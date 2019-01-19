@@ -1,0 +1,14 @@
+#page-welcome {
+	background: color($colors, primary);
+	color: color($colors, light);
+	h1{
+    	font-size: 56px;
+    	margin-top: 50px;
+    	text-align: center;
+    }
+    h2{
+    	font-size: 14px;
+    	margin-top: 30px;
+    	text-align: center;
+    }
+}

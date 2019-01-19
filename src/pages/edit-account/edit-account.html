@@ -1,0 +1,77 @@
+<!--
+  Generated template for the EditAccountPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ 'edit-account' | translate:param }}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="deleteAccount(editAccount)">
+        <ion-icon name="trash"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-list>
+
+  <ion-item>
+    <ion-label>{{ 'name' | translate:param }}</ion-label>
+    <ion-input text-right type="string" value="" [(ngModel)]="editAccount.name"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>{{ 'description' | translate:param }}</ion-label>
+    <ion-input text-right type="string" value="" [(ngModel)]="editAccount.description"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>{{ 'currency' | translate:param }}</ion-label>
+    <ion-select [(ngModel)]="editAccount.currency">
+      <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.name | translate:param }}</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>{{ 'type' | translate:param }}</ion-label>
+    <ion-select [(ngModel)]="editAccount.type">
+      <ion-option *ngFor="let accountType of accountTypes" [value]="accountType._id">{{ accountType.code | translate:param }}</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>{{ 'initial-balance' | translate:param }}</ion-label>
+    <ion-input text-right type="number" value="" [(ngModel)]="editAccount.initialBalance"></ion-input>
+  </ion-item>
+
+  <ion-item-divider>{{ 'Stats' | translate:param }}</ion-item-divider>
+
+  <ion-item>
+    <p>{{ 'cumulative-inflow' | translate:param }}</p>
+    <p item-end> {{ editAccount.cumulativeInflow | number:0 }} </p>
+  </ion-item>
+
+  <ion-item>
+    <p>{{ 'cumulative-outflow' | translate:param }}</p>
+    <p item-end> {{ editAccount.cumulativeOutflow | number:0 }} </p>
+  </ion-item>
+
+  <ion-item>
+    <p>{{ 'balance' | translate:param }}</p>
+    <p item-end> {{ editAccount.balance | number:0 }} </p>
+  </ion-item>
+
+  </ion-list>
+
+</ion-content>
+
+<ion-footer>
+   <button ion-button full large strong color="primary" (click)="updateAccount(editAccount)">{{ 'update-account' | translate:param }}</button>
+</ion-footer>
