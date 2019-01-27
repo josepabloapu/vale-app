@@ -13,23 +13,27 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content id="page-stats">
 
   <ion-list>
 
-    <ion-item-divider>{{ 'balance-per-category' | translate:param }}</ion-item-divider>
-
-    <ion-item *ngFor="let item of objectKeys(expenseCategoriesBalance)">
-      <p>{{expenseCategoriesBalance[item].name | translate:param}} ({{expenseCategoriesBalance[item].balance | number:0 }})</p>
-      <p item-end>{{expenseCategoriesBalance[item].percentage | number: '1.2-2' }}%</p>
-      
+    <ion-item no-lines color="secondary">
+      {{ 'balance-per-category' | translate:param }} {{ '(this-month)' | translate:param }}
+    </ion-item>
+    <ion-item no-lines *ngFor="let category of expenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+      <p>{{ dataSortedByDate['this-month'].categoriesBalance[category.name].name | translate:param}} ({{dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number:0 }})</p>
+      <p item-end>{{dataSortedByDate['this-month'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
     </ion-item>
 
-<!--     <ion-item *ngFor="let item of objectKeys(expenseCategoriesBalance)">
-      <h3>{{expenseCategoriesBalance[item].name | translate:param}} - ({{expenseCategoriesBalance[item].balance | number:0 }})</h3>
-      <p item-end>{{expenseCategoriesBalance[item].percentage | number: '1.2-2' }}%</p>
-    </ion-item> -->
+    <ion-item no-lines color="secondary">
+      {{ 'balance-per-category' | translate:param }} {{ '(this-year)' | translate:param }}
+    </ion-item>
+    <ion-item no-lines *ngFor="let category of expenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+      <p>{{ dataSortedByDate['this-year'].categoriesBalance[category.name].name | translate:param}} ({{dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number:0 }})</p>
+      <p item-end>{{dataSortedByDate['this-year'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
+    </ion-item>
 
   </ion-list>
+
 
 </ion-content>

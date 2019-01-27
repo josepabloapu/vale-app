@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
 
 import { AccountModel } from '../../models/account/account';
 import { AccountTypeModel } from '../../models/account-type/account-type';
 import { CurrencyModel } from '../../models/currency/currency';
 
+import { MessageProvider } from '../../providers/message/message';
 import { AccountProvider } from '../../providers/account/account';
 import { AccountTypeProvider } from '../../providers/account-type/account-type';
 import { CurrencyProvider } from '../../providers/currency/currency';
@@ -33,7 +33,7 @@ export class EditAccountPage {
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams, 
-  	private toastCtrl: ToastController,
+  	private messageProvider: MessageProvider,
   	private currencyProvider: CurrencyProvider,
     private accountTypeProvider: AccountTypeProvider, 
   	private accountProvider: AccountProvider) 
@@ -44,7 +44,7 @@ export class EditAccountPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EditAccountPage');
+    // console.log('ionViewDidLoad EditAccountPage');
   }
 
   public updateCurrencies(currencies: CurrencyModel []) {
@@ -71,15 +71,19 @@ export class EditAccountPage {
   	this.updateAccountLocalObject(this.accountProvider.currentAccount)
   }
 
-  private updateAccount(account: AccountModel) {
-  	this.accountProvider.updateAccount(account)
+  public getCurrencyReadableObject(id: string) {
+    return this.currencyProvider.mappedCurrenciesById[id];
+  }
+
+  private updateAccount() {
+  	this.accountProvider.updateAccount(this.editAccount)
       .then(
         res => {
           let response = res as any;
           this.navCtrl.setRoot(AccountsPage);
-          this.presentToast('an-account-has-been-updated');
+          this.messageProvider.displaySuccessMessage('message-update-account-success')
         }, 
-        err => this.presentToast(err.error)
+        err => this.messageProvider.displayErrorMessage('message-update-account-error')
       );
   }
 
@@ -88,26 +92,10 @@ export class EditAccountPage {
       .then(
         res => {
           this.navCtrl.setRoot(AccountsPage);
-          this.presentToast('an-account-has-been-deleted');
+          this.messageProvider.displaySuccessMessage('message-delete-account-success')
         }, 
-        err => this.presentToast(err.error)
+        err => this.messageProvider.displayErrorMessage('message-delete-account-error')
       );
-  }
-
-  presentToast(message) {
-
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 1500,
-      position: 'bottom'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
-
   }
 
 }

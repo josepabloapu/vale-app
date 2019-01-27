@@ -18,7 +18,6 @@ export class TransactionProvider {
   public currentTransaction: TransactionModel;
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
-    console.log('Hello TransactionProvider Provider');
     // console.log({ TRANSACTION: this });
   }
 

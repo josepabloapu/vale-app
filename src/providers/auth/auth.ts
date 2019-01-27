@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 import { UserModel } from '../../models/user/user';
 
 import { ApiProvider } from '../../providers/api/api';
-import { UserProvider } from '../../providers/user/user';
+import { MeProvider } from '../../providers/me/me';
+import { TokenProvider } from '../../providers/token/token';
 
 /*
   Generated class for the AuthProvider provider.
@@ -15,8 +16,8 @@ import { UserProvider } from '../../providers/user/user';
 @Injectable()
 export class AuthProvider {
 
-  constructor(public http: HttpClient, private userProvider: UserProvider, private apiProvider: ApiProvider) {
-    console.log('Hello AuthProvider Provider');
+  constructor(public http: HttpClient, private meProvider: MeProvider, private tokenProvider: TokenProvider, private apiProvider: ApiProvider) {
+    // console.log({PROVIDER_AUTH: this})
   }
 
   /**
@@ -58,10 +59,15 @@ export class AuthProvider {
    * @returns {Promise<any>}
    */
   logout(): Promise<any> {
-    return new Promise((resolve) => {
-      this.userProvider.deleteOnStorage().then(() => {
-        resolve();
-      });
+    return new Promise((resolve, reject) => {
+      this.apiProvider.postRequest('/auth/logout', null, true)
+        .subscribe(
+          res => {
+            this.tokenProvider.removeToken()
+            this.meProvider.removeLocalUser()
+            resolve(<any>res)
+          },
+          error => reject(<any>error));
     });
   }
 

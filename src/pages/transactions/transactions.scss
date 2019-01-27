@@ -1,3 +1,18 @@
 page-transactions {
 
+	.odd {
+	  background: white;
+	}
+	.even {
+	  background: color($colors, light);
+	}
+
+	.income {
+	  color: green
+	}
+
+	.expense {
+	  color: color($colors, danger)
+	}
+	
 }

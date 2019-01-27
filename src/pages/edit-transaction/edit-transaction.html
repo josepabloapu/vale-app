@@ -18,53 +18,60 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content id="page-edit-transaction">
 
 	<ion-list>
 
-  <ion-item>
-    <ion-label>{{ 'type' | translate:param }}</ion-label>
-    <ion-select [(ngModel)]="editTransaction.type" (ionChange)="typeChange($event)">
-      <ion-option value="expense" selected="true">{{ 'expense' | translate:param }}</ion-option>
-      <ion-option value="income">{{ 'income' | translate:param }}</ion-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item>
-    <ion-label>{{ 'amount' | translate:param }}</ion-label>
-    <ion-input text-right type="number" value="" [(ngModel)]="editTransaction.amount"></ion-input>
-  </ion-item>
-
-  <ion-item *ngIf="editTransaction.type === 'income'">
-    <ion-label>{{ 'category' | translate:param }}</ion-label>
-    <ion-select [(ngModel)]="editTransaction.category">
-      <ion-option *ngFor="let category of incomeCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item *ngIf="editTransaction.type === 'expense'">
-    <ion-label>{{ 'category' | translate:param }}</ion-label>
-    <ion-select [(ngModel)]="editTransaction.category">
-      <ion-option *ngFor="let category of expenseCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item>
-    <ion-label>{{ 'account' | translate:param }}</ion-label>
-    <ion-select [(ngModel)]="editTransaction.account" #account (ionChange)="accountChange(account._value)">
-      <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item>
-    <ion-label>{{ 'description' | translate:param }}</ion-label>
-    <ion-input text-right type="string" value="" [(ngModel)]="editTransaction.description"></ion-input>
-  </ion-item>
+    <ion-item no-lines color="white">
+        <ion-label>{{ 'amount' | translate:param }}</ion-label>
+        <ion-input 
+          text-right type="tel"
+          [ngClass]="'amount'"
+          [(ngModel)]="tempAmount" 
+          pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
+          (input)="tempAmount = format(tempAmount)"></ion-input>
+      </ion-item>
+  
+    <ion-item no-lines color="light">
+      <ion-label>{{ 'type' | translate:param }}</ion-label>
+      <ion-select [(ngModel)]="editTransaction.type" (ionChange)="typeChange($event)">
+        <ion-option value="expense" selected="true">{{ 'expense' | translate:param }}</ion-option>
+        <ion-option value="income">{{ 'income' | translate:param }}</ion-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item no-lines color="white" *ngIf="editTransaction.type === 'income'">
+      <ion-label>{{ 'category' | translate:param }}</ion-label>
+      <ion-select [(ngModel)]="editTransaction.category">
+        <ion-option *ngFor="let category of incomeCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item no-lines color="white" *ngIf="editTransaction.type === 'expense'">
+      <ion-label>{{ 'category' | translate:param }}</ion-label>
+      <ion-select [(ngModel)]="editTransaction.category">
+        <ion-option *ngFor="let category of expenseCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item no-lines color="light">
+      <ion-label>{{ 'account' | translate:param }}</ion-label>
+      <ion-select [(ngModel)]="editTransaction.account" #account (ionChange)="accountChange(account._value)">
+        <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
+      </ion-select>
+    </ion-item>
+  
+    <ion-item no-lines color="white">
+      <ion-label>{{ 'description' | translate:param }}</ion-label>
+      <ion-input text-right type="string" value="" [(ngModel)]="editTransaction.description"></ion-input>
+    </ion-item>
 
   </ion-list>
 
 </ion-content>
 
 <ion-footer>
-  <button ion-button full large strong color="primary" (click)="updateTransaction(editTransaction)">{{ 'update-transaction' | translate:param }}</button>
+  <button ion-item no-lines color="primary" (click)="updateTransaction()">
+    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'update-transaction' | translate:param }}</ion-title >
+  </button>
 </ion-footer>

@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
 
+import { UserModel } from '../../models/user/user';
 import { AccountModel } from '../../models/account/account';
 
+import { MessageProvider } from '../../providers/message/message';
+import { MeProvider } from '../../providers/me/me';
+import { CurrencyProvider } from '../../providers/currency/currency';
 import { AccountProvider } from '../../providers/account/account';
 import { AccountTypeProvider } from '../../providers/account-type/account-type';
 
@@ -24,6 +27,7 @@ import { EditAccountPage } from '../../pages/edit-account/edit-account';
 })
 export class AccountsPage {
 
+  private user: UserModel;
   private accounts: AccountModel [];
 
   private debitAccounts: AccountModel [];
@@ -45,19 +49,32 @@ export class AccountsPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
-    private toastCtrl: ToastController, 
+    private messageProvider: MessageProvider,
+    private meProvider: MeProvider, 
+    private currencyProvider: CurrencyProvider,
     public accountProvider: AccountProvider,
     private accountTypeProvider: AccountTypeProvider) 
-  {    
+  {
+    this.updateAccountsProviderUser(this.meProvider.user);    
     this.getAccounts();
+    // console.log({PAGE_ACCOUNTS: this})
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AccountsPage');
+    // console.log('ionViewDidLoad AccountsPage');
   }
 
   ionViewWillEnter() {
     this.getAccounts();
+  }
+
+  public updateAccountsProviderUser(user: UserModel) {
+    this.user = user
+  }
+
+  public getAccountType(id: string) : string {
+    let accountType = this.accountTypeProvider.mappedAccountTypesById[id].code
+    return accountType;
   }
 
   public updateAccounts(accounts: AccountModel []) {
@@ -66,13 +83,17 @@ export class AccountsPage {
     this.computeNetWorth();
   }
 
+  public getCurrencyReadableObject(id: string) {
+    return this.currencyProvider.mappedCurrenciesById[id];
+  }
+
   private getAccounts() {
   	this.accountProvider.getAccounts()
   	.then(
   		res => {
   			this.updateAccounts(AccountModel.ParseFromArray(res))
   		},
-  		err => this.presentToast(err.error)
+  		err => this.messageProvider.displayErrorMessage('message-get-accounts-error')
     );
   }
 
@@ -94,11 +115,9 @@ export class AccountsPage {
       .then(
         res => {
           this.getAccounts();
-          // this.navCtrl.push(AccountsPage, { }, { animate: false });
-          console.log(res);
-          this.presentToast(res);
+          this.messageProvider.displaySuccessMessage('message-delete-account-success')
         }, 
-        err => this.presentToast(err.error.message.message)
+        err => this.messageProvider.displayErrorMessage('message-delete-account-error')
       );
   }
 
@@ -149,39 +168,29 @@ export class AccountsPage {
     this.assets = 0;
     this.liabilities = 0;
 
+    this.cashAccounts.forEach(function(element) {
+      this.assets = this.assets + element.balance;
+    }, this);
+
     this.debitAccounts.forEach(function(element) {
       this.assets = this.assets + element.balance;
     }, this);
 
-    // if(false) {
-    //   this.investmentAccounts.forEach(function(element) {
-    //     this.assets = this.assets + element.balance;
-    //   }, this);
-    // }
+    this.investmentAccounts.forEach(function(element) {
+      this.assets = this.assets + element.balance;
+    }, this);
 
     this.creditAccounts.forEach(function(element) {
+      this.liabilities = this.liabilities + element.balance;
+    }, this);
+
+    this.loanAccounts.forEach(function(element) {
       this.liabilities = this.liabilities + element.balance;
     }, this);
 
     this.liabilities = this.liabilities * (-1);
     this.netWorth = this.assets - this.liabilities;
     
-  }
-
-  presentToast(message) {
-
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 1500,
-      position: 'bottom'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
-
   }
 
 }

@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
 
 import { TransactionModel } from '../../models/transaction/transaction';
 import { AccountModel } from '../../models/account/account';
 import { CategoryModel } from '../../models/category/category';
 
+import { MessageProvider } from '../../providers/message/message';
 import { TransactionProvider } from '../../providers/transaction/transaction';
 import { CategoryProvider } from '../../providers/category/category';
+import { CurrencyProvider } from '../../providers/currency/currency';
 import { AccountProvider } from '../../providers/account/account';
 
 import { NewTransactionPage } from '../../pages/new-transaction/new-transaction';
@@ -34,8 +35,9 @@ export class TransactionsPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    private toastCtrl: ToastController,
+    private messageProvider: MessageProvider, 
     private categoryProvider: CategoryProvider,
+    private currencyProvider: CurrencyProvider,
     private accountProvider: AccountProvider,
     public transactionProvider: TransactionProvider) 
   {
@@ -46,7 +48,7 @@ export class TransactionsPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad TransactionsPage');
+    // console.log('ionViewDidLoad TransactionsPage');
   }
 
   ionViewWillEnter() {
@@ -63,7 +65,7 @@ export class TransactionsPage {
       res => {
         this.updateAccounts(AccountModel.ParseFromArray(res))
       },
-      err => this.presentToast(err.error)
+      err => this.messageProvider.displaySuccessMessage('message-get-accounts-error')
     );
   }
 
@@ -77,7 +79,7 @@ export class TransactionsPage {
       res => {
         this.updateTransactions(TransactionModel.ParseFromArray(res))
       },
-      err => this.presentToast(err.error)
+      err => this.messageProvider.displaySuccessMessage('message-get-transactions-error')
     );
   }
 
@@ -91,7 +93,7 @@ export class TransactionsPage {
       res => {
         this.updateCategories(CategoryModel.ParseFromArray(res))
       },
-      err => this.presentToast(err.error)
+      err => this.messageProvider.displaySuccessMessage('message-get-categories-error')
     );
   }
 
@@ -109,35 +111,22 @@ export class TransactionsPage {
       .then(
         res => {
           this.getTransactions();
-          console.log(res);
-          this.presentToast(res);
+          this.messageProvider.displaySuccessMessage('message-delete-transaction-success')
         }, 
-        err => this.presentToast(err.error)
+        err => this.messageProvider.displayErrorMessage('message-delete-transaction-error')
       );
   }
 
-  getCategoryReadableName(id: string) {
+  getCategoryReadableObject(id: string) {
     return this.categoryProvider.mappedCategoriesById[id];
   }
 
-  getAccountReadableName(id: string) {
+  getAccountReadableObject(id: string) {
     return this.accountProvider.mappedAccountsById[id];
   }
 
-  presentToast(message) {
-
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 1500,
-      position: 'bottom'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
-
+  getCurrencyReadableObject(id: string) {
+    return this.currencyProvider.mappedCurrenciesById[id];
   }
 
 }

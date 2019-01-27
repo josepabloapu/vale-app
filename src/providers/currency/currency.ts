@@ -19,7 +19,6 @@ export class CurrencyProvider {
   public mappedCurrenciesByName: {};
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
-    console.log('Hello CurrencyProvider Provider');
     // console.log({ CURRENCY: this });
     this.getCurrencies();
   }

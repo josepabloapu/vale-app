@@ -19,7 +19,6 @@ export class AccountTypeProvider {
   public mappedAccountTypesByCode: {};
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
-    console.log('Hello AccountTypeProvider Provider');
     this.getAccountTypes();
   }
 

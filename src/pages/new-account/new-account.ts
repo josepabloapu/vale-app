@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
 
 import { AccountModel } from '../../models/account/account';
 import { CurrencyModel } from '../../models/currency/currency';
 import { AccountTypeModel } from '../../models/account-type/account-type';
 
-import { UserProvider } from '../../providers/user/user';
+import { MessageProvider } from '../../providers/message/message';
+import { MeProvider } from '../../providers/me/me';
 import { ApiProvider } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { AccountProvider } from '../../providers/account/account';
@@ -36,8 +36,8 @@ export class NewAccountPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private toastCtrl: ToastController,
-    private userProvider: UserProvider,
+    private messageProvider: MessageProvider,
+    private meProvider: MeProvider,
     private apiProvider: ApiProvider,
     private currencyProvider: CurrencyProvider,
     private accountTypeProvider: AccountTypeProvider, 
@@ -50,10 +50,11 @@ export class NewAccountPage {
     this.loadCurrencies();
     this.loadAccountTypes();
     this.initAccount();
+    // console.log({PAGE_NEWACCOUNT: this})
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad NewAccountPage');
+    // console.log('ionViewDidLoad NewAccountPage');
   }
 
   public updateCurrencies(currencies: CurrencyModel []) {
@@ -78,24 +79,24 @@ export class NewAccountPage {
 
   private initAccount() {
     this.newAccount = AccountModel.GetNewInstance();
-    this.newAccount.owner = this.userProvider.user._id;
+    this.newAccount.owner = this.meProvider.user._id;
     this.newAccount.type = this.accountTypeProvider.accountTypes[0]._id;
-    this.newAccount.currency = this.userProvider.user.currency;
-    this.newAccount.initialBalance = 0;
+    this.newAccount.currency = this.meProvider.user.currency;
+    this.newAccount.initialBalance = null;
     this.newAccount.cumulativeInflow = 0;
     this.newAccount.cumulativeOutflow = 0;
   }
 
   public createAccount() {
-    // console.log(this._currencies[0]);
+    if (this.newAccount.initialBalance == null) this.newAccount.initialBalance = 0;
     this.accountProvider.createAccount(this.newAccount)
       .then(
         res => {
           this.getAccounts();
           this.navCtrl.setRoot(AccountsPage);
-          this.presentToast('new-account-has-been-created');
+          this.messageProvider.displaySuccessMessage('message-new-account-success')
         }, 
-        err => this.presentToast(err.error)
+        err => this.messageProvider.displayErrorMessage('message-new-account-error')
       );
   }
 
@@ -109,22 +110,6 @@ export class NewAccountPage {
 
   typeChange(value) {
     console.log(value);
-  }
-
-  presentToast(message) {
-
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 1500,
-      position: 'bottom'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
-
   }
 
 }

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
 
 import { TransactionModel } from '../../models/transaction/transaction';
 import { CurrencyModel } from '../../models/currency/currency';
 import { CategoryModel } from '../../models/category/category';
 import { AccountModel } from '../../models/account/account';
 
+import { MessageProvider } from '../../providers/message/message';
 import { TransactionProvider } from '../../providers/transaction/transaction';
 import { AccountProvider } from '../../providers/account/account';
 import { CurrencyProvider } from '../../providers/currency/currency';
@@ -28,18 +28,22 @@ import { TransactionsPage } from '../../pages/transactions/transactions';
 })
 export class EditTransactionPage {
 
+  DECIMAL_SEPARATOR=".";
+  GROUP_SEPARATOR=",";
+
 	private editTransaction: TransactionModel;
   private currencies: CurrencyModel [];
   private categories: CategoryModel [];
   private incomeCategories: CategoryModel [];
   private expenseCategories: CategoryModel [];
   private accounts: AccountModel [];
+  private tempAmount: string;
 
   constructor(
     public app: App,
   	public navCtrl: NavController, 
   	public navParams: NavParams, 
-  	private toastCtrl: ToastController,
+  	private messageProvider: MessageProvider,
   	private currencyProvider: CurrencyProvider,
     private categoryProvider: CategoryProvider,
   	private transactionProvider: TransactionProvider,
@@ -49,11 +53,11 @@ export class EditTransactionPage {
     this.loadCategories();
     this.loadAccounts();
   	this.getTransaction();
-    console.log({EDIT_TRANSACTION: this})
+    // console.log({EDIT_TRANSACTION: this})
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EditAccountPage');
+    // console.log('ionViewDidLoad EditAccountPage');
   }
 
   /* CURRENCIES */
@@ -91,6 +95,7 @@ export class EditTransactionPage {
   }
 
   public updateTransactionLocalObject(transaction: TransactionModel) {
+    this.tempAmount = this.format(transaction.amount);
     this.editTransaction = transaction;
   }
 
@@ -98,15 +103,16 @@ export class EditTransactionPage {
   	this.updateTransactionLocalObject(this.transactionProvider.currentTransaction)
   }
 
-  private updateTransaction(transaction: TransactionModel) {
-  	this.transactionProvider.updateTransaction(transaction)
+  private updateTransaction() {
+    this.editTransaction.amount = this.unFormat(this.tempAmount);
+  	this.transactionProvider.updateTransaction(this.editTransaction)
       .then(
         res => {
           let response = res as any;
           this.navCtrl.setRoot(TransactionsPage);
-          this.presentToast('transaction-has-been-updated');
+          this.messageProvider.displaySuccessMessage('message-update-transaction-success')
         }, 
-        err => this.presentToast(err.error)
+        err => this.messageProvider.displayErrorMessage('message-update-transaction-error')
       );
   }
 
@@ -115,9 +121,9 @@ export class EditTransactionPage {
       .then(
         res => {
           this.navCtrl.setRoot(TransactionsPage);
-          this.presentToast('transaction-has-been-deleted');
+          this.messageProvider.displaySuccessMessage('message-delete-transaction-success')
         }, 
-        err => this.presentToast(err.error)
+        err => this.messageProvider.displayErrorMessage('message-delete-transaction-error')
       );
   }
 
@@ -153,20 +159,26 @@ export class EditTransactionPage {
     }, this);
   }
 
-  presentToast(message) {
+  format(valString) {
+    if (!valString) {
+      return '';
+    }
+    let val = valString.toString();
+    const parts = this.unFormat(val).split(this.DECIMAL_SEPARATOR);
+    return parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, this.GROUP_SEPARATOR) + (!parts[1] ? '' : this.DECIMAL_SEPARATOR + parts[1]);
+  };
 
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 1500,
-      position: 'bottom'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
-
-  }
+  unFormat(val) {
+      if (!val) {
+          return '';
+      }
+      val = val.replace(/^0+/, '');
+  
+      if (this.GROUP_SEPARATOR === ',') {
+          return val.replace(/,/g, '');
+      } else {
+          return val.replace(/\./g, '');
+      }
+  };
 
 }

@@ -41,8 +41,8 @@ export class TabsPage {
   	private currencyProvider: CurrencyProvider, 
   	private categoryProvider: CategoryProvider) 
   {
-  	console.log({ TABS: this })
-    this.translateService.use(this.userProvider.user.language);
+  	// console.log({ TABS: this })
+    this.translateService.use(this.meProvider.user.language);
   }
   
 }

@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { CurrencyModel } from '../../models/currency/currency';
 
 import { ApiProvider } from '../../providers/api/api';
+import { MeProvider } from '../../providers/me/me';
 import { CurrencyProvider } from '../../providers/currency/currency';
 
 /*
@@ -20,21 +21,22 @@ export class StatsProvider {
 
   constructor(
     public http: HttpClient, 
-    private apiProvider: ApiProvider, 
+    private apiProvider: ApiProvider,
+    private meProvider: MeProvider,
     private currencyProvider: CurrencyProvider) 
   {
-    console.log('Hello StatsProvider Provider');
-    this.date = 'this-year';
-    this.currency = this.currencyProvider.currencies[0];
+    this.currency = this.currencyProvider.mappedCurrenciesById[this.meProvider.user.currency];
     // console.log({ STATS: this });
   }
 
-  public getCategoryBalance(category): Promise<any> {
+  public getBalancePerCategoryAndDate(category, date): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.apiProvider.getRequest('/stats/balance-per-category/categories/' + category._id + '/date/' + this.date + '/currency/' + this.currency._id , true)
+      var balance: any;
+      this.apiProvider.getRequest('/stats/balance-per-category/categories/' + category._id + '/date/' + date + '/currency/' + this.currency._id , true)
         .subscribe(
-          res => {
-            resolve(res);
+          result => {
+            balance = result;
+            resolve(balance.amount);
           },
           err => reject(<any>err));
     });

@@ -1,3 +1,10 @@
 page-stats {
 
+	.odd {
+	  background: white;
+	}
+	.even {
+	  background: color($colors, light);
+	}
+
 }

@@ -1,3 +1,16 @@
 page-edit-transaction {
-
+  ion-footer {
+  	font-size: 48px;
+  	font-weight: bold;
+  }
+  h1 {
+    text-align: center;
+    text-transform: uppercase;
+    padding-top: 0.4cm;
+    padding-bottom: 0.3cm;
+  }
+  .amount {
+    font-size: 48px;
+  	font-weight: bold;
+  }
 }

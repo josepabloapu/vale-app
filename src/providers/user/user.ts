@@ -20,7 +20,7 @@ export class UserProvider {
     public storage: Storage
     ) 
   {
-    console.log('Hello UserProvider Provider');
+
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -55,7 +55,7 @@ export class UserProvider {
       }).then(() => {
         this.updateUserProvider(user);
         this.storage.set('user', JSON.stringify(user));
-        resolve();
+        resolve(user);
       });
     });
   }
@@ -94,7 +94,9 @@ export class UserProvider {
    */
   updateOnStorage(user: UserModel): Promise<UserModel> {
     return new Promise((resolve) => {
-      resolve(this.storage.get('user'));
+      this.storage.set('user', JSON.stringify(user))
+      this.updateUserProvider(user);
+      resolve(user);
     });
   }
 

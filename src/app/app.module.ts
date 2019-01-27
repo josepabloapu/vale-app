@@ -37,6 +37,7 @@ import { StatsProvider } from '../providers/stats/stats';
 import { AccountTypeProvider } from '../providers/account-type/account-type';
 import { MeProvider } from '../providers/me/me';
 import { TokenProvider } from '../providers/token/token';
+import { MessageProvider } from '../providers/message/message';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -104,7 +105,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     StatsProvider,
     AccountTypeProvider,
     MeProvider,
-    TokenProvider
+    TokenProvider,
+    MessageProvider
   ]
 })
 export class AppModule {}

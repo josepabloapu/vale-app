@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
-import { ToastController } from 'ionic-angular';
 
 import { UserModel } from '../../models/user/user';
 import { CurrencyModel } from '../../models/currency/currency';
 
+import { MessageProvider } from '../../providers/message/message';
 import { UserProvider } from '../../providers/user/user';
 import { MeProvider } from '../../providers/me/me';
 import { AccountProvider } from '../../providers/account/account';
@@ -33,8 +33,8 @@ export class EditUserPage {
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
-    private toastCtrl: ToastController,
   	private translateService: TranslateService,
+    private messageProvider: MessageProvider,
   	public userProvider: UserProvider,
     public meProvider: MeProvider,
   	public accountProvider: AccountProvider,
@@ -42,10 +42,11 @@ export class EditUserPage {
   {
   	this.loadCurrencies();
   	this.loadUser();
+    // console.log({PAGE_EDITUSER: this})
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad EditUserPage');
+    // console.log('ionViewDidLoad EditUserPage');
   }
 
   private updateCurrencies(currencies: CurrencyModel []) {
@@ -61,40 +62,23 @@ export class EditUserPage {
   }
 
   public loadUser() {
-    this.updateUserProvider(this.userProvider.user);
+    this.updateUserProvider(this.meProvider.user);
   }
 
-  private updateUser(user: UserModel) {
-    this.meProvider.updateUser(user)
+  private updateUser() {
+    this.meProvider.updateUser(this.editUser)
     .then(
         res => {
-          this.userProvider.updateUserProvider(this.editUser);
           this.navCtrl.setRoot(MePage);
-          this.presentToast('user-has-been-updated');
+          this.messageProvider.displaySuccessMessage('message-update-user-success')
         }, 
-        err => this.presentToast(err.error.mmesage.message)
+        err => this.messageProvider.displayErrorMessage('message-update-user-error')
       );
   }
 
   public changeLanguage(value) {
     this.editUser.language = value;
     this.translateService.use(value);
-  }
-
-  presentToast(message) {
-
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 1500,
-      position: 'bottom'
-    });
-
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
-
   }
 
 }

@@ -14,13 +14,12 @@ export class TokenProvider {
 	public token: string;
 
   constructor(private http: HttpClient, private storage: Storage) {
-    console.log('Hello TokenProvider Provider');
     this.getToken();
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-    /**
+  /**
    * Write token in the local storage.
    *
    * @param token

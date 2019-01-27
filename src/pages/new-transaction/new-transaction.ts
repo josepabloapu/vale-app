@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
+import { ActionSheetController } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { TransactionModel } from '../../models/transaction/transaction';
 import { CurrencyModel } from '../../models/currency/currency';
 import { CategoryModel } from '../../models/category/category';
 import { AccountModel } from '../../models/account/account';
 
-import { UserProvider } from '../../providers/user/user';
+import { MessageProvider } from '../../providers/message/message';
+import { MeProvider } from '../../providers/me/me';
 import { ApiProvider } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { CategoryProvider } from '../../providers/category/category';
@@ -30,6 +33,9 @@ import { TransactionsPage } from '../../pages/transactions/transactions';
 })
 export class NewTransactionPage {
 
+  DECIMAL_SEPARATOR=".";
+  GROUP_SEPARATOR=",";
+
   // private _newTransaction: any;
   private newTransaction: TransactionModel;
   private newTransactionOut: TransactionModel;
@@ -42,13 +48,14 @@ export class NewTransactionPage {
   private isTransfer: boolean;
   private accountOut: string;
   private accountIn: string;
+  private tempAmount: string;
   
   constructor(
     private app: App,
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    private toastCtrl: ToastController,
-    private userProvider: UserProvider,
+    private navCtrl: NavController,
+    private navParams: NavParams,
+    private messageProvider: MessageProvider,
+    private meProvider: MeProvider,
     private apiProvider: ApiProvider,
     private currencyProvider: CurrencyProvider,
     private categoryProvider: CategoryProvider,
@@ -58,16 +65,19 @@ export class NewTransactionPage {
     this.isTransfer = false;
     this.accountOut = '';
     this.accountIn = '';
+    this.tempAmount = ''
     this.loadAccounts();
     this.loadCurrencies();
     this.loadCategories();
     this.initTransaction();
-    console.log({NEW_TRANSACTION: this})
+    // console.log({NEW_TRANSACTION: this})
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad NewTransactionPage');
+    // console.log('ionViewDidLoad NewTransactionPage');
   }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
   /* CURRENCIES */
   /**************/
@@ -115,17 +125,22 @@ export class NewTransactionPage {
     this.updateAccounts(this.accountProvider.accounts);
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
   private initTransaction() {
     this.newTransaction = TransactionModel.GetNewInstance();
-    this.newTransaction.owner = this.userProvider.user._id;
-    this.newTransaction.currency = this.userProvider.user.currency;
+    this.newTransaction.owner = this.meProvider.user._id;
+    this.newTransaction.currency = this.meProvider.user.currency;
     this.newTransaction.type = 'expense';
     this.newTransaction.description = '';
     this.newTransaction.category = this.categoryProvider.mappedCategoriesByName['Living']._id;
     this.newTransaction.account = this.accountProvider.accounts[0]._id;
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
   public createTransaction() {
+    this.newTransaction.amount = this.unFormat(this.tempAmount);
     this.transactionProvider.createTransaction(this.newTransaction)
       .then(
         res => {
@@ -136,13 +151,17 @@ export class NewTransactionPage {
             }
           );
           this.navCtrl.setRoot(TransactionsPage);
-          this.presentToast('new-transaction-has-been-created');
+          this.messageProvider.displaySuccessMessage('message-new-transaction-success');
         }, 
-        err => this.presentToast(err.error)
+        err => {
+          this.messageProvider.displayErrorMessage('message-new-transaction-error');
+        }
       );
   }
 
   public createTransferTransaction() {
+    this.newTransaction.amount = this.unFormat(this.tempAmount);
+    
     this.newTransactionOut = TransactionModel.GetNewInstance();
     this.newTransactionIn = TransactionModel.GetNewInstance();
 
@@ -174,7 +193,6 @@ export class NewTransactionPage {
           this.transactionProvider.createTransaction(this.newTransactionIn)
             .then(
               res => {
-
                 this.getTransactions();
                 this.accountProvider.getAccounts().then(
                   res => {
@@ -182,14 +200,17 @@ export class NewTransactionPage {
                   }
                 );
                 this.navCtrl.setRoot(TransactionsPage);
-                this.presentToast('two-new-transactions-have-been-created');
-
+                this.messageProvider.displaySuccessMessage('message-new-two-transactions-success');
               }, 
-              err => this.presentToast(err.error)
+              err => {
+                this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
+              }
             );
 
         }, 
-        err => this.presentToast(err.error)
+        err => {
+          this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
+        }
       );
   }
 
@@ -203,6 +224,8 @@ export class NewTransactionPage {
         // console.log(err)
       });
   }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
   currencyChange(value) {
     console.log(value);
@@ -227,6 +250,8 @@ export class NewTransactionPage {
     this.newTransaction.currency = this.accountProvider.mappedAccountsById[value].currency
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
   private computeCategoriesPerType() {
     
     this.incomeCategories = [];
@@ -241,25 +266,33 @@ export class NewTransactionPage {
           this.expenseCategories.push(element);
           break;
         default:
-          // code block
+          break;
       }
     }, this);
   }
 
-  presentToast(message) {
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 1500,
-      position: 'bottom'
-    });
+  format(valString) {
+    if (!valString) {
+      return '';
+    }
+    let val = valString.toString();
+    const parts = this.unFormat(val).split(this.DECIMAL_SEPARATOR);
+    return parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, this.GROUP_SEPARATOR) + (!parts[1] ? '' : this.DECIMAL_SEPARATOR + parts[1]);
+  };
 
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-
-    toast.present();
-
-  }
+  unFormat(val) {
+      if (!val) {
+          return '';
+      }
+      val = val.replace(/^0+/, '');
+  
+      if (this.GROUP_SEPARATOR === ',') {
+          return val.replace(/,/g, '');
+      } else {
+          return val.replace(/\./g, '');
+      }
+  };
 
 }

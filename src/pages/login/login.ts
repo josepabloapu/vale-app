@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
+import { MessageProvider } from '../../providers/message/message';
 import { TokenProvider } from '../../providers/token/token';
 import { ApiProvider } from '../../providers/api/api';
 import { AuthProvider } from '../../providers/auth/auth';
@@ -30,8 +31,9 @@ export class LoginPage {
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
-    public toastCtrl: ToastController,
     public loadingCtrl: LoadingController,
+    private storage: Storage,
+    private messageProvider: MessageProvider,
     public tokenProvider: TokenProvider, 
     public apiProvider: ApiProvider, 
     public authProvider: AuthProvider, 
@@ -44,7 +46,7 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    // console.log('ionViewDidLoad LoginPage');
   }
 
   userData = { username: "", password: "" };
@@ -53,19 +55,17 @@ export class LoginPage {
     this.loading.present().then(() => {
       this.authProvider.login(this.userData)
         .then(
-          result => {
-            this.userProvider.createOnStorage(result);
-            this.meProvider.updateUserProvider(result);
-            this.tokenProvider.setToken(result.token).then(
-              res => {
-                this.loading.dismiss();
-                this.navCtrl.push(TabsPage, { }, { animate: false });
-              }
-            );
+          user => {
+            this.storage.set('user', JSON.stringify(user));
+            this.tokenProvider.setToken(user.token);
+            this.meProvider.updateUserProvider(user);
+            this.apiProvider.updateApiProviderToken(user.token);
+            this.loading.dismiss();
+            this.navCtrl.push(TabsPage, { }, { animate: false });
           }, 
           err => {
             this.loading.dismiss();
-            this.presentToast(err.error.message.message)
+            this.messageProvider.displayErrorMessage('message-loggin-error');
           }
         );
     });
@@ -74,21 +74,5 @@ export class LoginPage {
   register() {
     this.navCtrl.push(RegisterPage, { }, { animate: false });
   }
-
-  presentToast(message) {
-
-  	let toast = this.toastCtrl.create({
-  	  message: message,
-  	  duration: 1500,
-  	  position: 'bottom'
-  	});
-
-  	toast.onDidDismiss(() => {
-  	  console.log('Dismissed toast');
-  	});
-
-  	toast.present();
-
-	}
 
 }

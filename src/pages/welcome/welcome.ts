@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
+import { UserModel } from '../../models/user/user';
+
 import { TabsPage } from '../tabs/tabs';
 import { LoginPage } from '../login/login';
 import { RegisterPage } from '../register/register';
 
 import { TokenProvider } from '../../providers/token/token';
-import { UserProvider } from '../../providers/user/user';
 import { MeProvider } from '../../providers/me/me';
 import { AuthProvider } from '../../providers/auth/auth';
 import { CurrencyProvider } from '../../providers/currency/currency';
@@ -34,18 +35,18 @@ export class WelcomePage {
     public navParams: NavParams, 
     private storage: Storage, 
     public loadingCtrl: LoadingController,
-    // private tokenProvider: TokenProvider,
-    private userProvider: UserProvider,
+    private tokenProvider: TokenProvider,
     private meProvider: MeProvider,
     private authProvider: AuthProvider, 
     private currencyProvider: CurrencyProvider) 
   {
     this.loading = this.loadingCtrl.create({ content: 'Logging in' });
-    this.getAuthUser();
+    this.getUser();
+    // console.log({PAGE_WELCOME: this})
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WelcomePage');
+    // console.log('ionViewDidLoad WelcomePage');
   }
 
   login(){
@@ -56,13 +57,13 @@ export class WelcomePage {
     this.navCtrl.push(RegisterPage, { }, { animate: false });
   }
 
-  getAuthUser() {
-    this.userProvider.getOnStorage()
-      .then(
-        user => {
-          this.meProvider.updateUserProvider(user)
-          if (user) this.verifyToken();
-        });
+  private getUser() {
+    this.storage.get('user').then((value) => {
+      if (value == null) return 0;
+      let user = UserModel.ParseFromObject(JSON.parse(value));
+      this.meProvider.setLocalUser(user);
+      this.verifyToken();
+    });
   }
 
   private verifyToken() {

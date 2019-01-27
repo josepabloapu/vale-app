@@ -19,7 +19,6 @@ export class CategoryProvider {
   public mappedCategoriesByName: {};
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
-    console.log('Hello CategoryProvider Provider');
     // console.log({ CATEGORY: this });
     this.getCategories();
   }

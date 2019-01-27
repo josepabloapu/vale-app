@@ -17,24 +17,14 @@
 
 </ion-header>
 
-
-<ion-content padding>
+<ion-content id="page-transactions">
 
   <ion-list>
-    <button ion-item *ngFor="let transaction of transactions" (click)="editTransaction(transaction)">
-
-      <h2 [ngStyle]="{'color': (transaction.type == 'expense')? 'red' : 'green'}">
-        {{ transaction.amount | number:0 }}
-      </h2>
-
-      <p>
-        {{ getCategoryReadableName(transaction.category).name | translate:param }} - {{ getAccountReadableName(transaction.account).name }}
-      </p>
-
-      <p item-end>
-        {{ transaction.date | date }}
-      </p>
-      
+    <button ion-item no-lines *ngFor="let transaction of transactions; let $i = index" (click)="editTransaction(transaction)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+      <h2 [ngClass]="(transaction.type == 'expense')? 'expense' : 'income'">{{ transaction.amount | number:0 }} {{ getCurrencyReadableObject(transaction.currency).code }} </h2>
+      <p>{{ getCategoryReadableObject(transaction.category).name | translate:param }} - {{ getAccountReadableObject(transaction.account).name }}</p>
+      <p>{{ transaction.description }}</p>
+      <p item-end>{{ transaction.date | date }}</p>
     </button> 
   </ion-list>
 
