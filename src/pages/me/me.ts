@@ -2,13 +2,10 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
-// import Models
 import { UserModel } from '../../models/user/user';
-// import Providers
 import { AuthProvider } from '../../providers/auth/auth';
 import { MeProvider } from '../../providers/me/me';
 import { CurrencyProvider } from '../../providers/currency/currency';
-// import Pages
 import { WelcomePage } from '../../pages/welcome/welcome';
 import { EditUserPage } from '../../pages/edit-user/edit-user';
 

@@ -1,57 +1,43 @@
-<!--
-  Generated template for the EditUserPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>EditUser</ion-title>
+    <ion-title>@{{ editUser.username }}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="logout()">
+        <ion-icon name="exit"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content>
-
 	<ion-list>
-
-  <ion-item-divider>{{ 'personal-info' | translate:param }}</ion-item-divider>
-
-  <ion-item>
-    <ion-label>{{ 'name' | translate:param }}</ion-label>
-    <ion-input text-right type="string" value="" [(ngModel)]="editUser.name"></ion-input>
-  </ion-item>
-
-  <ion-item>
-    <ion-label>{{ 'email' | translate:param }}</ion-label>
-    <ion-input text-right type="string" value="" [(ngModel)]="editUser.email"></ion-input>
-  </ion-item>
-
-  <ion-item-divider>{{ 'config' | translate:param }}</ion-item-divider>
-
-  <ion-item>
-    <ion-label>{{ 'currency' | translate:param }}</ion-label>
-    <ion-select [(ngModel)]="editUser.currency">
-      <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.code | translate:param }}</ion-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item>
-    <ion-label>{{ 'language' | translate:param }}</ion-label>
-    <ion-select [(ngModel)]="editUser.language" (ionChange)="changeLanguage($event)">
-      <ion-option value="en" selected="true">{{ 'en' | translate:param }}</ion-option>
-      <ion-option value="es">{{ 'es' | translate:param }}</ion-option>
-    </ion-select>
-  </ion-item>
+    <ion-item no-lines color="secondary">
+        {{ 'personal-info' | translate:param }}
+    </ion-item>
+    <ion-item no-lines color="white">
+      <ion-label>{{ 'name' | translate:param }}</ion-label>
+      <ion-input text-right type="string" value="" [(ngModel)]="editUser.name" (blur)="changeName($event.target.value)"></ion-input>
+    </ion-item>
+    <ion-item no-lines color="light">
+      <ion-label>{{ 'email' | translate:param }}</ion-label>
+      <ion-input text-right type="string" value="" [(ngModel)]="editUser.email" (blur)="changeEmail($event.target.value)"></ion-input>
+    </ion-item>
+    <ion-item no-lines color="secondary">
+        {{ 'config' | translate:param }}
+    </ion-item>
+    <ion-item no-lines color="white">
+      <ion-label>{{ 'currency' | translate:param }}</ion-label>
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editUser.currency" (ionChange)="changeCurrency($event)">
+        <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.code | translate:param }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item no-lines color="light">
+      <ion-label>{{ 'language' | translate:param }}</ion-label>
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editUser.language" (ionChange)="changeLanguage($event)">
+        <ion-option value="en" selected="true">{{ 'en' | translate:param }}</ion-option>
+        <ion-option value="es">{{ 'es' | translate:param }}</ion-option>
+      </ion-select>
+    </ion-item>
 
   </ion-list>
-
 </ion-content>
-
-<ion-footer>
-  <button ion-item no-lines color="primary" (click)="updateUser()">
-    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'update-user' | translate:param }}</ion-title >
-  </button>
-</ion-footer>

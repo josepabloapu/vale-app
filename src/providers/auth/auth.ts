@@ -2,17 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { UserModel } from '../../models/user/user';
-
 import { ApiProvider } from '../../providers/api/api';
 import { MeProvider } from '../../providers/me/me';
 import { TokenProvider } from '../../providers/token/token';
 
-/*
-  Generated class for the AuthProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class AuthProvider {
 
@@ -28,7 +21,6 @@ export class AuthProvider {
    * @returns {Promise<any>}
    */
   register(user: object): Promise<any> {
-    // console.log("auth/register");
     return new Promise((resolve, reject) => {
       this.apiProvider.postRequest('/auth/register', user, false)
         .subscribe(

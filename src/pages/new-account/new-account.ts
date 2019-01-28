@@ -1,25 +1,17 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+// import { ViewChild } from '@angular/core';
 
 import { AccountModel } from '../../models/account/account';
 import { CurrencyModel } from '../../models/currency/currency';
 import { AccountTypeModel } from '../../models/account-type/account-type';
-
 import { MessageProvider } from '../../providers/message/message';
 import { MeProvider } from '../../providers/me/me';
 import { ApiProvider } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { AccountProvider } from '../../providers/account/account';
 import { AccountTypeProvider } from '../../providers/account-type/account-type';
-
 import { AccountsPage } from '../../pages/accounts/accounts';
-
-/**
- * Generated class for the NewAccountPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -28,10 +20,15 @@ import { AccountsPage } from '../../pages/accounts/accounts';
 })
 export class NewAccountPage {
 
-  // private _newAccount: any;
+  // @ViewChild('myInput') myInput;
+
+  DECIMAL_SEPARATOR=".";
+  GROUP_SEPARATOR=",";
+
   private newAccount: AccountModel;
   private currencies: CurrencyModel [];
   private accountTypes: AccountTypeModel [];
+  private tempAmount: string;
   
   constructor(
     public navCtrl: NavController,
@@ -43,10 +40,6 @@ export class NewAccountPage {
     private accountTypeProvider: AccountTypeProvider, 
     private accountProvider: AccountProvider)
   {
-
-    // this._currencies = this.currencyProvider._currencies;
-    // console.log({CURRENCIES: _currencies})
-
     this.loadCurrencies();
     this.loadAccountTypes();
     this.initAccount();
@@ -56,6 +49,12 @@ export class NewAccountPage {
   ionViewDidLoad() {
     // console.log('ionViewDidLoad NewAccountPage');
   }
+
+  // ngAfterViewChecked() {
+  //   this.myInput.setFocus()
+  // }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
   public updateCurrencies(currencies: CurrencyModel []) {
     this.currencies = currencies;
@@ -77,6 +76,12 @@ export class NewAccountPage {
     this.updateAccountTypes(this.accountTypeProvider.accountTypes);
   }
 
+  private getAccounts() {
+    this.accountProvider.getAccounts();
+  }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
   private initAccount() {
     this.newAccount = AccountModel.GetNewInstance();
     this.newAccount.owner = this.meProvider.user._id;
@@ -88,21 +93,21 @@ export class NewAccountPage {
   }
 
   public createAccount() {
-    if (this.newAccount.initialBalance == null) this.newAccount.initialBalance = 0;
+    let initialBalance = this.unFormat(this.tempAmount);
+    if (initialBalance == "") initialBalance = 0;
+    this.newAccount.initialBalance = initialBalance;
     this.accountProvider.createAccount(this.newAccount)
       .then(
         res => {
           this.getAccounts();
-          this.navCtrl.setRoot(AccountsPage);
           this.messageProvider.displaySuccessMessage('message-new-account-success')
+          this.navCtrl.setRoot(AccountsPage);
         }, 
         err => this.messageProvider.displayErrorMessage('message-new-account-error')
       );
   }
 
-  private getAccounts() {
-    this.accountProvider.getAccounts();
-  }
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
   currencyChange(value) {
     console.log(value);
@@ -111,5 +116,29 @@ export class NewAccountPage {
   typeChange(value) {
     console.log(value);
   }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  format(valString) {
+    if (!valString) {
+      return '';
+    }
+    let val = valString.toString();
+    const parts = this.unFormat(val).split(this.DECIMAL_SEPARATOR);
+    return parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, this.GROUP_SEPARATOR) + (!parts[1] ? '' : this.DECIMAL_SEPARATOR + parts[1]);
+  };
+
+  unFormat(val) {
+      if (!val) {
+          return '';
+      }
+      val = val.replace(/^0+/, '');
+  
+      if (this.GROUP_SEPARATOR === ',') {
+          return val.replace(/,/g, '');
+      } else {
+          return val.replace(/\./g, '');
+      }
+  };
 
 }

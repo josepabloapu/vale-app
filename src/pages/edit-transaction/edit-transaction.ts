@@ -108,24 +108,40 @@ export class EditTransactionPage {
   	this.transactionProvider.updateTransaction(this.editTransaction)
       .then(
         res => {
-          let response = res as any;
-          this.navCtrl.setRoot(TransactionsPage);
           this.messageProvider.displaySuccessMessage('message-update-transaction-success')
+          this.navCtrl.setRoot(TransactionsPage);  
         }, 
         err => this.messageProvider.displayErrorMessage('message-update-transaction-error')
       );
   }
 
-  private deleteTransaction(transaction: TransactionModel) {
-    this.transactionProvider.deleteTransaction(transaction)
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  public deleteAlertMessage() {
+    this.messageProvider.displayAlertConfirmMessage('are-you-sure?').then( res => {
+      if (this.messageProvider.flag == true) {
+        this.deleteTransaction()
+        this.messageProvider.flag = false;
+      }
+    });
+  }
+
+  private deleteTransaction() {
+    this.transactionProvider.deleteTransaction(this.editTransaction)
       .then(
         res => {
-          this.navCtrl.setRoot(TransactionsPage);
           this.messageProvider.displaySuccessMessage('message-delete-transaction-success')
+          this.navCtrl.setRoot(TransactionsPage);
         }, 
         err => this.messageProvider.displayErrorMessage('message-delete-transaction-error')
       );
   }
+
+  private doNothing() {
+
+  }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
   accountChange(value) {
     this.editTransaction.currency = this.accountProvider.mappedAccountsById[value].currency

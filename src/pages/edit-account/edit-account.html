@@ -1,77 +1,61 @@
-<!--
-  Generated template for the EditAccountPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
     <ion-title>{{ 'edit-account' | translate:param }}</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="deleteAccount(editAccount)">
+      <button ion-button icon-only (click)="deleteAlertMessage()">
         <ion-icon name="trash"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content>
-
   <ion-list>
-
     <ion-item no-lines color="white">
       <ion-label>{{ 'name' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="editAccount.name"></ion-input>
     </ion-item>
-  
     <ion-item no-lines color="light">
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="editAccount.description"></ion-input>
     </ion-item>
-  
     <ion-item no-lines color="white">
       <ion-label>{{ 'currency' | translate:param }}</ion-label>
-      <ion-select [(ngModel)]="editAccount.currency">
-        <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.name | translate:param }}</ion-option>
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editAccount.currency">
+        <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.code | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-  
     <ion-item no-lines color="light">
       <ion-label>{{ 'type' | translate:param }}</ion-label>
-      <ion-select [(ngModel)]="editAccount.type">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editAccount.type">
         <ion-option *ngFor="let accountType of accountTypes" [value]="accountType._id">{{ accountType.code | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-  
     <ion-item no-lines color="white">
       <ion-label>{{ 'initial-balance' | translate:param }}</ion-label>
-      <ion-input text-right type="number" value="" [(ngModel)]="editAccount.initialBalance"></ion-input>
+      <ion-input 
+        text-right type="tel"
+        [ngClass]="'amount'"
+        [(ngModel)]="tempAmount" 
+        pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
+        (input)="tempAmount = format(tempAmount)"></ion-input>
     </ion-item>
-  
     <ion-item no-lines color="secondary">
-      {{ 'Stats' | translate:param }}
+      {{ 'stats' | translate:param }}
     </ion-item>
-  
     <ion-item no-lines color="white">
       <p>{{ 'cumulative-inflow' | translate:param }}</p>
       <p item-end>{{ editAccount.cumulativeInflow | number:0 }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
     </ion-item>
-  
     <ion-item no-lines color="light">
       <p>{{ 'cumulative-outflow' | translate:param }}</p>
       <p item-end>{{ editAccount.cumulativeOutflow | number:0 }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
     </ion-item>
-  
     <ion-item no-lines color="white">
       <p>{{ 'balance' | translate:param }}</p>
       <p item-end>{{ editAccount.balance | number:0 }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
     </ion-item>
-
   </ion-list>
-
 </ion-content>
 
 <ion-footer>
@@ -79,22 +63,3 @@
     <ion-title style="text-align:center;text-transform:uppercase;">{{ 'update-account' | translate:param }}</ion-title >
   </button>
 </ion-footer>
-
-
-  <!-- <div padding> -->
-    <!-- <ion-card> -->
-      <!-- <ion-item no-lines color="secondary">{{ 'stats' | translate:param }}</ion-item> -->
-      <!-- <ion-item no-lines color="white"> -->
-        <!-- <p>{{ 'cumulative-inflow' | translate:param }}</p> -->
-        <!-- <p item-end> {{ editAccount.cumulativeInflow | number:0 }} </p> -->
-      <!-- </ion-item> -->
-      <!-- <ion-item no-lines color="light"> -->
-        <!-- <p>{{ 'cumulative-outflow' | translate:param }}</p> -->
-        <!-- <p item-end> {{ editAccount.cumulativeOutflow | number:0 }} </p> -->
-      <!-- </ion-item> -->
-      <!-- <ion-item no-lines color="white"> -->
-        <!-- <p>{{ 'balance' | translate:param }}</p> -->
-        <!-- <p item-end> {{ editAccount.balance | number:0 }} </p> -->
-      <!-- </ion-item> -->
-    <!-- </ion-card> -->
-  <!-- </div> -->

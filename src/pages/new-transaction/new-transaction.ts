@@ -3,12 +3,12 @@ import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
+// import { ViewChild } from '@angular/core';
 
 import { TransactionModel } from '../../models/transaction/transaction';
 import { CurrencyModel } from '../../models/currency/currency';
 import { CategoryModel } from '../../models/category/category';
 import { AccountModel } from '../../models/account/account';
-
 import { MessageProvider } from '../../providers/message/message';
 import { MeProvider } from '../../providers/me/me';
 import { ApiProvider } from '../../providers/api/api';
@@ -16,15 +16,7 @@ import { CurrencyProvider } from '../../providers/currency/currency';
 import { CategoryProvider } from '../../providers/category/category';
 import { TransactionProvider } from '../../providers/transaction/transaction';
 import { AccountProvider } from '../../providers/account/account';
-
 import { TransactionsPage } from '../../pages/transactions/transactions';
-
-/**
- * Generated class for the NewTransactionPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -32,6 +24,8 @@ import { TransactionsPage } from '../../pages/transactions/transactions';
   templateUrl: 'new-transaction.html',
 })
 export class NewTransactionPage {
+
+  // @ViewChild('myInput') myInput;
 
   DECIMAL_SEPARATOR=".";
   GROUP_SEPARATOR=",";
@@ -76,6 +70,10 @@ export class NewTransactionPage {
   ionViewDidLoad() {
     // console.log('ionViewDidLoad NewTransactionPage');
   }
+
+  // ngAfterViewChecked() {
+  //   this.myInput.setFocus()
+  // }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
@@ -150,8 +148,8 @@ export class NewTransactionPage {
               this.loadAccounts();
             }
           );
-          this.navCtrl.setRoot(TransactionsPage);
           this.messageProvider.displaySuccessMessage('message-new-transaction-success');
+          this.navCtrl.setRoot(TransactionsPage);
         }, 
         err => {
           this.messageProvider.displayErrorMessage('message-new-transaction-error');
@@ -177,8 +175,8 @@ export class NewTransactionPage {
     this.newTransactionOut.currency = this.accountProvider.mappedAccountsById[this.accountOut].currency
     this.newTransactionIn.currency = this.accountProvider.mappedAccountsById[this.accountIn].currency
 
-    this.newTransactionOut.description = this.newTransaction.description + ' (transfer to ' + this.accountProvider.mappedAccountsById[this.accountIn].name + ')';
-    this.newTransactionIn.description = this.newTransaction.description + ' (transfer from ' + this.accountProvider.mappedAccountsById[this.accountOut].name + ')';
+    this.newTransactionOut.description = this.newTransaction.description + ' >>> ' + this.accountProvider.mappedAccountsById[this.accountIn].name + ')';
+    this.newTransactionIn.description = this.newTransaction.description + ' <<< ' + this.accountProvider.mappedAccountsById[this.accountOut].name + ')';
 
     this.newTransactionOut.type = 'expense';
     this.newTransactionIn.type = 'income';
@@ -199,8 +197,8 @@ export class NewTransactionPage {
                     this.loadAccounts();
                   }
                 );
-                this.navCtrl.setRoot(TransactionsPage);
                 this.messageProvider.displaySuccessMessage('message-new-two-transactions-success');
+                this.navCtrl.setRoot(TransactionsPage);
               }, 
               err => {
                 this.messageProvider.displayErrorMessage('message-new-two-transaction-error');

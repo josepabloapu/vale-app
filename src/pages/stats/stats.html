@@ -21,7 +21,7 @@
       {{ 'balance-per-category' | translate:param }} {{ '(this-month)' | translate:param }}
     </ion-item>
     <ion-item no-lines *ngFor="let category of expenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
-      <p>{{ dataSortedByDate['this-month'].categoriesBalance[category.name].name | translate:param}} ({{dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number:0 }})</p>
+      <p>{{ dataSortedByDate['this-month'].categoriesBalance[category.name].name | translate:param}} ({{dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number:0 }} {{ getCurrencyReadableObject(user.currency).code }})</p>
       <p item-end>{{dataSortedByDate['this-month'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
     </ion-item>
 
@@ -29,7 +29,7 @@
       {{ 'balance-per-category' | translate:param }} {{ '(this-year)' | translate:param }}
     </ion-item>
     <ion-item no-lines *ngFor="let category of expenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
-      <p>{{ dataSortedByDate['this-year'].categoriesBalance[category.name].name | translate:param}} ({{dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number:0 }})</p>
+      <p>{{ dataSortedByDate['this-year'].categoriesBalance[category.name].name | translate:param}} ({{dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number:0 }} {{ getCurrencyReadableObject(user.currency).code }})</p>
       <p item-end>{{dataSortedByDate['this-year'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
     </ion-item>
 

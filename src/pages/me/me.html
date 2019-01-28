@@ -1,11 +1,4 @@
-<!--
-  Generated template for the MePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
     <ion-title>@{{ user.username }}</ion-title>
     <ion-buttons end>
@@ -17,7 +10,6 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 
@@ -25,30 +17,30 @@
 
 	<ion-list>
 
-    <ion-item no-lines color="light">
+    <ion-item no-lines color="secondary">
         {{ 'personal-info' | translate:param }}
     </ion-item>
 
-    <ion-item no-lines>
+    <ion-item no-lines color="white">
    	  <p>{{ 'name' | translate:param }}</p>
    	  <p item-end>{{ user.name }}</p>
    	</ion-item>
 
-    <ion-item no-lines>
+    <ion-item no-lines color="light">
       <p>{{ 'email' | translate:param }}</p>
       <p item-end>{{ user.email }}</p>
     </ion-item>
 
-   	<ion-item no-lines color="light">
+   	<ion-item no-lines color="secondary">
         {{ 'config' | translate:param }}
     </ion-item>
 
-    <ion-item no-lines>
+    <ion-item no-lines color="white">
       <p>{{ 'currency' | translate:param }}</p>
       <p item-end>{{ getCurrencyReadableName(user.currency).code }}</p>
     </ion-item> 
 
-    <ion-item no-lines>
+    <ion-item no-lines color="light">
       <p>{{ 'language' | translate:param }}</p>
       <p item-end>{{ user.language | translate:param }}</p>
     </ion-item>

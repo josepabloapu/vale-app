@@ -9,6 +9,7 @@ import { WelcomePage } from '../pages/welcome/welcome';
   templateUrl: 'app.html'
 })
 export class MyApp {
+  
   rootPage:any = WelcomePage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translateService: TranslateService) {
@@ -23,20 +24,5 @@ export class MyApp {
       splashScreen.hide();
     });
   }
-
-  // private initTranslate()
-  // {
-  //    // Set the default language for translation strings, and the current language.
-  //    this.translateService.setDefaultLang('en');
-
-  //    if (this.translateService.getBrowserLang() !== undefined)
-  //    {
-  //        this.translateService.use(this.translateService.getBrowserLang());
-  //    }
-  //    else
-  //    {
-  //        this.translateService.use('en'); // Set your language here
-  //    }
-  // }
 
 }

@@ -1,97 +1,73 @@
-<!--
-  Generated template for the NewTransactionPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
     <ion-title>{{ 'new-transaction' | translate:param }}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content id="page-new-transaction">
-
   <ion-list>
-
     <ion-item no-lines color="white">
       <ion-label>{{ 'amount' | translate:param }}</ion-label>
       <ion-input 
-        text-right type="tel"
+        autofocus text-right type="tel"
         [ngClass]="'amount'"
         [(ngModel)]="tempAmount" 
         pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
         (input)="tempAmount = format(tempAmount)"></ion-input>
     </ion-item>
-
     <ion-item no-lines color="light">
       <ion-label>{{ 'type' | translate:param }}</ion-label>
-      <ion-select [(ngModel)]="newTransaction.type" (ionChange)="typeChange($event)">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.type" (ionChange)="typeChange($event)">
         <ion-option value="income" selected="true">{{ 'income' | translate:param }}</ion-option>
         <ion-option value="expense"> {{ 'expense' | translate:param }} </ion-option>
         <ion-option value="transfer"> {{ 'transfer' | translate:param }} </ion-option>
       </ion-select>
     </ion-item>
-
     <ion-item no-lines color="white" *ngIf="newTransaction.type === 'income'">
       <ion-label>{{ 'category' | translate:param }}</ion-label>
-      <ion-select [(ngModel)]="newTransaction.category">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.category">
         <ion-option *ngFor="let category of incomeCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-  
     <ion-item no-lines color="white" *ngIf="newTransaction.type === 'expense'">
       <ion-label>{{ 'category' | translate:param }}</ion-label>
-      <ion-select [(ngModel)]="newTransaction.category">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.category">
         <ion-option *ngFor="let category of expenseCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-  
     <ion-item  no-lines color="light" *ngIf="isTransfer === false">
       <ion-label>{{ 'account' | translate:param }}</ion-label>
-      <ion-select [(ngModel)]="newTransaction.account" #account (ionChange)="accountChange(account._value)">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.account" #account (ionChange)="accountChange(account._value)">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-  
     <ion-item  no-lines color="white" *ngIf="isTransfer === true">
       <ion-label>{{ 'account-out' | translate:param }}</ion-label>
-      <ion-select [(ngModel)]="accountOut">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountOut">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-  
     <ion-item no-lines color="light" *ngIf="isTransfer === true">
       <ion-label>{{ 'account-in' | translate:param }}</ion-label>
-      <ion-select [(ngModel)]="accountIn">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountIn">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-  
     <ion-item no-lines color="white">
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="newTransaction.description"></ion-input>
     </ion-item>
-
   </ion-list>
-
 </ion-content>
 
 <ion-footer>
-
   <button *ngIf="newTransaction.type === 'income'" ion-item no-lines color="secondary" (click)="createTransaction()">
     <ion-title style="text-align:center;text-transform:uppercase;">{{ 'create-transaction' | translate:param }}</ion-title >
   </button>
-
   <button *ngIf="newTransaction.type === 'expense'" ion-item no-lines color="danger" (click)="createTransaction()">
     <ion-title style="text-align:center;text-transform:uppercase;">{{ 'create-transaction' | translate:param }}</ion-title >
   </button>
-
   <button *ngIf="newTransaction.type === 'transfer'" ion-item no-lines color="energized" (click)="createTransferTransaction()">
     <ion-title style="text-align:center;text-transform:uppercase;">{{ 'create-transaction' | translate:param }}</ion-title >
   </button>
-
 </ion-footer>

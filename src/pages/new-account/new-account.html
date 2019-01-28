@@ -1,53 +1,41 @@
-<!--
-  Generated template for the NewAccountPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
     <ion-title>{{ 'new-account' | translate:param }}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content>
-
   <ion-list>
-
-  <ion-item no-lines color="white">
-    <ion-label>{{ 'name' | translate:param }}</ion-label>
-    <ion-input text-right type="string" value="" [(ngModel)]="newAccount.name"></ion-input>
-  </ion-item>
-
-  <ion-item no-lines color="light">
-    <ion-label>{{ 'description' | translate:param }}</ion-label>
-    <ion-input text-right type="string" value="" [(ngModel)]="newAccount.description"></ion-input>
-  </ion-item>
-
-	<ion-item no-lines color="white">
-    <ion-label>{{ 'currency' | translate:param }}</ion-label>
-    <ion-select [(ngModel)]="newAccount.currency">
-      <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.name | translate:param }}</ion-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item no-lines color="light">
-    <ion-label>{{ 'type' | translate:param }}</ion-label>
-    <ion-select [(ngModel)]="newAccount.type">
-      <ion-option *ngFor="let accountType of accountTypes" [value]="accountType._id">{{ accountType.code | translate:param }}</ion-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item no-lines color="white">
-    <ion-label>{{ 'initial-balance' | translate:param }}</ion-label>
-    <ion-input text-right type="number" value="" [(ngModel)]="newAccount.initialBalance"></ion-input>
-  </ion-item>
-
+    <ion-item no-lines color="white">
+      <ion-label>{{ 'name' | translate:param }}</ion-label>
+      <ion-input autofocus text-right type="string" value="" [(ngModel)]="newAccount.name"></ion-input>
+    </ion-item>
+    <ion-item no-lines color="light">
+      <ion-label>{{ 'description' | translate:param }}</ion-label>
+      <ion-input text-right type="string" value="" [(ngModel)]="newAccount.description"></ion-input>
+    </ion-item>
+    <ion-item no-lines color="white">
+      <ion-label>{{ 'currency' | translate:param }}</ion-label>
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newAccount.currency">
+        <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.code | translate:param }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item no-lines color="light">
+      <ion-label>{{ 'type' | translate:param }}</ion-label>
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newAccount.type">
+        <ion-option *ngFor="let accountType of accountTypes" [value]="accountType._id">{{ accountType.code | translate:param }}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item no-lines color="white">
+      <ion-label>{{ 'initial-balance' | translate:param }}</ion-label>
+      <ion-input 
+        text-right type="tel"
+        [ngClass]="'amount'"
+        [(ngModel)]="tempAmount" 
+        pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
+        (input)="tempAmount = format(tempAmount)"></ion-input>
+    </ion-item>
   </ion-list>
-
 </ion-content>
 
 <ion-footer>

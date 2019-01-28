@@ -2,13 +2,20 @@
 	background: color($colors, primary);
 	color: color($colors, light);
 	h1{
-    	font-size: 56px;
+    	font-size: 48px;
     	margin-top: 50px;
     	text-align: center;
+        font-weight: bold;
     }
     h2{
     	font-size: 14px;
     	margin-top: 30px;
     	text-align: center;
+    }
+    div {
+        background: url(../assets/imgs/welcome.png);
+        background-repeat: no-repeat;
+        background-position: right top;
+        background-size: 140%;
     }
 }

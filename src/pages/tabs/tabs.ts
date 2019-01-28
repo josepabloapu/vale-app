@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TransactionsPage } from '../transactions/transactions';
 import { AccountsPage } from '../accounts/accounts';
 import { StatsPage } from '../stats/stats';
+import { EditUserPage } from '../edit-user/edit-user';
 import { MePage } from '../me/me';
 
 import { ApiProvider } from '../../providers/api/api';
@@ -26,7 +27,7 @@ export class TabsPage {
   tab1Root = TransactionsPage;
   tab2Root = AccountsPage;
   tab3Root = StatsPage;
-  tab4Root = MePage;
+  tab4Root = EditUserPage;
 
   constructor(
     private translateService: TranslateService,

@@ -44,7 +44,7 @@ export class TransactionsPage {
     this.getCategories();
     this.getAccounts();
     this.getTransactions();
-    
+    // console.log({TRANSACTION_PAGE: this})
   }
 
   ionViewDidLoad() {
@@ -117,15 +117,15 @@ export class TransactionsPage {
       );
   }
 
-  getCategoryReadableObject(id: string) {
+  getCategoryReadableObject(id: string = '') {
     return this.categoryProvider.mappedCategoriesById[id];
   }
 
-  getAccountReadableObject(id: string) {
+  getAccountReadableObject(id: string = '') {
     return this.accountProvider.mappedAccountsById[id];
   }
 
-  getCurrencyReadableObject(id: string) {
+  getCurrencyReadableObject(id: string = '') {
     return this.currencyProvider.mappedCurrenciesById[id];
   }
 

@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { UserModel } from '../../models/user/user';
 import { CategoryModel } from '../../models/category/category';
 
+import { MeProvider } from '../../providers/me/me';
 import { StatsProvider } from '../../providers/stats/stats';
 import { CategoryProvider } from '../../providers/category/category';
+import { CurrencyProvider } from '../../providers/currency/currency';
 
 import {Pipe, PipeTransform} from '@angular/core';
 
@@ -15,6 +18,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class StatsPage {
 
+  private user: UserModel;
 	public categories: CategoryModel [];
   public incomeCategories: CategoryModel [];
   public expenseCategories: CategoryModel [];
@@ -26,11 +30,13 @@ export class StatsPage {
 
   constructor(
   	public navCtrl: NavController, 
-  	public navParams: NavParams, 
+  	public navParams: NavParams,
+    private meProvider: MeProvider,
   	private statsProvider: StatsProvider,
-  	private categoryProvider: CategoryProvider) 
+  	private categoryProvider: CategoryProvider,
+    private currencyProvider: CurrencyProvider) 
   {
-    this.dataSortedByDate = {};
+    this.updateStatsProviderUser(this.meProvider.user); 
   	this.loadCategories();
     this.initStats();
     // console.log({PAGE_STATS: this})
@@ -45,8 +51,11 @@ export class StatsPage {
     self.getStats();
     setTimeout(function() {
       self.getStats();
-    }, 1000);
-    
+    }, 1000); 
+  }
+
+  public updateStatsProviderUser(user: UserModel) {
+    this.user = user
   }
 
   /* CATEGORIES */
@@ -70,6 +79,8 @@ export class StatsPage {
   private initStats() {
 
     var self = this;
+
+    this.dataSortedByDate = {};
 
     this.dataSortedByDate['this-month'] = { 
       categoriesBalance: {}, 
@@ -114,6 +125,10 @@ export class StatsPage {
   private getStats() {
     this.computeExpenseCategoriesByDate('this-month')
     this.computeExpenseCategoriesByDate('this-year')
+  }
+
+  public getCurrencyReadableObject(id: string) {
+    return this.currencyProvider.mappedCurrenciesById[id];
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */

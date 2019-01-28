@@ -5,42 +5,34 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
     <ion-title>{{ 'login' | translate:param }}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-<ion-content padding>
-
-  <ion-grid>
-
-    <ion-row>
-      <ion-col>  
-        <ion-item>
-          <ion-label fixed>{{ 'username' | translate:param }}</ion-label>
-          <ion-input type="text" value="" [(ngModel)]="userData.username"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <ion-label fixed>{{ 'password' | translate:param }}</ion-label>
-          <ion-input type="password" [(ngModel)]="userData.password"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-  </ion-grid>
-
+<ion-content>
+  <div padding>
+    <ion-card>
+      <ion-item no-lines color="primary">
+        {{ 'add-your-credentials' | translate:param }}
+      </ion-item>
+      <ion-item no-lines color="white">
+        <ion-label>{{ 'username' | translate:param }}</ion-label>
+        <ion-input type="text" value="" [(ngModel)]="userData.username"></ion-input>
+      </ion-item>
+      <ion-item no-lines color="light">
+        <ion-label>{{ 'password' | translate:param }}</ion-label>
+        <ion-input type="password" [(ngModel)]="userData.password"></ion-input>
+      </ion-item>
+    </ion-card>
+  </div>
 </ion-content>
 
 <ion-footer>
-
-  <button ion-button full large strong color="primary" (click)="login()">{{ 'login' | translate:param }}</button>
-  <button ion-button full large strong color="light" (click)="register()">{{ 'not-yet-an-user-?' | translate:param }}</button>
-
+  <button ion-item no-lines color="secondary" (click)="login()">
+    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'login' | translate:param }}</ion-title >
+  </button>
+  <button ion-item no-lines color="dark" (click)="register()">
+    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'not-yet-an-user-?' | translate:param }}</ion-title >
+  </button>
 </ion-footer>
