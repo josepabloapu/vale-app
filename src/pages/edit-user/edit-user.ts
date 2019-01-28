@@ -8,6 +8,7 @@ import { MessageProvider } from '../../providers/message/message';
 import { MeProvider } from '../../providers/me/me';
 import { AccountProvider } from '../../providers/account/account';
 import { CurrencyProvider } from '../../providers/currency/currency';
+import { ExportProvider } from '../../providers/export/export';
 import { WelcomePage } from '../../pages/welcome/welcome';
 import { MePage } from '../../pages/me/me';
 
@@ -38,7 +39,8 @@ export class EditUserPage {
     public authProvider: AuthProvider,
     public meProvider: MeProvider,
   	public accountProvider: AccountProvider,
-    public currencyProvider: CurrencyProvider) 
+    public currencyProvider: CurrencyProvider,
+    public exportProvider: exportProvider) 
   {
   	this.loadCurrencies();
   	this.loadUser();

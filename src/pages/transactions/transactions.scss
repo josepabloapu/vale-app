@@ -8,11 +8,13 @@ page-transactions {
 	}
 
 	.income {
-	  color: green
+	  color: color($colors, nature);
+	  font-weight: bold;
 	}
 
 	.expense {
-	  color: color($colors, danger)
+	  color: color($colors, dark);
+	  font-weight: bold;
 	}
 	
 }

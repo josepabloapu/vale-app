@@ -25,7 +25,7 @@
       <p *ngIf="getAccountReadableObject(transaction.account) != null">{{ getCategoryReadableObject(transaction.category).name | translate:param }} - {{ getAccountReadableObject(transaction.account).name }}</p>
       <p *ngIf="getAccountReadableObject(transaction.account) == null">
         {{ getCategoryReadableObject(transaction.category).name | translate:param }}
-        <ion-badge color="danger">{{ 'removed-account' | translate:param }}</ion-badge>
+        <ion-badge color="energized">{{ 'removed-account' | translate:param }}</ion-badge>
       </p>
       <p>{{ transaction.description }}</p>
       <p item-end>{{ transaction.date | date: 'yyyy/MM/dd' }}</p>

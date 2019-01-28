@@ -49,7 +49,9 @@
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="editTransaction.description"></ion-input>
     </ion-item>
-
+    <ion-item no-lines color="energized" *ngIf="getAccountReadableObject(editTransaction.account) == null">
+      <p text-wrap>{{ 'warning-transaction-account-removed' | translate:param }}</p>
+    </ion-item>
   </ion-list>
 </ion-content>
 

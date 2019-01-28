@@ -53,7 +53,7 @@ export class EditTransactionPage {
     this.loadCategories();
     this.loadAccounts();
   	this.getTransaction();
-    // console.log({EDIT_TRANSACTION: this})
+    console.log({EDIT_TRANSACTION: this})
   }
 
   ionViewDidLoad() {
@@ -196,5 +196,19 @@ export class EditTransactionPage {
           return val.replace(/\./g, '');
       }
   };
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  getCategoryReadableObject(id: string = '') {
+    return this.categoryProvider.mappedCategoriesById[id];
+  }
+
+  getAccountReadableObject(id: string = '') {
+    return this.accountProvider.mappedAccountsById[id];
+  }
+
+  getCurrencyReadableObject(id: string = '') {
+    return this.currencyProvider.mappedCurrenciesById[id];
+  }
 
 }
