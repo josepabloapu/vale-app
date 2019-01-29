@@ -21,7 +21,7 @@
 
   <ion-list>
     <button ion-item no-lines *ngFor="let transaction of transactions; let $i = index" (click)="editTransaction(transaction)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
-      <h2 [ngClass]="(transaction.type == 'expense')? 'expense' : 'income'">{{ transaction.amount | number:0 }} {{ getCurrencyReadableObject(transaction.currency).code }} </h2>
+      <h2 [ngClass]="(getCategoryReadableObject(transaction.category).name == 'Transfer')? 'transfer' : (transaction.type == 'expense')? 'expense' : 'income'">{{ transaction.amount | number:0 }} {{ getCurrencyReadableObject(transaction.currency).code }} </h2>
       <p *ngIf="getAccountReadableObject(transaction.account) != null">{{ getCategoryReadableObject(transaction.category).name | translate:param }} - {{ getAccountReadableObject(transaction.account).name }}</p>
       <p *ngIf="getAccountReadableObject(transaction.account) == null">
         {{ getCategoryReadableObject(transaction.category).name | translate:param }}

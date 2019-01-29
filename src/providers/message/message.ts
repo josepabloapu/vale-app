@@ -3,9 +3,6 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertController, ToastController } from 'ionic-angular';
 
-import { EditAccountPage } from '../../pages/edit-account/edit-account';
-import { AccountProvider } from '../../providers/account/account';
-
 @Injectable()
 export class MessageProvider {
 
@@ -13,10 +10,9 @@ export class MessageProvider {
 
   constructor(
     public http: HttpClient, 
-    public translateService: TranslateService, 
     public toastCtrl: ToastController,
-    public alertController: AlertController,
-    public accountProvider: AccountProvider) 
+    public translateService: TranslateService, 
+    public alertController: AlertController) 
   {
     this.flag = false;
   }

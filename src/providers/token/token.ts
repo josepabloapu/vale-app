@@ -34,7 +34,6 @@ export class TokenProvider {
           });
         }
       }).then(() => {
-        console.log("saving token: " + token)
         this.storage.set('token', token);
         this.token = token;
         resolve();

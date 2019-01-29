@@ -7,6 +7,11 @@ page-transactions {
 	  background: color($colors, light);
 	}
 
+	.transfer {
+	  color: color($colors, energized);
+	  font-weight: bold;
+	}
+
 	.income {
 	  color: color($colors, nature);
 	  font-weight: bold;

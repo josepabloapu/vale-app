@@ -175,8 +175,8 @@ export class NewTransactionPage {
     this.newTransactionOut.currency = this.accountProvider.mappedAccountsById[this.accountOut].currency
     this.newTransactionIn.currency = this.accountProvider.mappedAccountsById[this.accountIn].currency
 
-    this.newTransactionOut.description = this.newTransaction.description + ' >>> ' + this.accountProvider.mappedAccountsById[this.accountIn].name + ')';
-    this.newTransactionIn.description = this.newTransaction.description + ' <<< ' + this.accountProvider.mappedAccountsById[this.accountOut].name + ')';
+    this.newTransactionOut.description = this.newTransaction.description + ' >>> ' + this.accountProvider.mappedAccountsById[this.accountIn].name;
+    this.newTransactionIn.description = this.newTransaction.description + ' <<< ' + this.accountProvider.mappedAccountsById[this.accountOut].name;
 
     this.newTransactionOut.type = 'expense';
     this.newTransactionIn.type = 'income';
