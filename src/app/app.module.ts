@@ -2,11 +2,8 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-
-
-import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-
+import { IonicStorageModule } from '@ionic/storage';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -38,6 +35,7 @@ import { AccountTypeProvider } from '../providers/account-type/account-type';
 import { MeProvider } from '../providers/me/me';
 import { TokenProvider } from '../providers/token/token';
 import { MessageProvider } from '../providers/message/message';
+import { ExportProvider } from '../providers/export/export';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -106,7 +104,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AccountTypeProvider,
     MeProvider,
     TokenProvider,
-    MessageProvider
+    MessageProvider,
+    ExportProvider
   ]
 })
 export class AppModule {}

@@ -1,39 +1,44 @@
-<!--
-  Generated template for the StatsPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
     <ion-title>{{ 'stats' | translate:param }}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content id="page-stats">
-
   <ion-list>
-
     <ion-item no-lines color="secondary">
-      {{ 'balance-per-category' | translate:param }} {{ '(this-month)' | translate:param }}
+      <p style="font-weight: bold;">{{ 'balance-per-category' | translate:param }}
+      <p item-end style="font-weight: bold;">{{ 'this-month' | translate:param }}</p>
     </ion-item>
-    <ion-item no-lines *ngFor="let category of expenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
-      <p>{{ dataSortedByDate['this-month'].categoriesBalance[category.name].name | translate:param}} ({{dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number:0 }} {{ getCurrencyReadableObject(user.currency).code }})</p>
-      <p item-end>{{dataSortedByDate['this-month'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
-    </ion-item>
-
+    <ion-item no-lines color="white">
+      <ion-row *ngFor="let category of expenseCategories">
+        <ion-col>
+          <p>{{ dataSortedByDate['this-month'].categoriesBalance[category.name].name | translate:param}}</p>
+        </ion-col>
+        <ion-col text-right>
+          <p>{{dataSortedByDate['this-month'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
+        </ion-col>
+        <ion-col text-right>
+          <p>{{dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+        </ion-col>
+      </ion-row>
+    </ion-item>  
     <ion-item no-lines color="secondary">
-      {{ 'balance-per-category' | translate:param }} {{ '(this-year)' | translate:param }}
+      <p style="font-weight: bold;">{{ 'balance-per-category' | translate:param }}
+      <p item-end style="font-weight: bold;">{{ 'this-year' | translate:param }}</p>
     </ion-item>
-    <ion-item no-lines *ngFor="let category of expenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
-      <p>{{ dataSortedByDate['this-year'].categoriesBalance[category.name].name | translate:param}} ({{dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number:0 }} {{ getCurrencyReadableObject(user.currency).code }})</p>
-      <p item-end>{{dataSortedByDate['this-year'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
-    </ion-item>
-
+    <ion-item no-lines color="white">
+      <ion-row *ngFor="let category of expenseCategories">
+        <ion-col>
+          <p>{{ dataSortedByDate['this-year'].categoriesBalance[category.name].name | translate:param}}</p>
+        </ion-col>
+        <ion-col text-right>
+          <p>{{dataSortedByDate['this-year'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
+        </ion-col>
+        <ion-col text-right>
+          <p>{{dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+        </ion-col>
+      </ion-row>
+    </ion-item> 
   </ion-list>
-
-
 </ion-content>

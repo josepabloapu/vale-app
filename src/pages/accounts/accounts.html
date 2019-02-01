@@ -9,30 +9,53 @@
   </ion-navbar>
 </ion-header>
 
-
 <ion-content id="page-accounts">
-
-  <div padding>
-    <ion-card>
-      <ion-item no-lines color="primary">
-        {{ 'net-assets' | translate:param }}
-        <p item-end>{{ netWorth | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
-      </ion-item>
-      <ion-item no-lines >
-        <p>{{ 'assets' | translate:param }}</p>
-        <p item-end>{{assets | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
-      </ion-item>
-      <ion-item no-lines >
-        <p>{{ 'liabilities' | translate:param }}</p>
-        <p item-end>{{liabilities | number:0 }} {{ getCurrencyReadableObject(user.currency).code }} </p>
-      </ion-item>
-    </ion-card>
+  <ion-item no-lines color="secondary">
+    <p style="font-weight: bold;">{{ 'net-worth' | translate:param }}</p>
+    <p item-end style="font-weight: bold;">{{ netWorth | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+  </ion-item>
+  <ion-item no-lines color="white">
+    <p>{{ 'assets' | translate:param }}</p>
+    <p item-end>{{assets | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+  </ion-item>
+  <ion-item no-lines color="light">
+    <p>{{ 'liabilities' | translate:param }}</p>
+    <p item-end>{{liabilities | number:0 }} {{ getCurrencyReadableObject(user.currency).code }} </p>
+  </ion-item>
+  <div *ngIf="debitAccountsTrue === true">
+    <ion-item no-lines color="secondary">
+      <p style="font-weight: bold;">{{ 'debit-cards' | translate:param }}</p>
+    </ion-item>
+    <button ion-item no-lines *ngFor="let account of debitAccounts; let $i = index" (click)="editAccount(account)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+      <p>{{account.name}}</p>
+      <p item-end>{{account.balance | number:0 }} {{getCurrencyReadableObject(account.currency).code}}</p>
+    </button>
   </div>
-  
-  <button ion-item no-lines *ngFor="let account of accounts; let $i = index" (click)="editAccount(account)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
-    <p>{{ account.name }}</p>
-    <ion-badge>{{ getAccountType(account.type) | translate:param }}</ion-badge>
-    <p item-end>{{ account.balance | number:0 }} {{ getCurrencyReadableObject(account.currency).code }} </p>
-  </button>
-
+  <div *ngIf="creditAccountsTrue === true">
+    <ion-item no-lines color="secondary">
+      <p style="font-weight: bold;">{{ 'credit-cards' | translate:param }}</p>
+    </ion-item>
+    <button ion-item no-lines *ngFor="let account of creditAccounts; let $i = index" (click)="editAccount(account)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+      <p>{{account.name}}</p>
+      <p item-end>{{account.balance | number:0 }} {{getCurrencyReadableObject(account.currency).code}}</p>
+    </button>
+  </div>
+  <div *ngIf="investmentAccountsTrue === true">
+    <ion-item no-lines color="secondary">
+      <p style="font-weight: bold;">{{ 'investments' | translate:param }}</p>
+    </ion-item>
+    <button ion-item no-lines *ngFor="let account of investmentAccounts; let $i = index" (click)="editAccount(account)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+      <p>{{account.name}}</p>
+      <p item-end>{{account.balance | number:0 }} {{getCurrencyReadableObject(account.currency).code}}</p>
+    </button>
+  </div>
+  <div *ngIf="loanAccountsTrue === true">
+    <ion-item no-lines color="secondary">
+      <p style="font-weight: bold;">{{ 'loans' | translate:param }}</p>
+    </ion-item>
+    <button ion-item no-lines *ngFor="let account of loanAccounts; let $i = index" (click)="editAccount(account)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+      <p>{{account.name}}</p>
+      <p item-end>{{account.balance | number:0 }} {{getCurrencyReadableObject(account.currency).code}}</p>
+    </button>
+  </div>
 </ion-content>

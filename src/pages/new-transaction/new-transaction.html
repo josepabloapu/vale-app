@@ -57,6 +57,9 @@
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="newTransaction.description"></ion-input>
     </ion-item>
+    <ion-item no-lines color="energized" *ngIf="newTransaction.account == null">
+      <p text-wrap>{{ 'warning-transaction-no-account' | translate:param }}</p>
+    </ion-item>
   </ion-list>
 </ion-content>
 

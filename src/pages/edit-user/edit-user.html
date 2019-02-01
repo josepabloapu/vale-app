@@ -11,9 +11,6 @@
 
 <ion-content>
 	<ion-list>
-    <ion-item no-lines color="secondary">
-        {{ 'personal-info' | translate:param }}
-    </ion-item>
     <ion-item no-lines color="white">
       <ion-label>{{ 'name' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="editUser.name" (blur)="changeName($event.target.value)"></ion-input>
@@ -21,9 +18,6 @@
     <ion-item no-lines color="light">
       <ion-label>{{ 'email' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="editUser.email" (blur)="changeEmail($event.target.value)"></ion-input>
-    </ion-item>
-    <ion-item no-lines color="secondary">
-        {{ 'config' | translate:param }}
     </ion-item>
     <ion-item no-lines color="white">
       <ion-label>{{ 'currency' | translate:param }}</ion-label>
@@ -38,6 +32,14 @@
         <ion-option value="es">{{ 'es' | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-
+    <ion-item no-lines color="secondary">
+      <p style="font-weight: bold;">{{ 'import-and-export' | translate:param }}</p>
+    </ion-item>
+    <button ion-item no-lines color="white" (click)="export()">
+      <p>{{ 'export-to-file' | translate:param }}</p> 
+    </button>
+    <button ion-item no-lines color="light" (click)="import()" [disabled]="true">
+      <p>{{ 'import-to-file' | translate:param }}</p>
+    </button>
   </ion-list>
 </ion-content>

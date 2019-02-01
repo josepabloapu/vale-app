@@ -6,8 +6,10 @@
 	"you-can-edit-them-later-on":"Puede cambiarlas posteriormente",
 	"ok":"OK",
 	"cancel":"Cancelar",
-	"yes":"Sí",
 	"no":"No",
+	"yes":"Sí",
+	"exit":"Salir",
+	"copy":"Copiar",
 	"are-you-sure?":"¿Está seguro que quiere realizar esta acción?",
 	"initial-balance":"Balance inicial",
 	"currency":"Moneda",
@@ -82,6 +84,8 @@
 	"Education":"Educación",
 	"Travel":"Viaje",
 	"Transfer":"Transferencia",
+	"this-month":"Este mes",
+	"this-year":"Este año",
 	"(this-month)":"(este mes)",
 	"(this-year)":"(este año)",
 	"removed-account":"Cuenta eliminada",
@@ -110,5 +114,6 @@
 	"message-update-user-success":"El usuario ha sido actualizado",
 	"message-update-user-error":"El usuario no fue actualizado",
 	"message-loggin-error":"No se pudo ingresar, verifique sus credenciales",
-	"warning-transaction-account-removed": "La cuenta de esta transación fue eliminada, por lo tanto no se puede editar, pero sí eliminar."
+	"warning-transaction-account-removed": "La cuenta de esta transación fue eliminada, por lo tanto no se puede editar, pero sí eliminar.",
+	"warning-transaction-no-account":"Usted no tiene una cuenta aún, favor cree una primero."
 }

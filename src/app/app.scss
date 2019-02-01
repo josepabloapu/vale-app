@@ -15,16 +15,23 @@
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
 
-.successToast{
-  div{
+.odd {
+  background: white;
+}
+.even {
+  background: color($colors, light);
+}
+
+.successToast {
+  div {
     background-color:color($colors, dark)!important;
     font-weight: normal;
     text-align: center !important;
   }
 }
 
-.errorToast{
-  div{
+.errorToast {
+  div {
     background-color:color($colors, dark)!important;
     font-weight: normal;
     text-align: center !important;

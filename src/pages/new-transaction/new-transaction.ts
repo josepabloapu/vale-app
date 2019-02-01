@@ -132,7 +132,9 @@ export class NewTransactionPage {
     this.newTransaction.type = 'expense';
     this.newTransaction.description = '';
     this.newTransaction.category = this.categoryProvider.mappedCategoriesByName['Living']._id;
-    this.newTransaction.account = this.accountProvider.accounts[0]._id;
+    if(this.accountProvider.accounts.length != 0) {
+      this.newTransaction.account = this.accountProvider.accounts[0]._id;
+    }
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */

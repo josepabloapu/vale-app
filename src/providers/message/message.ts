@@ -77,7 +77,7 @@ export class MessageProvider {
     })
   }
 
-  public presentAlertConfirm(message, no, yes) {
+  private presentAlertConfirm(message, no, yes) {
     return new Promise((resolve) => {
       const alert = this.alertController.create({
         message: message,
@@ -86,13 +86,13 @@ export class MessageProvider {
             text: no,
             role: 'cancel',
             cssClass: 'secondary',
-            handler: (cb) => {
+            handler: () => {
               this.flag = false
               resolve()
             }
           }, {
             text: yes,
-            handler: (cb) => {
+            handler: () => {
               this.flag = true
               resolve()
             }

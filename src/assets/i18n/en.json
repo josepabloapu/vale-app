@@ -6,8 +6,10 @@
 	"you-can-edit-them-later-on":"You can edit them later on",
 	"ok":"OK",
 	"cancel":"Cancel",
-	"yes":"Yes",
 	"no":"No",
+	"yes":"Yes",
+	"exit":"Exit",
+	"copy":"Copy",
 	"are-you-sure?":"Are you sure you want to perform this action?",
 	"initial-balance":"Initial Balance",
 	"currency":"Currency",
@@ -82,6 +84,8 @@
 	"Education":"Education",
 	"Travel":"Travel",
 	"Transfer":"Transfer",
+	"this-month":"This Month",
+	"this-year":"This Year",
 	"(this-month)":"(this month)",
 	"(this-year)":"(this year)",
 	"removed-account":"Removed account",
@@ -110,5 +114,6 @@
 	"message-update-user-success":"The user has been updated",
 	"message-update-user-error":"Unable to update the user",
 	"message-loggin-error":"Unable to loggin",
-	"warning-transaction-account-removed": "The account of this transaction was removed, therefore the transaction is not able to be edited but removed."
+	"warning-transaction-account-removed": "The account of this transaction was removed, therefore the transaction is not able to be edited but removed.",
+	"warning-transaction-no-account":"You have no accounts yet, please create one first."
 }
