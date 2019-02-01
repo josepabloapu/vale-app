@@ -77,6 +77,20 @@ export class MessageProvider {
     })
   }
 
+  public displayAlertCustomMessage(message, buttonTitle1, buttonTitle2) {
+    return new Promise((resolve) => {
+      let object: any = {}
+      this.translateThreeStrings(message, buttonTitle1, buttonTitle2).then(
+        result => {
+          object = result;
+          this.presentAlertConfirm(object.string1, object.string2, object.string3).then( res => {
+            resolve(res)
+          })
+        }
+      )
+    })
+  }
+
   private presentAlertConfirm(message, no, yes) {
     return new Promise((resolve) => {
       const alert = this.alertController.create({

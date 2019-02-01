@@ -111,7 +111,7 @@ export class EditUserPage {
 
   private export() {
     this.exportProvider.getCSV().then( result => {
-      this.messageProvider.presentAlertConfirm(result, 'exit', 'copy');
+      this.messageProvider.displayAlertCustomMessage(result, 'exit', 'copy');
     })
   }
 
