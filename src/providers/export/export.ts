@@ -10,6 +10,7 @@ import { CategoryProvider } from '../../providers/category/category';
 import { AccountProvider } from '../../providers/account/account';
 import { TransactionProvider } from '../../providers/transaction/transaction';
 import { MessageProvider } from '../../providers/message/message';
+import { File } from '@ionic-native/file';
 
 @Injectable()
 export class ExportProvider {
@@ -23,7 +24,8 @@ export class ExportProvider {
 
   constructor(
     public platform: Platform,
-  	public http: HttpClient,
+    public http: HttpClient,
+    public file: File,
   	public currencyProvider: CurrencyProvider,
   	public categoryProvider: CategoryProvider,
   	public accountProvider: AccountProvider,
@@ -107,10 +109,28 @@ export class ExportProvider {
   		this.parseData().then( res => {
   			let csv = '';
     	  this.convertToCSV(res).then( csv => {
+          console.log(csv);
     	  	resolve(csv);
     	  });
   		});
   	})
+  }
+
+  public createCVS() {
+    return new Promise((resolve) => {
+      this.file.createDir(this.file.externalRootDirectory, 'Transactions', true)
+        .then( (directory) => {
+          this.getCSV().then( (csv: string) => {
+            this.file.writeFile(directory.toURL(), 'data.csv', csv, {replace: true}).then( _ => {
+              alert('Data has been exported. ' + directory.toURL() + 'data.csv');
+              resolve()
+            })
+          })
+        })
+        .catch( (err) => {
+          alert('Directory was not created');
+        })
+    })
   }
 
   private parseTransactions() {
