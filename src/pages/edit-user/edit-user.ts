@@ -110,9 +110,7 @@ export class EditUserPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   private export() {
-    this.exportProvider.getCSV().then( result => {
-      this.messageProvider.displayAlertCustomMessage(result, 'exit', 'copy');
-    })
+    this.exportProvider.createCVS();
   }
 
   private import() {

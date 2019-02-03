@@ -6,6 +6,19 @@
 
 <ion-content id="page-stats">
   <ion-list>
+      <ion-item no-lines color="secondary">
+      <p style="font-weight: bold;">{{ 'expenses' | translate:param }}
+    </ion-item>
+    <ion-item no-lines color="white">
+      <ion-row *ngFor="let term of dateTerms">
+        <ion-col>
+          <p>{{ term | translate:param }}</p>
+        </ion-col>
+        <ion-col text-right>
+          <p>{{ dataSortedByDate[term].expenseBalance | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+        </ion-col>
+      </ion-row>
+    </ion-item>
     <ion-item no-lines color="secondary">
       <p style="font-weight: bold;">{{ 'balance-per-category' | translate:param }}
       <p item-end style="font-weight: bold;">{{ 'this-month' | translate:param }}</p>
