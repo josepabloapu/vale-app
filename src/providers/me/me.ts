@@ -98,4 +98,16 @@ export class MeProvider {
     });
   }
 
+  public deleteRemoteUser(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.deleteRequest('/users/me', true)
+        .subscribe(
+          res => {
+            this.removeLocalUser();
+            resolve(<any>res);
+          },
+          err => reject(<any>err));
+    });
+  }
+
 }
