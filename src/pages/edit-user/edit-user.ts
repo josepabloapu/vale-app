@@ -3,20 +3,12 @@ import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { UserModel } from '../../models/user/user';
 import { CurrencyModel } from '../../models/currency/currency';
-import { AuthProvider } from '../../providers/auth/auth';
 import { MessageProvider } from '../../providers/message/message';
 import { UserProvider } from '../../providers/user/user';
 import { AccountProvider } from '../../providers/account/account';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { ExportProvider } from '../../providers/export/export';
 import { WelcomePage } from '../../pages/welcome/welcome';
-
-/**
- * Generated class for the EditUserPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -35,14 +27,13 @@ export class EditUserPage {
   	public navParams: NavParams,
   	private translateService: TranslateService,
     private messageProvider: MessageProvider,
-    public authProvider: AuthProvider,
     public userProvider: UserProvider,
   	public accountProvider: AccountProvider,
     public currencyProvider: CurrencyProvider,
     public exportProvider: ExportProvider) 
   {
-  	this.loadCurrencies();
-  	this.loadUser();
+  	this.setCurrencies(this.currencyProvider.currencies);
+  	this.setUser(this.userProvider.user);
     // console.log({PAGE_EDITUSER: this})
   }
 
@@ -50,19 +41,13 @@ export class EditUserPage {
     // console.log('ionViewDidLoad EditUserPage');
   }
 
-  public loadCurrencies() {
-    this.updateCurrencies(this.currencyProvider.currencies);
-  }
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
-  public loadUser() {
-    this.updateUserProvider(this.userProvider.user);
-  }
-
-  private updateCurrencies(currencies: CurrencyModel []) {
+  private setCurrencies(currencies: CurrencyModel []) {
     this.currencies = currencies;
   }
 
-  private updateUserProvider(user: UserModel) {
+  private setUser(user: UserModel) {
     this.editUser = user;
     this.tempUser = UserModel.GetNewInstance();
     this.tempUser.name = this.editUser.name;
@@ -95,12 +80,11 @@ export class EditUserPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   private updateUser() {
-
     this.userProvider.updateRemoteUser(this.editUser)
     .then(
-        res => {
+        (user: UserModel) => {
           this.messageProvider.displaySuccessMessage('message-update-user-success')
-          this.loadUser();
+          this.setUser(user);
         }, 
         err => this.messageProvider.displayErrorMessage('message-update-user-error')
       );
@@ -119,7 +103,7 @@ export class EditUserPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   public logout() {
-    this.authProvider.logout().then( promise => {
+    this.userProvider.logout().then( promise => {
       this.app.getRootNav().setRoot(WelcomePage);
     });
   }

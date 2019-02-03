@@ -120,7 +120,7 @@
 	"message-update-transaction-error":"Unable to update the transaction",
 	"message-update-user-success":"The user has been updated",
 	"message-update-user-error":"Unable to update the user",
-	"message-loggin-error":"Unable to loggin",
+	"message-loggin-error":"Unable to login",
 	"warning-transaction-account-removed": "The account of this transaction was removed, therefore the transaction is not able to be edited but removed.",
 	"warning-transaction-no-account":"You have no accounts yet, please create one first."
 }

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
-import { CurrencyModel } from '../../models/currency/currency';
-import { CategoryModel } from '../../models/category/category';
-import { AccountModel } from '../../models/account/account';
+// import { CurrencyModel } from '../../models/currency/currency';
+// import { CategoryModel } from '../../models/category/category';
+// import { AccountModel } from '../../models/account/account';
 import { TransactionModel } from '../../models/transaction/transaction';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { CategoryProvider } from '../../providers/category/category';
@@ -15,9 +15,9 @@ import { File } from '@ionic-native/file';
 @Injectable()
 export class ExportProvider {
 
-  private currencies: CurrencyModel [];
-  private categories: CategoryModel [];
-  private accounts: AccountModel [];
+  // private currencies: CurrencyModel [];
+  // private categories: CategoryModel [];
+  // private accounts: AccountModel [];
   private transactions: TransactionModel [];
   private parsedTransactions: TransactionModel [];
   private headerFields: string [];
@@ -32,46 +32,34 @@ export class ExportProvider {
   	public transactionProvider: TransactionProvider,
   	public messageProvider: MessageProvider) 
   {
-    this.headerFields = ['type', 'account', 'category', 'amount', 'date','description'];
-    this.loadCurrencies();
-    this.loadCategories();
-    this.loadAccounts();
-    this.loadTransactions();
+    this.initializeVariables();
     // console.log({EXPORT_PROVIDER: this})
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  public updateCurrencies(currencies: CurrencyModel []) {
-    this.currencies = currencies;
+  private initializeVariables() {
+    this.headerFields = ['type', 'account', 'category', 'amount', 'date','description'];
+    // this.setCurrencies(this.currencyProvider.currencies);
+    // this.setCategories(this.categoryProvider.categories);
+    // this.setAccounts(this.accountProvider.accounts);
+    this.setTransactions(this.transactionProvider.transactions);
   }
 
-  private loadCurrencies() {
-    this.updateCurrencies(this.currencyProvider.currencies);
-  }
+  // public setCurrencies(currencies: CurrencyModel []) {
+  //   this.currencies = currencies;
+  // }
 
-  public updateCategories(categories: CategoryModel []) {
-    this.categories = categories;
-  }
+  // public setCategories(categories: CategoryModel []) {
+  //   this.categories = categories;
+  // }
 
-  private loadCategories() {
-    this.updateCategories(this.categoryProvider.categories);
-  }
+  // public setAccounts(accounts: AccountModel []) {
+  //   this.accounts = accounts;
+  // }
 
-  public updateAccounts(accounts: AccountModel []) {
-    this.accounts = accounts;
-  }
-
-  private loadAccounts() {
-    this.updateAccounts(this.accountProvider.accounts);
-  }
-
-  private updateTransactions(transactions: TransactionModel []) {
+  private setTransactions(transactions: TransactionModel []) {
     this.transactions = transactions;
-  }
-
-  private loadTransactions() {
-    this.updateTransactions(this.transactionProvider.transactions);
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -89,27 +77,12 @@ export class ExportProvider {
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
+  /* Exporting data */
 
-  private parseData() {
+  public computeCSV() {
   	return new Promise((resolve) => {
-  		this.loadCurrencies();
-    	this.loadCategories();
-    	this.loadAccounts();
-    	this.loadTransactions();
-    	this.parseTransactions().then( data => {
-    		resolve(data)
-    	});
-  	})
-  }
-
-  /* ---------------------------------------------------------------------------------------------------------------- */
-
-  public getCSV() {
-  	return new Promise((resolve) => {
-  		this.parseData().then( res => {
-  			let csv = '';
-    	  this.convertToCSV(res).then( csv => {
-          console.log(csv);
+  		this.parseData().then( transactions => {
+    	  this.convertToCSV(transactions).then( csv => {
     	  	resolve(csv);
     	  });
   		});
@@ -120,10 +93,10 @@ export class ExportProvider {
     return new Promise((resolve) => {
       this.file.createDir(this.file.externalRootDirectory, 'Transactions', true)
         .then( (directory) => {
-          this.getCSV().then( (csv: string) => {
+          this.computeCSV().then( (csv: string) => {
             this.file.writeFile(directory.toURL(), 'data.csv', csv, {replace: true}).then( _ => {
               alert('Data has been exported. ' + directory.toURL() + 'data.csv');
-              resolve()
+              resolve();
             })
           })
         })
@@ -131,6 +104,33 @@ export class ExportProvider {
           alert('Directory was not created');
         })
     })
+  }
+
+  private  convertToCSV(transactions) {
+  	return new Promise((resolve) => {
+  	  var csv: any = '';
+  	  var line: any = '';
+  	  for (let transaction of transactions) {
+  	  	line = '';
+  	  	for (let field of this.headerFields) {
+  	  		line += transaction[field] + '; '
+  	  	}
+  	  	csv += line + '\r\n';
+  	  }
+  	  resolve(csv);
+  	})
+  }
+
+  private parseData() {
+  	return new Promise((resolve) => {
+  		// this.loadCurrencies();
+    	// this.loadCategories();
+    	// this.loadAccounts();
+    	this.setTransactions(this.transactionProvider.transactions);
+    	this.parseTransactions().then( data => {
+    		resolve(data)
+    	});
+  	})
   }
 
   private parseTransactions() {
@@ -151,26 +151,9 @@ export class ExportProvider {
   	})
   }
 
-  private  convertToCSV(transactions) {
-  	return new Promise((resolve) => {
-  	  var csv: any = '';
-  	  var line: any = '';
-  	  for (let transaction of transactions) {
-  	  	line = '';
-  	  	for (let field of this.headerFields) {
-  	  		line += transaction[field] + '; '
-  	  	}
-  	  	csv += line + '\r\n';
-  	  }
-  	  resolve(csv);
-  	})
-  }
-
-  /* ---------------------------------------------------------------------------------------------------------------- */
-
   private refreshTransactions() {
     this.transactionProvider.getTransactions().then( res => {
-        this.updateTransactions(TransactionModel.ParseFromArray(res));
+        this.setTransactions(TransactionModel.ParseFromArray(res));
       },
       err => {
       	this.messageProvider.displaySuccessMessage('message-get-transactions-error');

@@ -16,11 +16,11 @@
   </ion-item>
   <ion-item no-lines color="white">
     <p>{{ 'assets' | translate:param }}</p>
-    <p item-end>{{assets | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+    <p item-end>{{ assets | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
   </ion-item>
   <ion-item no-lines color="light">
     <p>{{ 'liabilities' | translate:param }}</p>
-    <p item-end>{{liabilities | number:0 }} {{ getCurrencyReadableObject(user.currency).code }} </p>
+    <p item-end>{{ liabilities | number:0 }} {{ getCurrencyReadableObject(user.currency).code }} </p>
   </ion-item>
   <div *ngIf="debitAccountsTrue === true">
     <ion-item no-lines color="secondary">

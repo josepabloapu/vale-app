@@ -40,6 +40,8 @@ export class WelcomePage {
     // console.log('ionViewDidLoad WelcomePage');
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
   public login(){
     this.navCtrl.push(LoginPage, { }, { animate: false });
   }
@@ -47,6 +49,8 @@ export class WelcomePage {
   public register(){
     this.navCtrl.push(RegisterPage, { }, { animate: false });
   }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
   private tryToLogin() {
     this.userProvider.getLocalUser().then((user: UserModel) => {

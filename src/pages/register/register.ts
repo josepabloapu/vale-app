@@ -15,8 +15,8 @@ import { LoginPage } from '../login/login';
 })
 export class RegisterPage {
 
-  private newUser: UserModel;
-  private currencies: CurrencyModel [];
+  public newUser: UserModel;
+  public currencies: CurrencyModel [];
 
   constructor(
     public navCtrl: NavController, 
@@ -26,7 +26,7 @@ export class RegisterPage {
     private userProvider: UserProvider, 
     private currencyProvider: CurrencyProvider) 
   {
-    this.loadCurrencies();
+    this.settCurrencies(this.currencyProvider.currencies);
     this.newUser = UserModel.GetNewInstance();
     this.newUser.currency = this.currencies[0]._id;
     this.newUser.language = 'en';
@@ -36,19 +36,15 @@ export class RegisterPage {
     // console.log('ionViewDidLoad RegisterPage');
   }
 
-  private updateCurrencies(currencies: CurrencyModel []) {
+  private settCurrencies(currencies: CurrencyModel []) {
     this.currencies = currencies;
   }
 
-  private loadCurrencies() {
-    this.updateCurrencies(this.currencyProvider.currencies);
-  }
-
-  login() {
+  public login() {
     this.navCtrl.push(LoginPage, { }, { animate: false });
   }
 
-  register() {
+  public register() {
     this.userProvider.register(this.newUser).then((result) => {
       this.messageProvider.displaySuccessMessage('message-new-user-success')
       this.navCtrl.push(LoginPage, { }, { animate: false });
@@ -57,7 +53,7 @@ export class RegisterPage {
     });
   }
 
-  changeLanguage(value) {
+  public changeLanguage(value) {
     this.newUser.language = value;
     this.translateService.use(value);
   }

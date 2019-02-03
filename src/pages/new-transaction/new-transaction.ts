@@ -1,17 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
-import { ActionSheetController } from 'ionic-angular';
-import { TranslateService } from '@ngx-translate/core';
 // import { ViewChild } from '@angular/core';
-
 import { TransactionModel } from '../../models/transaction/transaction';
 import { CurrencyModel } from '../../models/currency/currency';
 import { CategoryModel } from '../../models/category/category';
 import { AccountModel } from '../../models/account/account';
 import { MessageProvider } from '../../providers/message/message';
 import { UserProvider } from '../../providers/user/user';
-import { ApiProvider } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { CategoryProvider } from '../../providers/category/category';
 import { TransactionProvider } from '../../providers/transaction/transaction';
@@ -57,9 +52,9 @@ export class NewTransactionPage {
     this.accountOut = '';
     this.accountIn = '';
     this.tempAmount = ''
-    this.loadAccounts();
-    this.loadCurrencies();
-    this.loadCategories();
+    this.setAccounts(this.accountProvider.accounts);
+    this.setCurrencies(this.currencyProvider.currencies);
+    this.setCategories(this.categoryProvider.categories);
     this.initTransaction();
     // console.log({NEW_TRANSACTION: this})
   }
@@ -74,50 +69,17 @@ export class NewTransactionPage {
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  /* CURRENCIES */
-  /**************/
-
-  public updateCurrencies(currencies: CurrencyModel []) {
+  public setCurrencies(currencies: CurrencyModel []) {
     this.currencies = currencies;
   }
-
-  private getDefaultCurrency() {
-    return 0
-  }
-
-  private loadCurrencies() {
-    this.updateCurrencies(this.currencyProvider.currencies);
-  }
-
-  /* CATEGORIES */
-  /************/
-
-  public updateCategories(categories: CategoryModel []) {
+ 
+  public setCategories(categories: CategoryModel []) {
     this.categories = categories;
     this.computeCategoriesPerType();
   }
 
-  private getDefaultCategory() {
-    return 0
-  }
-
-  private loadCategories() {
-    this.updateCategories(this.categoryProvider.categories);
-  }
-
-  /* ACCOUNTS */
-  /************/
-
-  public updateAccounts(accounts: AccountModel []) {
+  public setAccounts(accounts: AccountModel []) {
     this.accounts = accounts;
-  }
-
-  private getDefaultAccount() {
-    return 0
-  }
-
-  private loadAccounts() {
-    this.updateAccounts(this.accountProvider.accounts);
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -141,14 +103,9 @@ export class NewTransactionPage {
     this.transactionProvider.createTransaction(this.newTransaction)
       .then(
         res => {
-          this.getTransactions();
-          this.accountProvider.getAccounts().then(
-            res => {
-              this.loadAccounts();
-            }
-          );
           this.messageProvider.displaySuccessMessage('message-new-transaction-success');
           this.navCtrl.setRoot(TransactionsPage);
+         
         }, 
         err => {
           this.messageProvider.displayErrorMessage('message-new-transaction-error');
@@ -190,20 +147,14 @@ export class NewTransactionPage {
           this.transactionProvider.createTransaction(this.newTransactionIn)
             .then(
               res => {
-                this.getTransactions();
-                this.accountProvider.getAccounts().then(
-                  res => {
-                    this.loadAccounts();
-                  }
-                );
                 this.messageProvider.displaySuccessMessage('message-new-two-transactions-success');
                 this.navCtrl.setRoot(TransactionsPage);
+                
               }, 
               err => {
                 this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
               }
             );
-
         }, 
         err => {
           this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
@@ -211,24 +162,9 @@ export class NewTransactionPage {
       );
   }
 
-  private getTransactions() {
-    this.transactionProvider.getTransactions()
-    .then(
-      res => {
-        // console.log(res)
-      },
-      err => {
-        // console.log(err)
-      });
-  }
-
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  currencyChange(value) {
-    console.log(value);
-  }
-
-  typeChange(value) {
+  public typeChange(value) {
     if (value == 'transfer') {
       this.isTransfer = true;
       this.newTransaction.category = this.categoryProvider.mappedCategoriesByName['Transfer']._id;
@@ -243,7 +179,7 @@ export class NewTransactionPage {
     }
   }
 
-  accountChange(value) {
+  public accountChange(value) {
     this.newTransaction.currency = this.accountProvider.mappedAccountsById[value].currency
   }
 
@@ -270,7 +206,7 @@ export class NewTransactionPage {
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  format(valString) {
+  public format(valString) {
     if (!valString) {
       return '';
     }
@@ -279,7 +215,7 @@ export class NewTransactionPage {
     return parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, this.GROUP_SEPARATOR) + (!parts[1] ? '' : this.DECIMAL_SEPARATOR + parts[1]);
   };
 
-  unFormat(val) {
+  private unFormat(val) {
       if (!val) {
           return '';
       }

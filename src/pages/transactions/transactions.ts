@@ -45,6 +45,8 @@ export class TransactionsPage {
     this.getTransactions();
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
   public updateAccounts(accounts: AccountModel []) {
     this.accounts = accounts;
   }
@@ -87,6 +89,9 @@ export class TransactionsPage {
     );
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+  /* Functions to be used with transactions page */
+
   public createTransaction() {
     this.navCtrl.push(NewTransactionPage, { }, { animate: false });
   }
@@ -106,6 +111,9 @@ export class TransactionsPage {
         err => this.messageProvider.displayErrorMessage('message-delete-transaction-error')
       );
   }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+  /* Functions to be used with angular expressions */
 
   public getCategoryReadableObject(id: string = '') {
     return this.categoryProvider.mappedCategoriesById[id];

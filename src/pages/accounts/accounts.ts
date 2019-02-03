@@ -1,24 +1,14 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
+import { IonicPage, NavController } from 'ionic-angular';
 import { UserModel } from '../../models/user/user';
 import { AccountModel } from '../../models/account/account';
-
 import { MessageProvider } from '../../providers/message/message';
 import { UserProvider } from '../../providers/user/user';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { AccountProvider } from '../../providers/account/account';
-import { AccountTypeProvider } from '../../providers/account-type/account-type';
-
+import { AccountTypeProvider } from '../../providers/account-type/account-type'
 import { NewAccountPage } from '../../pages/new-account/new-account';
 import { EditAccountPage } from '../../pages/edit-account/edit-account';
-
-/**
- * Generated class for the AccountsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -27,35 +17,29 @@ import { EditAccountPage } from '../../pages/edit-account/edit-account';
 })
 export class AccountsPage {
 
-  private user: UserModel;
+  public user;
+  public debitAccountsTrue: Boolean;
+  public creditAccountsTrue: Boolean;
+  public investmentAccountsTrue: Boolean;
+  public loanAccountsTrue: Boolean;
+  public netWorth: number;
+  public assets: number;
+  public liabilities: number;
   private accounts: AccountModel [];
-
   private debitAccounts: AccountModel [];
   private creditAccounts: AccountModel [];
   private investmentAccounts: AccountModel [];
   private loanAccounts: AccountModel [];
-  private cashAccounts: AccountModel [];
-
-  private debitAccountsTrue: Boolean;
-  private creditAccountsTrue: Boolean;
-  private investmentAccountsTrue: Boolean;
-  private loanAccountsTrue: Boolean;
-  private cashAccountsTrue: Boolean;
-
-  private netWorth: number;
-  private assets: number;
-  private liabilities: number;
 
   constructor(
-    public navCtrl: NavController, 
-    public navParams: NavParams, 
+    private navCtrl: NavController, 
     private messageProvider: MessageProvider,
     private userProvider: UserProvider, 
     private currencyProvider: CurrencyProvider,
-    public accountProvider: AccountProvider,
+    private accountProvider: AccountProvider,
     private accountTypeProvider: AccountTypeProvider) 
-  {
-    this.updateAccountsProviderUser(this.userProvider.user);    
+  {    
+    this.setUser(this.userProvider.user)
     this.getAccounts();
     // console.log({PAGE_ACCOUNTS: this})
   }
@@ -68,49 +52,50 @@ export class AccountsPage {
     this.getAccounts();
   }
 
-  public updateAccountsProviderUser(user: UserModel) {
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  public setUser(user: UserModel) : void {
     this.user = user
   }
 
-  public getAccountType(id: string) : string {
-    let accountType = this.accountTypeProvider.mappedAccountTypesById[id].code
-    return accountType;
+  /* ---------------------------------------------------------------------------------------------------------------- */
+  
+  private getAccounts() {
+  	this.accountProvider.getAccounts()
+  	.then(
+  		res => {
+  			this.updateAccounts(AccountModel.ParseFromArray(res));
+  		},
+  		err => {
+        this.messageProvider.displayErrorMessage('message-get-accounts-error');
+      }
+    );
   }
 
-  public updateAccounts(accounts: AccountModel []) {
+  private updateAccounts(accounts: AccountModel []) {
     this.accounts = accounts;
     this.computeAccountsPerType();
     this.computeNetWorth();
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
   public getCurrencyReadableObject(id: string) {
     return this.currencyProvider.mappedCurrenciesById[id];
   }
 
-  private getAccounts() {
-  	this.accountProvider.getAccounts()
-  	.then(
-  		res => {
-  			this.updateAccounts(AccountModel.ParseFromArray(res))
-  		},
-  		err => this.messageProvider.displayErrorMessage('message-get-accounts-error')
-    );
-  }
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
-  private createAccount() {
+  public createAccount() {
     this.navCtrl.push(NewAccountPage, { }, { animate: false });
   }
 
-  private markAccountAsDefault(accout: AccountModel) {
-
-  }
-
-  private editAccount(account: AccountModel) {
+  public editAccount(account: AccountModel) {
     this.accountProvider.updateCurrentAccount(account);
     this.navCtrl.push(EditAccountPage, { }, { animate: false });
   }
 
-  private deleteAccount(account: AccountModel) {
+  public deleteAccount(account: AccountModel) {
     this.accountProvider.deleteAccount(account)
       .then(
         res => {
@@ -121,56 +106,50 @@ export class AccountsPage {
       );
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
   private computeAccountsPerType() {
     
     this.debitAccounts = [];
     this.creditAccounts = [];
     this.investmentAccounts = [];
     this.loanAccounts = [];
-    this.cashAccounts = [];
 
     this.debitAccountsTrue = false;
     this.creditAccountsTrue = false;
     this.investmentAccountsTrue = false;
     this.loanAccountsTrue = false;
-    this.cashAccountsTrue = false;
 
+    var self = this;
     this.accounts.forEach(function(element) {
       switch(element.type) {
-        case this.accountTypeProvider.mappedAccountTypesByCode['debit-card']._id:
-          this.debitAccounts.push(element);
-          this.debitAccountsTrue = true;
+        case self.accountTypeProvider.mappedAccountTypesByCode['debit-card']._id:
+          self.debitAccounts.push(element);
+          self.debitAccountsTrue = true;
           break;
-        case this.accountTypeProvider.mappedAccountTypesByCode['credit-card']._id:
-          this.creditAccounts.push(element);
-          this.creditAccountsTrue = true;
+        case self.accountTypeProvider.mappedAccountTypesByCode['credit-card']._id:
+          self.creditAccounts.push(element);
+          self.creditAccountsTrue = true;
           break;
-        case this.accountTypeProvider.mappedAccountTypesByCode['investment']._id:
-          this.investmentAccounts.push(element);
-          this.investmentAccountsTrue = true;
+        case self.accountTypeProvider.mappedAccountTypesByCode['investment']._id:
+          self.investmentAccounts.push(element);
+          self.investmentAccountsTrue = true;
           break;
-        case this.accountTypeProvider.mappedAccountTypesByCode['loan']._id:
-          this.loanAccounts.push(element);
-          this.loanAccountsTrue = true;
-          break;
-        case this.accountTypeProvider.mappedAccountTypesByCode['cash']._id:
-          this.cashAccounts.push(element);
-          this.cashAccountsTrue = true;
+        case self.accountTypeProvider.mappedAccountTypesByCode['load']._id:
+          self.loanAccounts.push(element);
+          self.loanAccountsTrue = true;
           break;
         default:
-          // code block
+          alert("Invalid account type");
       }
-    }, this);
+    });
+    
   }
 
   private computeNetWorth() {
 
     this.assets = 0;
     this.liabilities = 0;
-
-    this.cashAccounts.forEach(function(element) {
-      this.assets = this.assets + element.balance;
-    }, this);
 
     this.debitAccounts.forEach(function(element) {
       this.assets = this.assets + element.balance;

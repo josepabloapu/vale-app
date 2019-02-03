@@ -21,12 +21,12 @@ export class EditTransactionPage {
   DECIMAL_SEPARATOR=".";
   GROUP_SEPARATOR=",";
 
-	private editTransaction: TransactionModel;
-  private currencies: CurrencyModel [];
+  public currencies: CurrencyModel [];
+  public incomeCategories: CategoryModel [];
+  public expenseCategories: CategoryModel [];
+  public accounts: AccountModel [];
+  private editTransaction: TransactionModel;
   private categories: CategoryModel [];
-  private incomeCategories: CategoryModel [];
-  private expenseCategories: CategoryModel [];
-  private accounts: AccountModel [];
   private tempAmount: string;
 
   constructor(
@@ -39,61 +39,40 @@ export class EditTransactionPage {
   	private transactionProvider: TransactionProvider,
   	private accountProvider: AccountProvider) 
   {
-  	this.loadCurrencies();
-    this.loadCategories();
-    this.loadAccounts();
-  	this.getTransaction();
-    console.log({EDIT_TRANSACTION: this})
+  	this.setCurrencies(this.currencyProvider.currencies);
+    this.setCategories(this.categoryProvider.categories);
+    this.setAccounts(this.accountProvider.accounts);
+  	this.setTransaction(this.transactionProvider.currentTransaction);
+    // console.log({EDIT_TRANSACTION: this})
   }
 
   ionViewDidLoad() {
     // console.log('ionViewDidLoad EditAccountPage');
   }
 
-  /* CURRENCIES */
-  /**************/
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
-  public updateCurrencies(currencies: CurrencyModel []) {
+  public setCurrencies(currencies: CurrencyModel []) {
     this.currencies = currencies;
   }
 
-  private loadCurrencies() {
-    this.updateCurrencies(this.currencyProvider.currencies);
-  }
-
-  /* CATEGORIES */
-  /************/
-
-  public updateCategories(categories: CategoryModel []) {
+  public setCategories(categories: CategoryModel []) {
     this.categories = categories;
     this.computeCategoriesPerType();
   }
 
-  private loadCategories() {
-    this.updateCategories(this.categoryProvider.categories);
-  }
-
-  /* ACCOUNTS */
-  /************/
-
-  public updateAccounts(accounts: AccountModel []) {
+  public setAccounts(accounts: AccountModel []) {
     this.accounts = accounts;
   }
 
-  private loadAccounts() {
-    this.updateAccounts(this.accountProvider.accounts);
-  }
-
-  public updateTransactionLocalObject(transaction: TransactionModel) {
+  private setTransaction(transaction: TransactionModel) {
     this.tempAmount = this.format(transaction.amount);
     this.editTransaction = transaction;
   }
 
-  private getTransaction() {
-  	this.updateTransactionLocalObject(this.transactionProvider.currentTransaction)
-  }
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
-  private updateTransaction() {
+  public updateTransaction() {
     this.editTransaction.amount = this.unFormat(this.tempAmount);
   	this.transactionProvider.updateTransaction(this.editTransaction)
       .then(
@@ -127,17 +106,13 @@ export class EditTransactionPage {
       );
   }
 
-  private doNothing() {
-
-  }
-
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  accountChange(value) {
+  public accountChange(value) {
     this.editTransaction.currency = this.accountProvider.mappedAccountsById[value].currency
   }
 
-  typeChange(value) {
+  public typeChange(value) {
     if (value == 'expense') {
       this.editTransaction.category = this.categoryProvider.mappedCategoriesByName['Living']._id;
     }
@@ -145,6 +120,8 @@ export class EditTransactionPage {
       this.editTransaction.category = this.categoryProvider.mappedCategoriesByName['Wage']._id;
     }
   }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
   private computeCategoriesPerType() {
     
@@ -165,7 +142,7 @@ export class EditTransactionPage {
     }, this);
   }
 
-  format(valString) {
+  private format(valString) {
     if (!valString) {
       return '';
     }
@@ -174,7 +151,7 @@ export class EditTransactionPage {
     return parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, this.GROUP_SEPARATOR) + (!parts[1] ? '' : this.DECIMAL_SEPARATOR + parts[1]);
   };
 
-  unFormat(val) {
+  private unFormat(val) {
       if (!val) {
           return '';
       }
@@ -189,15 +166,15 @@ export class EditTransactionPage {
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  getCategoryReadableObject(id: string = '') {
+  public getCategoryReadableObject(id: string = '') {
     return this.categoryProvider.mappedCategoriesById[id];
   }
 
-  getAccountReadableObject(id: string = '') {
+  public getAccountReadableObject(id: string = '') {
     return this.accountProvider.mappedAccountsById[id];
   }
 
-  getCurrencyReadableObject(id: string = '') {
+  public getCurrencyReadableObject(id: string = '') {
     return this.currencyProvider.mappedCurrenciesById[id];
   }
 

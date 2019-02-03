@@ -20,10 +20,10 @@ export class EditAccountPage {
   DECIMAL_SEPARATOR=".";
   GROUP_SEPARATOR=",";
 
-	private editAccount: AccountModel;
-  private currencies: CurrencyModel [];
-  private accountTypes: AccountTypeModel [];
-  private tempAmount: string;
+	public editAccount: AccountModel;
+  public currencies: CurrencyModel [];
+  public accountTypes: AccountTypeModel [];
+  public tempAmount: string;
 
   constructor(
   	public navCtrl: NavController, 
@@ -33,47 +33,41 @@ export class EditAccountPage {
     public accountTypeProvider: AccountTypeProvider, 
   	public accountProvider: AccountProvider) 
   {
-  	this.loadCurrencies();
-    this.loadAccountTypes();
-  	this.getAccount();
+  	this.setCurrencies(this.currencyProvider.currencies);
+    this.setAccountTypes(this.accountTypeProvider.accountTypes);
+  	this.setAccount(this.accountProvider.currentAccount);
   }
 
   ionViewDidLoad() {
     // console.log('ionViewDidLoad EditAccountPage');
   }
 
-  public updateCurrencies(currencies: CurrencyModel []) {
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  private setCurrencies(currencies: CurrencyModel []) {
     this.currencies = currencies;
   }
 
-  private loadCurrencies() {
-    this.updateCurrencies(this.currencyProvider.currencies);
-  }
-
-  public updateAccountTypes(accountTypes: AccountTypeModel []) {
+  private setAccountTypes(accountTypes: AccountTypeModel []) {
     this.accountTypes = accountTypes;
   }
 
-  private loadAccountTypes() {
-    this.updateAccountTypes(this.accountTypeProvider.accountTypes);
-  }
-
-  public updateAccountLocalObject(account: AccountModel) {
+  private setAccount(account: AccountModel) {
     let initialBalance = this.format(account.initialBalance);
     if (initialBalance == "") initialBalance = "0";
     this.tempAmount = initialBalance;
     this.editAccount = account;
   }
 
-  private getAccount() {
-  	this.updateAccountLocalObject(this.accountProvider.currentAccount)
-  }
+  /* ---------------------------------------------------------------------------------------------------------------- */
 
   public getCurrencyReadableObject(id: string) {
     return this.currencyProvider.mappedCurrenciesById[id];
   }
 
-  private updateAccount() {
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  public updateAccount() {
     let initialBalance = this.unFormat(this.tempAmount);
     if (initialBalance == "") initialBalance = 0;
     this.editAccount.initialBalance = initialBalance;
@@ -87,17 +81,6 @@ export class EditAccountPage {
       );
   }
 
-  /* ---------------------------------------------------------------------------------------------------------------- */
-
-  public deleteAlertMessage() {
-    this.messageProvider.displayAlertConfirmMessage('are-you-sure?').then( res => {
-      if (this.messageProvider.flag == true) {
-        this.deleteAccount()
-        this.messageProvider.flag = false;
-      }
-    });
-  }
-
   private deleteAccount() {
     this.accountProvider.deleteAccount(this.editAccount)
       .then(
@@ -109,13 +92,9 @@ export class EditAccountPage {
       );
   }
 
-  private doNothing() {
-
-  }
-
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  format(valString) {
+  private format(valString) {
     if (!valString) {
       return '';
     }
@@ -124,7 +103,7 @@ export class EditAccountPage {
     return parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, this.GROUP_SEPARATOR) + (!parts[1] ? '' : this.DECIMAL_SEPARATOR + parts[1]);
   };
 
-  unFormat(val) {
+  private unFormat(val) {
       if (!val) {
           return '';
       }
@@ -136,5 +115,16 @@ export class EditAccountPage {
           return val.replace(/\./g, '');
       }
   };
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  public deleteAlertMessage() {
+    this.messageProvider.displayAlertConfirmMessage('are-you-sure?').then( res => {
+      if (this.messageProvider.flag == true) {
+        this.deleteAccount()
+        this.messageProvider.flag = false;
+      }
+    });
+  }
 
 }

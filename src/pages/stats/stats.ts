@@ -54,19 +54,19 @@ export class StatsPage {
   /* Initialize data from providers and construct how is going to be store the stats data */
 
   private initializeData() {
-    this.loadUser(); 
-    this.loadCategories();
+    this.setUser(this.userProvider.user); 
+    this.setCategories(this.categoryProvider.categories);
     this.initializeDateTermsArray();
     this.initializaeCategoriesArraysPerType();
     this.initializeDataSortedByDate();
   }
 
-  private loadUser() {
-    this.user = this.userProvider.user
+  private setUser(user: UserModel) {
+    this.user = user;
   }
 
-  private loadCategories() {
-    this.categories = this.categoryProvider.categories
+  private setCategories(categories: CategoryModel []) {
+    this.categories = categories;
   }
 
   private initializaeCategoriesArraysPerType() {
@@ -188,7 +188,7 @@ export class StatsPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
   /* Functions to be used with angular expressions */
 
-  private objectKeys(obj) {
+  public objectKeys(obj) {
     return Object.keys(obj);
   }
 

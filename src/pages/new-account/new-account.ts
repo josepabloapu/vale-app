@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-// import { ViewChild } from '@angular/core';
-
+import { IonicPage, NavController } from 'ionic-angular';
 import { AccountModel } from '../../models/account/account';
 import { CurrencyModel } from '../../models/currency/currency';
 import { AccountTypeModel } from '../../models/account-type/account-type';
@@ -19,27 +17,24 @@ import { AccountsPage } from '../../pages/accounts/accounts';
 })
 export class NewAccountPage {
 
-  // @ViewChild('myInput') myInput;
-
   DECIMAL_SEPARATOR=".";
   GROUP_SEPARATOR=",";
 
-  private newAccount: AccountModel;
-  private currencies: CurrencyModel [];
-  private accountTypes: AccountTypeModel [];
-  private tempAmount: string;
+  public currencies: CurrencyModel [];
+  public accountTypes: AccountTypeModel [];
+  public newAccount: AccountModel;
+  public tempAmount: string;
   
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
+    private navCtrl: NavController,
     private messageProvider: MessageProvider,
     private userProvider: UserProvider,
     private currencyProvider: CurrencyProvider,
     private accountTypeProvider: AccountTypeProvider, 
     private accountProvider: AccountProvider)
   {
-    this.loadCurrencies();
-    this.loadAccountTypes();
+    this.setCurrencies(this.currencyProvider.currencies);
+    this.setAccountTypes(this.accountTypeProvider.accountTypes);
     this.initAccount();
     // console.log({PAGE_NEWACCOUNT: this})
   }
@@ -48,30 +43,14 @@ export class NewAccountPage {
     // console.log('ionViewDidLoad NewAccountPage');
   }
 
-  // ngAfterViewChecked() {
-  //   this.myInput.setFocus()
-  // }
-
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  public updateCurrencies(currencies: CurrencyModel []) {
+  public setCurrencies(currencies: CurrencyModel []) {
     this.currencies = currencies;
   }
 
-  private getDefaultCurrency() {
-    return 0
-  }
-
-  private loadCurrencies() {
-    this.updateCurrencies(this.currencyProvider.currencies);
-  }
-
-  public updateAccountTypes(accountTypes: AccountTypeModel []) {
+  public setAccountTypes(accountTypes: AccountTypeModel []) {
     this.accountTypes = accountTypes;
-  }
-
-  private loadAccountTypes() {
-    this.updateAccountTypes(this.accountTypeProvider.accountTypes);
   }
 
   private getAccounts() {
@@ -107,17 +86,17 @@ export class NewAccountPage {
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  currencyChange(value) {
+  public currencyChange(value) {
     console.log(value);
   }
 
-  typeChange(value) {
+  public typeChange(value) {
     console.log(value);
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  format(valString) {
+  public format(valString) {
     if (!valString) {
       return '';
     }
@@ -126,7 +105,7 @@ export class NewAccountPage {
     return parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, this.GROUP_SEPARATOR) + (!parts[1] ? '' : this.DECIMAL_SEPARATOR + parts[1]);
   };
 
-  unFormat(val) {
+  private unFormat(val) {
       if (!val) {
           return '';
       }

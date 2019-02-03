@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { UserModel } from '../../models/user/user';
 import { MessageProvider } from '../../providers/message/message';
 import { ApiProvider } from '../../providers/api/api';
-import { AuthProvider } from '../../providers/auth/auth';
 import { UserProvider } from '../../providers/user/user';
 import { TabsPage } from '../tabs/tabs';
 import { RegisterPage } from '../register/register';
@@ -19,7 +18,7 @@ import { RegisterPage } from '../register/register';
 export class LoginPage {
 
   private loading: any;
-  private userData: Object;
+  public userData: Object;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -27,8 +26,7 @@ export class LoginPage {
     public storage: Storage,
     public translateService: TranslateService,
     public messageProvider: MessageProvider, 
-    public apiProvider: ApiProvider, 
-    public authProvider: AuthProvider, 
+    public apiProvider: ApiProvider,  
     public userProvider: UserProvider) 
   {
     this.userData = { username: "", password: "" };
@@ -41,7 +39,7 @@ export class LoginPage {
 
   public login() {
     this.loading.present().then(() => {
-      this.authProvider.login(this.userData)
+      this.userProvider.login(this.userData)
         .then(
           res => {
             let user = UserModel.ParseFromObject(res);

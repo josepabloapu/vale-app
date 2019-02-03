@@ -23,7 +23,6 @@ import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { AuthProvider } from '../providers/auth/auth';
 
 import { ApiProvider } from '../providers/api/api';
 import { TransactionProvider } from '../providers/transaction/transaction';
@@ -32,7 +31,6 @@ import { CategoryProvider } from '../providers/category/category';
 import { CurrencyProvider } from '../providers/currency/currency';
 import { StatsProvider } from '../providers/stats/stats';
 import { AccountTypeProvider } from '../providers/account-type/account-type';
-import { MeProvider } from '../providers/me/me';
 
 import { MessageProvider } from '../providers/message/message';
 import { ExportProvider } from '../providers/export/export';
@@ -93,7 +91,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     SplashScreen,
     File,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AuthProvider,
     ApiProvider,
     TransactionProvider,
     AccountProvider,
@@ -101,7 +98,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     CurrencyProvider,
     StatsProvider,
     AccountTypeProvider,
-    MeProvider,
     MessageProvider,
     ExportProvider,
     UserProvider
