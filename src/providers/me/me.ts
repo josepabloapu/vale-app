@@ -13,7 +13,7 @@ export class MeProvider {
     // console.log({PROVIDER_ME: this})
   }
 
-  public updateUserProvider(user: UserModel) {
+  public updateUser(user: UserModel) {
     this.user = user;
   }
 
@@ -34,9 +34,8 @@ export class MeProvider {
           });
         }
       }).then(() => {
-        // console.log("saving user: " + user)
-        this.updateUserProvider(user);
         this.storage.set('user', JSON.stringify(user));
+        this.updateUser(user);
         resolve(user);
       });
     });
@@ -51,7 +50,7 @@ export class MeProvider {
     return new Promise((resolve) => {
       this.storage.get('user').then((value) => {
         let user = JSON.parse(value);
-        this.user = user;
+        this.updateUser(user);
         resolve(user);
       })
     });
@@ -65,46 +64,38 @@ export class MeProvider {
   public removeLocalUser(): Promise<string> {
     return new Promise((resolve) => {
       this.storage.remove('user');
+      this.updateUser(null);
       resolve();
     });
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
- 	public getUser(): Promise<any> {
+ 	public getRemoteUser(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.apiProvider.getRequest('/users/me', true)
         .subscribe(
           res => {
-            this.updateUserProvider(UserModel.ParseFromObject(res));
-            resolve(UserModel.ParseFromObject(res));
+            let user = UserModel.ParseFromObject(res);
+            this.setLocalUser(user);
+            resolve(user);
           },
           err => reject(<any>err));
     });
   }
 
-  public updateUser(user) {
+  public updateRemoteUser(user) {
     return new Promise((resolve, reject) => {
       this.apiProvider.putRequest('/users/me', user, true)
         .subscribe(
           res => {
-            this.getUser();
-            resolve(<any>res);
+            let user = UserModel.ParseFromObject(res);
+            this.setLocalUser(user).then( user => {
+              resolve(user);
+            });
           },
           err => reject(<any>err));
     });
   }
-
-  // public deleteUser(user): Promise<any> {
-  //   return new Promise((resolve, reject) => {
-  //     this.apiProvider.deleteRequest('/users/' + user._id, true)
-  //       .subscribe(
-  //         res => {
-  //           this.getUsers();
-  //           resolve(<any>res);
-  //         },
-  //         err => reject(<any>err));
-  //   });
-  // }
 
 }

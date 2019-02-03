@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
+import { UserModel } from '../../models/user/user';
 import { MessageProvider } from '../../providers/message/message';
 import { TokenProvider } from '../../providers/token/token';
 import { ApiProvider } from '../../providers/api/api';
@@ -19,7 +20,7 @@ import { RegisterPage } from '../register/register';
 export class LoginPage {
 
   private loading: any;
-  private userData: {};
+  private userData: Object;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -32,43 +33,37 @@ export class LoginPage {
     public authProvider: AuthProvider, 
     public meProvider: MeProvider) 
   {
-    var self = this;
-
-    self.userData = { username: "", password: "" };
-    self.translateService.get('logging-in').subscribe( value => self.loading = self.loadingCtrl.create({ content: value }));
+    this.userData = { username: "", password: "" };
+    this.translateService.get('logging-in').subscribe( value => this.loading = this.loadingCtrl.create({ content: value }));
   }
 
   ionViewDidLoad() {
     // console.log('ionViewDidLoad LoginPage');
   }
 
-
-  private login() {
-    var self = this;
-
-    self.loading.present().then(() => {
-      self.authProvider.login(self.userData)
+  public login() {
+    this.loading.present().then(() => {
+      this.authProvider.login(this.userData)
         .then(
-          user => {
-            self.storage.set('user', JSON.stringify(user));
-            self.tokenProvider.setToken(user.token);
-            self.meProvider.updateUserProvider(user);
-            self.apiProvider.updateApiProviderToken(user.token);
-            self.loading.dismiss();
-            self.navCtrl.push(TabsPage, { }, { animate: false });
+          res => {
+            let user = UserModel.ParseFromObject(res);
+            this.meProvider.setLocalUser(user).then( user => {
+              this.tokenProvider.setToken(user.token);
+              this.apiProvider.updateApiProviderToken(user.token);
+              this.loading.dismiss();
+              this.navCtrl.push(TabsPage, { }, { animate: false });
+            })
           }, 
           err => {
-            self.loading.dismiss();
-            self.messageProvider.displayErrorMessage('message-loggin-error');
+            this.loading.dismiss();
+            this.messageProvider.displayErrorMessage('message-loggin-error');
           }
         );
     });
   }
 
-  private register() {
-    var self = this;
-    
-    self.navCtrl.push(RegisterPage, { }, { animate: false });
+  public register() {
+    this.navCtrl.push(RegisterPage, { }, { animate: false });
   }
 
 }

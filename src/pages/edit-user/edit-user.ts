@@ -96,12 +96,12 @@ export class EditUserPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   private updateUser() {
-    this.meProvider.setLocalUser(this.editUser)
+
+    this.meProvider.updateRemoteUser(this.editUser)
     .then(
         res => {
           this.messageProvider.displaySuccessMessage('message-update-user-success')
           this.loadUser();
-          // this.navCtrl.setRoot(MePage);
         }, 
         err => this.messageProvider.displayErrorMessage('message-update-user-error')
       );
