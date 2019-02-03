@@ -1,16 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { AccountTypeModel } from '../../models/account-type/account-type';
 import { ApiProvider } from '../../providers/api/api';
 
-import { AccountTypeModel } from '../../models/account-type/account-type';
-
-/*
-  Generated class for the AccountTypeProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class AccountTypeProvider {
 

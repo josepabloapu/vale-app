@@ -1,25 +1,15 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
-
-import { TransactionModel } from '../../models/transaction/transaction';
 import { CurrencyModel } from '../../models/currency/currency';
 import { CategoryModel } from '../../models/category/category';
 import { AccountModel } from '../../models/account/account';
-
+import { TransactionModel } from '../../models/transaction/transaction';
 import { MessageProvider } from '../../providers/message/message';
 import { TransactionProvider } from '../../providers/transaction/transaction';
 import { AccountProvider } from '../../providers/account/account';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { CategoryProvider } from '../../providers/category/category';
-
 import { TransactionsPage } from '../../pages/transactions/transactions';
-
-/**
- * Generated class for the EditAccountPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({

@@ -5,7 +5,7 @@ import { UserModel } from '../../models/user/user';
 import { AccountModel } from '../../models/account/account';
 
 import { MessageProvider } from '../../providers/message/message';
-import { MeProvider } from '../../providers/me/me';
+import { UserProvider } from '../../providers/user/user';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { AccountProvider } from '../../providers/account/account';
 import { AccountTypeProvider } from '../../providers/account-type/account-type';
@@ -50,12 +50,12 @@ export class AccountsPage {
     public navCtrl: NavController, 
     public navParams: NavParams, 
     private messageProvider: MessageProvider,
-    private meProvider: MeProvider, 
+    private userProvider: UserProvider, 
     private currencyProvider: CurrencyProvider,
     public accountProvider: AccountProvider,
     private accountTypeProvider: AccountTypeProvider) 
   {
-    this.updateAccountsProviderUser(this.meProvider.user);    
+    this.updateAccountsProviderUser(this.userProvider.user);    
     this.getAccounts();
     // console.log({PAGE_ACCOUNTS: this})
   }

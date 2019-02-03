@@ -4,12 +4,11 @@ import { Injectable } from '@angular/core';
 import { UserModel } from '../../models/user/user';
 import { ApiProvider } from '../../providers/api/api';
 import { MeProvider } from '../../providers/me/me';
-import { TokenProvider } from '../../providers/token/token';
 
 @Injectable()
 export class AuthProvider {
 
-  constructor(public http: HttpClient, private meProvider: MeProvider, private tokenProvider: TokenProvider, private apiProvider: ApiProvider) {
+  constructor(public http: HttpClient, private meProvider: MeProvider, private apiProvider: ApiProvider) {
     // console.log({PROVIDER_AUTH: this})
   }
 
@@ -55,7 +54,6 @@ export class AuthProvider {
       this.apiProvider.postRequest('/auth/logout', null, true)
         .subscribe(
           res => {
-            this.tokenProvider.removeToken()
             this.meProvider.removeLocalUser()
             resolve(<any>res)
           },
@@ -71,7 +69,7 @@ export class AuthProvider {
    */
   verifyToken(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.apiProvider.getRequest('/auth/verifyToken')
+      this.apiProvider.getRequest('/auth/verifyToken', true)
         .subscribe(
           res => resolve(<any>res),
           error => reject(<any>error));

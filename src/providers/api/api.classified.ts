@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { TokenProvider } from '../../providers/token/token';
 
 /*
   Generated class for the ApiProvider provider.
@@ -16,12 +15,20 @@ export class ApiProvider {
   private API_KEY: string;
   private AUTH_TOKEN: string;
 
-  constructor(private http: HttpClient, private tokenProvider: TokenProvider) {
-    this.BASE_URL = "https://example.com/api";
-    this.API_KEY = "secret-key";
-    this.tokenProvider.getToken().then((token) => {
-      this.AUTH_TOKEN = token;
-    });
+  constructor(private http: HttpClient) {
+    this.BASE_URL = "http://localhost:3000/api";
+    this.API_KEY = "my-secret";
+  }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+  /* Observable use object                                                                                            */
+
+  // public subscribeToUserProvider(callback) {
+  //   return this._user.subscribe(callback);
+  // }
+
+  public setToken(token: string) {
+    this.AUTH_TOKEN = token;
   }
 
   /**

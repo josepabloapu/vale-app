@@ -18,14 +18,13 @@ import { AccountsPage } from '../pages/accounts/accounts';
 import { NewAccountPage } from '../pages/new-account/new-account';
 import { EditAccountPage } from '../pages/edit-account/edit-account';
 import { StatsPage } from '../pages/stats/stats';
-import { MePage } from '../pages/me/me';
 import { EditUserPage } from '../pages/edit-user/edit-user';
 import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthProvider } from '../providers/auth/auth';
-import { UserProvider } from '../providers/user/user';
+
 import { ApiProvider } from '../providers/api/api';
 import { TransactionProvider } from '../providers/transaction/transaction';
 import { AccountProvider } from '../providers/account/account';
@@ -34,9 +33,10 @@ import { CurrencyProvider } from '../providers/currency/currency';
 import { StatsProvider } from '../providers/stats/stats';
 import { AccountTypeProvider } from '../providers/account-type/account-type';
 import { MeProvider } from '../providers/me/me';
-import { TokenProvider } from '../providers/token/token';
+
 import { MessageProvider } from '../providers/message/message';
 import { ExportProvider } from '../providers/export/export';
+import { UserProvider } from '../providers/user/user';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -56,7 +56,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     NewAccountPage,
     EditAccountPage,
     StatsPage,
-    MePage,
     EditUserPage,
     TabsPage
   ],
@@ -86,7 +85,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     NewAccountPage,
     EditAccountPage,
     StatsPage,
-    MePage,
     EditUserPage,
     TabsPage
   ],
@@ -96,7 +94,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     File,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
-    UserProvider,
     ApiProvider,
     TransactionProvider,
     AccountProvider,
@@ -105,9 +102,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     StatsProvider,
     AccountTypeProvider,
     MeProvider,
-    TokenProvider,
     MessageProvider,
-    ExportProvider
+    ExportProvider,
+    UserProvider
   ]
 })
 export class AppModule {}

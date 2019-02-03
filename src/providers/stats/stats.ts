@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { CurrencyModel } from '../../models/currency/currency';
 
 import { ApiProvider } from '../../providers/api/api';
-import { MeProvider } from '../../providers/me/me';
+import { UserProvider } from '../../providers/user/user';
 import { CurrencyProvider } from '../../providers/currency/currency';
 
 /*
@@ -22,10 +22,10 @@ export class StatsProvider {
   constructor(
     public http: HttpClient, 
     private apiProvider: ApiProvider,
-    private meProvider: MeProvider,
+    private userProvider: UserProvider,
     private currencyProvider: CurrencyProvider) 
   {
-    this.currency = this.currencyProvider.mappedCurrenciesById[this.meProvider.user.currency];
+    this.currency = this.currencyProvider.mappedCurrenciesById[this.userProvider.user.currency];
     // console.log({ STATS: this });
   }
 

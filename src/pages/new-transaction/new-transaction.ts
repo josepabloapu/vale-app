@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, App } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,7 +10,7 @@ import { CurrencyModel } from '../../models/currency/currency';
 import { CategoryModel } from '../../models/category/category';
 import { AccountModel } from '../../models/account/account';
 import { MessageProvider } from '../../providers/message/message';
-import { MeProvider } from '../../providers/me/me';
+import { UserProvider } from '../../providers/user/user';
 import { ApiProvider } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { CategoryProvider } from '../../providers/category/category';
@@ -30,27 +30,24 @@ export class NewTransactionPage {
   DECIMAL_SEPARATOR=".";
   GROUP_SEPARATOR=",";
 
-  // private _newTransaction: any;
+  public currencies: CurrencyModel [];
+  public incomeCategories: CategoryModel [];
+  public expenseCategories: CategoryModel [];
+  public accounts: AccountModel [];
+  public isTransfer: boolean;
+
   private newTransaction: TransactionModel;
   private newTransactionOut: TransactionModel;
   private newTransactionIn: TransactionModel;
-  private currencies: CurrencyModel [];
   private categories: CategoryModel [];
-  private incomeCategories: CategoryModel [];
-  private expenseCategories: CategoryModel [];
-  private accounts: AccountModel [];
-  private isTransfer: boolean;
   private accountOut: string;
   private accountIn: string;
   private tempAmount: string;
   
   constructor(
-    private app: App,
     private navCtrl: NavController,
-    private navParams: NavParams,
     private messageProvider: MessageProvider,
-    private meProvider: MeProvider,
-    private apiProvider: ApiProvider,
+    private userProvider: UserProvider,
     private currencyProvider: CurrencyProvider,
     private categoryProvider: CategoryProvider,
     private transactionProvider: TransactionProvider,
@@ -127,8 +124,8 @@ export class NewTransactionPage {
 
   private initTransaction() {
     this.newTransaction = TransactionModel.GetNewInstance();
-    this.newTransaction.owner = this.meProvider.user._id;
-    this.newTransaction.currency = this.meProvider.user.currency;
+    this.newTransaction.owner = this.userProvider.user._id;
+    this.newTransaction.currency = this.userProvider.user.currency;
     this.newTransaction.type = 'expense';
     this.newTransaction.description = '';
     this.newTransaction.category = this.categoryProvider.mappedCategoriesByName['Living']._id;

@@ -1,114 +1,128 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-
 import { UserModel } from '../../models/user/user';
+import { ApiProvider } from '../../providers/api/api';
 
-/*
-  Generated class for the UserProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class UserProvider {
 
-	public user: UserModel;
+  public user: UserModel
 
-  constructor(
-    public http: HttpClient, 
-    public storage: Storage
-    ) 
-  {
-
+  constructor(public http: HttpClient, public apiProvider: ApiProvider, private storage: Storage) {
+    // console.log({USER_ME: this})
   }
 
-  /* ---------------------------------------------------------------------------------------------------------------- */
-  /* Observable use object                                                                                            */
-
-  // public subscribeToUserProvider(callback) {
-  //   return this._user.subscribe(callback);
-  // }
-
-  public updateUserProvider(user: UserModel) {
-    // this._user.next(user);
+  public updateUser(user: UserModel) {
     this.user = user;
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
-  /* User storage management                                                                                          */
 
-  /**
-   * Write user properties in the local storage.
-   *
-   * @param user
-   * @returns {Promise<UserModel>}
-   */
-  createOnStorage(user: UserModel): Promise<UserModel> {
+  public setLocalUser(user: UserModel): Promise<UserModel> {
     return new Promise((resolve) => {
-      this.getOnStorage().then((res) => {
+      this.getLocalUser().then((res) => {
         if (res) {
-          this.deleteOnStorage().then(() => {
+          this.removeLocalUser().then(() => {
 
           });
         }
       }).then(() => {
-        this.updateUserProvider(user);
         this.storage.set('user', JSON.stringify(user));
+        this.updateUser(user);
         resolve(user);
       });
     });
   }
 
-  /**
-   * Get user properties from local storage.
-   *
-   * @returns {Promise<UserModel>}
-   */
-  getOnStorage(): Promise<UserModel> {
+  public getLocalUser(): Promise<UserModel> {
     return new Promise((resolve) => {
-    	this.storage.get('user').then((user) => {
-    		this.updateUserProvider(JSON.parse(user));
-    		resolve(this.storage.get('user'));
-			})
-		});
-  }
-
-  /**
-   * Get user properties from local storage.
-   *
-   * @returns {Promise<UserModel>}
-   */
-  getOnStorageSync() {
-  	this.storage.get('user').then((user) => {
-  		this.updateUserProvider(JSON.parse(user));
-  		return this.storage.get('user');
-  	})
-  }
-
-  /**
-   * Update user properties from local storage.
-   *
-   * @param user
-   * @returns {Promise<UserModel>}
-   */
-  updateOnStorage(user: UserModel): Promise<UserModel> {
-    return new Promise((resolve) => {
-      this.storage.set('user', JSON.stringify(user))
-      this.updateUserProvider(user);
-      resolve(user);
+      this.storage.get('user').then((value) => {
+        let user = JSON.parse(value);
+        this.updateUser(user);
+        resolve(user);
+      })
     });
   }
 
-  /**
-   * Delete user properties from local storage.
-   *
-   * @returns {Promise<UserModel>}
-   */
-  deleteOnStorage(): Promise<UserModel> {
+  public removeLocalUser(): Promise<string> {
     return new Promise((resolve) => {
       this.storage.remove('user');
+      this.updateUser(null);
       resolve();
+    });
+  }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+ 	public getRemoteUser(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.getRequest('/users/me', true)
+        .subscribe(
+          res => {
+            let user = UserModel.ParseFromObject(res);
+            this.setLocalUser(user);
+            resolve(user);
+          },
+          err => reject(<any>err));
+    });
+  }
+
+  public updateRemoteUser(user) {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.putRequest('/users/me', user, true)
+        .subscribe(
+          res => {
+            let user = UserModel.ParseFromObject(res);
+            this.setLocalUser(user).then( user => {
+              resolve(user);
+            });
+          },
+          err => reject(<any>err));
+    });
+  }
+
+  public deleteRemoteUser(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.deleteRequest('/users/me', true)
+        .subscribe(
+          res => {
+            this.removeLocalUser();
+            resolve(<any>res);
+          },
+          err => reject(<any>err));
+    });
+  }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  public register(user: object): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.postRequest('/auth/register', user, false)
+        .subscribe(
+          res => resolve(res),
+          err => reject(err));
+    });
+  }
+
+  public login(user: object): Promise<UserModel> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.postRequest('/auth/login', user, false)
+        .subscribe(
+          res => resolve(UserModel.ParseFromObject(res)),
+          error => reject(<any>error));
+    });
+  }
+
+  public logout(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.postRequest('/auth/logout', null, true)
+        .subscribe(
+          res => {
+            this.removeLocalUser()
+            resolve(<any>res)
+          },
+          error => reject(<any>error));
     });
   }
 

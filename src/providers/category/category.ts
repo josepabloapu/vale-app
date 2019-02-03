@@ -1,16 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { CategoryModel } from '../../models/category/category';
 import { ApiProvider } from '../../providers/api/api';
 
-import { CategoryModel } from '../../models/category/category';
-
-/*
-  Generated class for the CategoryProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class CategoryProvider {
 
@@ -24,7 +16,6 @@ export class CategoryProvider {
   }
 
   public updateCategoryProvider(categories: CategoryModel []) {
-    // this._user.next(user);
     this.categories = categories;
     this.updateMappedCategories(this.categories);
   }

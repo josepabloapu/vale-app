@@ -5,12 +5,11 @@ import { UserModel } from '../../models/user/user';
 import { CurrencyModel } from '../../models/currency/currency';
 import { AuthProvider } from '../../providers/auth/auth';
 import { MessageProvider } from '../../providers/message/message';
-import { MeProvider } from '../../providers/me/me';
+import { UserProvider } from '../../providers/user/user';
 import { AccountProvider } from '../../providers/account/account';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { ExportProvider } from '../../providers/export/export';
 import { WelcomePage } from '../../pages/welcome/welcome';
-import { MePage } from '../../pages/me/me';
 
 /**
  * Generated class for the EditUserPage page.
@@ -37,7 +36,7 @@ export class EditUserPage {
   	private translateService: TranslateService,
     private messageProvider: MessageProvider,
     public authProvider: AuthProvider,
-    public meProvider: MeProvider,
+    public userProvider: UserProvider,
   	public accountProvider: AccountProvider,
     public currencyProvider: CurrencyProvider,
     public exportProvider: ExportProvider) 
@@ -56,7 +55,7 @@ export class EditUserPage {
   }
 
   public loadUser() {
-    this.updateUserProvider(this.meProvider.user);
+    this.updateUserProvider(this.userProvider.user);
   }
 
   private updateCurrencies(currencies: CurrencyModel []) {
@@ -72,12 +71,12 @@ export class EditUserPage {
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  private changeName(value) {
+  public changeName(value) {
     this.editUser.name = value;
     if (this.editUser.name != this.tempUser.name) this.updateUser();
   }
 
-  private changeEmail(value) {
+  public changeEmail(value) {
     this.editUser.email = value;
     if (this.editUser.email != this.tempUser.email) this.updateUser();
   }
@@ -97,7 +96,7 @@ export class EditUserPage {
 
   private updateUser() {
 
-    this.meProvider.updateRemoteUser(this.editUser)
+    this.userProvider.updateRemoteUser(this.editUser)
     .then(
         res => {
           this.messageProvider.displaySuccessMessage('message-update-user-success')
@@ -109,17 +108,17 @@ export class EditUserPage {
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  private export() {
+  public export() {
     this.exportProvider.createCVS();
   }
 
-  private import() {
+  public import() {
     
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  private logout() {
+  public logout() {
     this.authProvider.logout().then( promise => {
       this.app.getRootNav().setRoot(WelcomePage);
     });

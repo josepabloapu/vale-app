@@ -6,8 +6,7 @@ import { AccountModel } from '../../models/account/account';
 import { CurrencyModel } from '../../models/currency/currency';
 import { AccountTypeModel } from '../../models/account-type/account-type';
 import { MessageProvider } from '../../providers/message/message';
-import { MeProvider } from '../../providers/me/me';
-import { ApiProvider } from '../../providers/api/api';
+import { UserProvider } from '../../providers/user/user';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { AccountProvider } from '../../providers/account/account';
 import { AccountTypeProvider } from '../../providers/account-type/account-type';
@@ -34,8 +33,7 @@ export class NewAccountPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private messageProvider: MessageProvider,
-    private meProvider: MeProvider,
-    private apiProvider: ApiProvider,
+    private userProvider: UserProvider,
     private currencyProvider: CurrencyProvider,
     private accountTypeProvider: AccountTypeProvider, 
     private accountProvider: AccountProvider)
@@ -84,9 +82,9 @@ export class NewAccountPage {
 
   private initAccount() {
     this.newAccount = AccountModel.GetNewInstance();
-    this.newAccount.owner = this.meProvider.user._id;
+    this.newAccount.owner = this.userProvider.user._id;
     this.newAccount.type = this.accountTypeProvider.accountTypes[0]._id;
-    this.newAccount.currency = this.meProvider.user.currency;
+    this.newAccount.currency = this.userProvider.user.currency;
     this.newAccount.initialBalance = null;
     this.newAccount.cumulativeInflow = 0;
     this.newAccount.cumulativeOutflow = 0;

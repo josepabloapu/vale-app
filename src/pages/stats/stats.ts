@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { UserModel } from '../../models/user/user';
 import { CategoryModel } from '../../models/category/category';
-import { MeProvider } from '../../providers/me/me';
+import { UserProvider } from '../../providers/user/user';
 import { CategoryProvider } from '../../providers/category/category';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { StatsProvider } from '../../providers/stats/stats';
@@ -28,7 +28,7 @@ export class StatsPage {
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
-    public meProvider: MeProvider,
+    public userProvider: UserProvider,
   	public statsProvider: StatsProvider,
   	public categoryProvider: CategoryProvider,
     public currencyProvider: CurrencyProvider) 
@@ -62,7 +62,7 @@ export class StatsPage {
   }
 
   private loadUser() {
-    this.user = this.meProvider.user
+    this.user = this.userProvider.user
   }
 
   private loadCategories() {

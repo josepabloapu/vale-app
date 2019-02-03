@@ -1,25 +1,15 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
 import { TransactionModel } from '../../models/transaction/transaction';
 import { AccountModel } from '../../models/account/account';
 import { CategoryModel } from '../../models/category/category';
-
 import { MessageProvider } from '../../providers/message/message';
 import { TransactionProvider } from '../../providers/transaction/transaction';
 import { CategoryProvider } from '../../providers/category/category';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { AccountProvider } from '../../providers/account/account';
-
 import { NewTransactionPage } from '../../pages/new-transaction/new-transaction';
 import { EditTransactionPage } from '../../pages/edit-transaction/edit-transaction';
-
-/**
- * Generated class for the TransactionsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -28,10 +18,10 @@ import { EditTransactionPage } from '../../pages/edit-transaction/edit-transacti
 })
 export class TransactionsPage {
 
-  private transactions: TransactionModel [];
-  private accounts: AccountModel [];
-  private categories: CategoryModel [];
-
+  public categories: CategoryModel [];
+  public accounts: AccountModel [];
+  public transactions: TransactionModel [];
+  
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -69,7 +59,7 @@ export class TransactionsPage {
     );
   }
 
-  public updateTransactions(transactions: TransactionModel []) {
+  private updateTransactions(transactions: TransactionModel []) {
     this.transactions = transactions;
   }
 
@@ -83,7 +73,7 @@ export class TransactionsPage {
     );
   }
 
-  public updateCategories(categories: CategoryModel []) {
+  private updateCategories(categories: CategoryModel []) {
     this.categories = categories;
   }
 
@@ -97,16 +87,16 @@ export class TransactionsPage {
     );
   }
 
-  private createTransaction() {
+  public createTransaction() {
     this.navCtrl.push(NewTransactionPage, { }, { animate: false });
   }
 
-  private editTransaction(transaction: TransactionModel) {
+  public editTransaction(transaction: TransactionModel) {
     this.transactionProvider.updateCurrentTransaction(transaction);
     this.navCtrl.push(EditTransactionPage, { }, { animate: false });
   }
 
-  private deleteTransaction(transaction: TransactionModel) {
+  public deleteTransaction(transaction: TransactionModel) {
     this.transactionProvider.deleteTransaction(transaction)
       .then(
         res => {
@@ -117,15 +107,15 @@ export class TransactionsPage {
       );
   }
 
-  getCategoryReadableObject(id: string = '') {
+  public getCategoryReadableObject(id: string = '') {
     return this.categoryProvider.mappedCategoriesById[id];
   }
 
-  getAccountReadableObject(id: string = '') {
+  public getAccountReadableObject(id: string = '') {
     return this.accountProvider.mappedAccountsById[id];
   }
 
-  getCurrencyReadableObject(id: string = '') {
+  public getCurrencyReadableObject(id: string = '') {
     return this.currencyProvider.mappedCurrenciesById[id];
   }
 

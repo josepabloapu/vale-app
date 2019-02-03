@@ -1,16 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { CurrencyModel } from '../../models/currency/currency';
 import { ApiProvider } from '../../providers/api/api';
 
-import { CurrencyModel } from '../../models/currency/currency';
-
-/*
-  Generated class for the CurrencyProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class CurrencyProvider {
 
@@ -24,7 +16,6 @@ export class CurrencyProvider {
   }
 
   public updateCurrencyProvider(currencies: CurrencyModel []) {
-    // this._user.next(user);
     this.currencies = currencies;
     this.updateMappedCurrencies(this.currencies);
   }

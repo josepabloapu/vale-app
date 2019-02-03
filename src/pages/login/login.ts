@@ -5,10 +5,9 @@ import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { UserModel } from '../../models/user/user';
 import { MessageProvider } from '../../providers/message/message';
-import { TokenProvider } from '../../providers/token/token';
 import { ApiProvider } from '../../providers/api/api';
 import { AuthProvider } from '../../providers/auth/auth';
-import { MeProvider } from '../../providers/me/me';
+import { UserProvider } from '../../providers/user/user';
 import { TabsPage } from '../tabs/tabs';
 import { RegisterPage } from '../register/register';
 
@@ -27,11 +26,10 @@ export class LoginPage {
     public loadingCtrl: LoadingController,
     public storage: Storage,
     public translateService: TranslateService,
-    public messageProvider: MessageProvider,
-    public tokenProvider: TokenProvider, 
+    public messageProvider: MessageProvider, 
     public apiProvider: ApiProvider, 
     public authProvider: AuthProvider, 
-    public meProvider: MeProvider) 
+    public userProvider: UserProvider) 
   {
     this.userData = { username: "", password: "" };
     this.translateService.get('logging-in').subscribe( value => this.loading = this.loadingCtrl.create({ content: value }));
@@ -47,9 +45,8 @@ export class LoginPage {
         .then(
           res => {
             let user = UserModel.ParseFromObject(res);
-            this.meProvider.setLocalUser(user).then( user => {
-              this.tokenProvider.setToken(user.token);
-              this.apiProvider.updateApiProviderToken(user.token);
+            this.userProvider.setLocalUser(user).then( user => {
+              this.apiProvider.setToken(user.token);
               this.loading.dismiss();
               this.navCtrl.push(TabsPage, { }, { animate: false });
             })
