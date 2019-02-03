@@ -23,6 +23,7 @@ export class StatsPage {
   public expenseCategoriesBalance: Object;
   public totalBalanceOfExpenseCategories: number;
   public totalBalanceOfIncomeCategories: number;
+  public dateTerms: string [];
 
   constructor(
   	public navCtrl: NavController, 
@@ -33,7 +34,7 @@ export class StatsPage {
     public currencyProvider: CurrencyProvider) 
   {
     this.initializeData();
-    console.log({PAGE_STATS: this})
+    // console.log({PAGE_STATS: this})
   }
 
   ionViewDidLoad() {
@@ -46,7 +47,7 @@ export class StatsPage {
     self.getStats();
     setTimeout(function() {
       self.getStats();
-    }, 1000); 
+    }, 2000); 
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -54,7 +55,8 @@ export class StatsPage {
 
   private initializeData() {
     this.loadUser(); 
-  	this.loadCategories();
+    this.loadCategories();
+    this.initializeDateTermsArray();
     this.initializaeCategoriesArraysPerType();
     this.initializeDataSortedByDate();
   }
@@ -88,26 +90,20 @@ export class StatsPage {
   private initializeDataSortedByDate() {
     var self = this;
     this.dataSortedByDate = {};
+    this.dateTerms.forEach(function(term) {
+      self.initializeDataSortedByDatePerTerm(term);
+    })
+  }
 
-    this.dataSortedByDate['this-month'] = { 
-      categoriesBalance: {}, 
-      expenseBalance: null, 
-      incomeBalance: null 
-    };
-    this.dataSortedByDate['this-year'] = { 
+  private initializeDataSortedByDatePerTerm(term) {
+    var self = this;
+    this.dataSortedByDate[term] = { 
       categoriesBalance: {}, 
       expenseBalance: null, 
       incomeBalance: null 
     };
     this.expenseCategories.forEach(function(element) {
-      self.dataSortedByDate['this-month'].categoriesBalance[element.name] = { 
-        name: element.name, 
-        type: element.type, 
-        count: 0, 
-        balance: 0, 
-        percentage: 0 
-      }
-      self.dataSortedByDate['this-year'].categoriesBalance[element.name] = { 
+      self.dataSortedByDate[term].categoriesBalance[element.name] = { 
         name: element.name, 
         type: element.type, 
         count: 0, 
@@ -117,12 +113,19 @@ export class StatsPage {
     });
   }
 
+  private initializeDateTermsArray() {
+    this.dateTerms = []
+    this.dateTerms = ['today', 'yesterday', 'this-week', 'last-week', 'this-month', 'last-month', 'this-year', 'last-year']
+  }
+
   /* ---------------------------------------------------------------------------------------------------------------- */
   /* Functions to compute expense balance, a its percentage per category */
 
   private getStats() {
-    this.computeExpenseCategoriesByDate('this-month')
-    this.computeExpenseCategoriesByDate('this-year')
+    var self = this;
+    this.dateTerms.forEach(function(term) {
+      self.computeExpenseCategoriesByDate(term);
+    })
   }
 
   private async computeExpenseCategoriesByDate(date: string) {
