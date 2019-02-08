@@ -36,13 +36,14 @@ $app-direction: ltr;
 $colors: (
   primary:    #488aff,
   secondary:  #32CD32,
-  // secondary:  #32db64,
+  secondary2: #32db64,
   nature:  	  #32CD32,
   danger:     #f53d3d,
   energized:  #ffa500,
   light:      #f4f4f4,
-  dark:       #222,
-  white:	  #ffffff
+  dark:       rgb(90, 90, 90),
+  darker:     #222,
+  white:	    #ffffff
 );
 
 
@@ -60,6 +61,11 @@ $colors: (
 $toolbar-background: color($colors, primary);
 $toast-md-background: color($colors, primary);
 $item-md-divider-color: color($colors, primary);
+
+// Remove ion-input focus green/blue color
+$text-input-md-show-focus-highlight: false !default;
+$text-input-md-show-valid-highlight: $text-input-md-show-focus-highlight !default;
+$text-input-md-show-invalid-highlight: $text-input-md-show-focus-highlight !default;
 
 // App Windows Variables
 // --------------------------------------------------

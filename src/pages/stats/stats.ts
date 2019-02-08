@@ -34,7 +34,7 @@ export class StatsPage {
     public currencyProvider: CurrencyProvider) 
   {
     this.initializeData();
-    // console.log({PAGE_STATS: this})
+    console.log({PAGE_STATS: this})
   }
 
   ionViewDidLoad() {
@@ -47,7 +47,7 @@ export class StatsPage {
     self.getStats();
     setTimeout(function() {
       self.getStats();
-    }, 2000); 
+    }, 3000); 
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -98,7 +98,8 @@ export class StatsPage {
   private initializeDataSortedByDatePerTerm(term) {
     var self = this;
     this.dataSortedByDate[term] = { 
-      categoriesBalance: {}, 
+      categoriesBalance: {},
+      validExpenseCategories: [],
       expenseBalance: null, 
       incomeBalance: null 
     };
@@ -115,16 +116,20 @@ export class StatsPage {
 
   private initializeDateTermsArray() {
     this.dateTerms = []
-    this.dateTerms = ['today', 'yesterday', 'this-week', 'last-week', 'this-month', 'last-month', 'this-year', 'last-year']
+    // this.dateTerms = ['today', 'yesterday', 'this-week', 'last-week', 'this-month', 'last-month', 'this-year', 'last-year']
+    this.dateTerms = ['today', 'this-week', 'this-month', 'this-year']
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
   /* Functions to compute expense balance, a its percentage per category */
 
   private getStats() {
-    var self = this;
-    this.dateTerms.forEach(function(term) {
-      self.computeExpenseCategoriesByDate(term);
+    return new Promise((resolve) => {
+      var self = this;
+      this.dateTerms.forEach(function(term) {
+        self.computeExpenseCategoriesByDate(term);
+      })
+      resolve();
     })
   }
 
@@ -133,10 +138,15 @@ export class StatsPage {
       var self = this;
       this.computeExpenseTotalBalance(date).then( total => {
         self.dataSortedByDate[date].expenseBalance = total;
+        self.dataSortedByDate[date].validExpenseCategories = [];
         for (let element of self.expenseCategories) {
           if (total != 0) {
             let balance = self.dataSortedByDate[date].categoriesBalance[element.name].balance;
             self.dataSortedByDate[date].categoriesBalance[element.name].percentage = 100 * balance / total;
+            
+            if (self.dataSortedByDate[date].categoriesBalance[element.name].percentage) {
+              self.dataSortedByDate[date].validExpenseCategories.push(element);
+            }
           }
         }
         resolve();

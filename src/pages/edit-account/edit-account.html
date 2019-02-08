@@ -9,7 +9,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content id="page-edit-account">
   <ion-list>
     <ion-item no-lines color="white">
       <ion-label>{{ 'name' | translate:param }}</ion-label>
@@ -40,26 +40,26 @@
         pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
         (input)="tempAmount = format(tempAmount)"></ion-input>
     </ion-item>
-    <ion-item no-lines color="secondary">
+    <ion-item no-lines color="dark">
       {{ 'stats' | translate:param }}
     </ion-item>
     <ion-item no-lines color="white">
       <p>{{ 'cumulative-inflow' | translate:param }}</p>
-      <p item-end>{{ editAccount.cumulativeInflow | number:0 }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
+      <p item-end>{{ editAccount.cumulativeInflow | number : '1.2-2' }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
     </ion-item>
     <ion-item no-lines color="light">
       <p>{{ 'cumulative-outflow' | translate:param }}</p>
-      <p item-end>{{ editAccount.cumulativeOutflow | number:0 }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
+      <p item-end>{{ editAccount.cumulativeOutflow | number : '1.2-2' }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
     </ion-item>
     <ion-item no-lines color="white">
       <p>{{ 'balance' | translate:param }}</p>
-      <p item-end>{{ editAccount.balance | number:0 }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
+      <p item-end>{{ editAccount.balance | number : '1.2-2' }} {{ getCurrencyReadableObject(editAccount.currency).code }}</p>
     </ion-item>
   </ion-list>
 </ion-content>
 
-<ion-footer>
+<ion-footer no-border padding>
   <button ion-item no-lines color="primary" (click)="updateAccount()">
-    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'update-account' | translate:param }}</ion-title >
+    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'update' | translate:param }}</ion-title >
   </button>
 </ion-footer>

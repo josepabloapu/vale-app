@@ -1,11 +1,4 @@
-<!--
-  Generated template for the TransactionsPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
     <ion-title>{{ 'transactions' | translate:param }}</ion-title>
     <ion-buttons end>
@@ -14,22 +7,34 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 <ion-content id="page-transactions">
-
+  <div ng-if="accountProvider">
   <ion-list>
-    <button ion-item no-lines *ngFor="let transaction of transactions; let $i = index" (click)="editTransaction(transaction)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
-      <h2 [ngClass]="(getCategoryReadableObject(transaction.category).name == 'Transfer')? 'transfer' : (transaction.type == 'expense')? 'expense' : 'income'">{{ transaction.amount | number:0 }} {{ getCurrencyReadableObject(transaction.currency).code }} </h2>
-      <p *ngIf="getAccountReadableObject(transaction.account) != null">{{ getCategoryReadableObject(transaction.category).name | translate:param }} - {{ getAccountReadableObject(transaction.account).name }}</p>
-      <p *ngIf="getAccountReadableObject(transaction.account) == null">
-        {{ getCategoryReadableObject(transaction.category).name | translate:param }}
-        <ion-badge color="energized">{{ 'removed-account' | translate:param }}</ion-badge>
-      </p>
-      <p>{{ transaction.description }}</p>
-      <p item-end>{{ transaction.date | date: 'yyyy/MM/dd' }}</p>
+    <button ion-item no-lines *ngFor="let transaction of transactions; let $i = index" 
+      (click)="editTransaction(transaction)" 
+      [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+        <div item-end>
+          <h2 text-right
+            [ngClass]="(getCategoryReadableObject(transaction.category).name == 'Transfer')? 'transfer' : (transaction.type == 'expense')? 'expense' : 'income'">
+              {{ transaction.amount | number : '1.2-2' }} {{ getCurrencyReadableObject(transaction.currency).code }}
+          </h2>
+          <p text-right>{{ transaction.date | date : 'yyyy/MM/dd' : timeZoneOffset }}</p>
+        </div>
+        <div item-start>
+          <h3 *ngIf="getCategoryReadableObject(transaction.category) != null">
+            {{ getCategoryReadableObject(transaction.category).name | translate:param }}
+          </h3>
+          <h3 *ngIf="getAccountReadableObject(transaction.account) != null">
+            {{ getAccountReadableObject(transaction.account).name }}
+          </h3>
+          <h3 *ngIf="getAccountReadableObject(transaction.account) == null">
+            <ion-badge color="energized">{{ 'removed-account' | translate:param }}</ion-badge>
+          </h3>
+          <p>{{ transaction.description }}</p>
+        </div>
     </button> 
   </ion-list>
-
+  </div>
 </ion-content>

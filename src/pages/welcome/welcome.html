@@ -3,10 +3,11 @@
   <h2>{{ 'slogan' | translate:param }}</h2>
 </ion-content>
 
-<ion-footer>
+<ion-footer no-border transparent padding>
   <button ion-item no-lines color="nature" (click)="register()">
     <ion-title style="text-align:center;text-transform:uppercase;">{{ 'register' | translate:param }}</ion-title >
   </button>
+  <br>
   <button ion-item no-lines color="dark" (click)="login()">
     <ion-title style="text-align:center;text-transform:uppercase;">{{ 'login' | translate:param }}</ion-title >
   </button>

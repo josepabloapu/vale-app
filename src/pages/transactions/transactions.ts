@@ -21,6 +21,7 @@ export class TransactionsPage {
   public categories: CategoryModel [];
   public accounts: AccountModel [];
   public transactions: TransactionModel [];
+  public timeZoneOffset: string;
   
   constructor(
     public navCtrl: NavController, 
@@ -31,10 +32,13 @@ export class TransactionsPage {
     private accountProvider: AccountProvider,
     public transactionProvider: TransactionProvider) 
   {
+
+    this.timeZoneOffset = String(new Date().getTimezoneOffset() / 60 * 100);
     this.getCategories();
     this.getAccounts();
     this.getTransactions();
     // console.log({TRANSACTION_PAGE: this})
+
   }
 
   ionViewDidLoad() {
