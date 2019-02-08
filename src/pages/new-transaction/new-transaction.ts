@@ -30,7 +30,7 @@ export class NewTransactionPage {
   public expenseCategories: CategoryModel [];
   public accounts: AccountModel [];
   public isTransfer: boolean;
-
+  public tempDate: string;
   private newTransaction: TransactionModel;
   private newTransactionOut: TransactionModel;
   private newTransactionIn: TransactionModel;
@@ -38,6 +38,8 @@ export class NewTransactionPage {
   private accountOut: string;
   private accountIn: string;
   private tempAmount: string;
+  private date: Date;
+  private isoDate: string;
   
   constructor(
     private navCtrl: NavController,
@@ -48,15 +50,19 @@ export class NewTransactionPage {
     private transactionProvider: TransactionProvider,
     private accountProvider: AccountProvider)
   {
+
     this.isTransfer = false;
     this.accountOut = '';
     this.accountIn = '';
-    this.tempAmount = ''
+    this.tempAmount = '';
+    this.date = new Date();
+    this.isoDate = new Date().toISOString();
     this.setAccounts(this.accountProvider.accounts);
     this.setCurrencies(this.currencyProvider.currencies);
     this.setCategories(this.categoryProvider.categories);
     this.initTransaction();
     // console.log({NEW_TRANSACTION: this})
+
   }
 
   ionViewDidLoad() {
@@ -85,21 +91,28 @@ export class NewTransactionPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   private initTransaction() {
+
     this.newTransaction = TransactionModel.GetNewInstance();
+    // this.tempDate = new Date(this.date.getTime() - this.date.getTimezoneOffset() * 60000).toISOString();
+    this.tempDate = this.unparseDate(this.isoDate);
     this.newTransaction.owner = this.userProvider.user._id;
     this.newTransaction.currency = this.userProvider.user.currency;
     this.newTransaction.type = 'expense';
     this.newTransaction.description = '';
     this.newTransaction.category = this.categoryProvider.mappedCategoriesByName['Living']._id;
+    
     if(this.accountProvider.accounts.length != 0) {
       this.newTransaction.account = this.accountProvider.accounts[0]._id;
     }
+
   }
+
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   public createTransaction() {
     this.newTransaction.amount = this.unFormat(this.tempAmount);
+    this.newTransaction.date = this.parseDate(this.tempDate);
     this.transactionProvider.createTransaction(this.newTransaction)
       .then(
         res => {
@@ -130,6 +143,9 @@ export class NewTransactionPage {
 
     this.newTransactionOut.currency = this.accountProvider.mappedAccountsById[this.accountOut].currency
     this.newTransactionIn.currency = this.accountProvider.mappedAccountsById[this.accountIn].currency
+
+    this.newTransactionOut.date = this.parseDate(this.tempDate);
+    this.newTransactionIn.date = this.parseDate(this.tempDate);
 
     this.newTransactionOut.description = this.newTransaction.description + ' >>> ' + this.accountProvider.mappedAccountsById[this.accountIn].name;
     this.newTransactionIn.description = this.newTransaction.description + ' <<< ' + this.accountProvider.mappedAccountsById[this.accountOut].name;
@@ -227,5 +243,17 @@ export class NewTransactionPage {
           return val.replace(/\./g, '');
       }
   };
+
+  public parseDate(localISO: string): string {
+    let tempTime = new Date(localISO);
+    let utcISO = new Date(tempTime.getTime() + this.date.getTimezoneOffset() * 60000).toISOString();
+    return utcISO;
+  }
+
+  private unparseDate(utcISO) {
+    let tempTime = new Date(utcISO);
+    let localISO = new Date(tempTime.getTime() - this.date.getTimezoneOffset() * 60000).toISOString();
+    return localISO;
+  }
 
 }

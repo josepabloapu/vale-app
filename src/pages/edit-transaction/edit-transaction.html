@@ -39,24 +39,32 @@
         <ion-option *ngFor="let category of expenseCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item no-lines color="light">
+    <ion-item no-lines color="light" *ngIf="getAccountReadableObject(editTransaction.account) != null">
       <ion-label>{{ 'account' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editTransaction.account" #account (ionChange)="accountChange(account._value)">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
+    <ion-item no-lines color="energized" *ngIf="getAccountReadableObject(editTransaction.account) == null">
+      <p text-wrap>{{ 'warning-transaction-account-removed' | translate:param }}</p>
+    </ion-item>
+    <ion-item no-lines color="white">
+      <ion-label>{{ 'date' | translate:param }}</ion-label>
+      <ion-datetime displayFormat="YYYY/MM/DD" [(ngModel)]="tempDate"></ion-datetime>
+    </ion-item>
+    <ion-item no-lines color="light">
+      <ion-label>{{ 'time' | translate:param }}</ion-label>
+      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="tempDate"></ion-datetime>
+    </ion-item>
     <ion-item no-lines color="white">
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="editTransaction.description"></ion-input>
     </ion-item>
-    <ion-item no-lines color="energized" *ngIf="getAccountReadableObject(editTransaction.account) == null">
-      <p text-wrap>{{ 'warning-transaction-account-removed' | translate:param }}</p>
-    </ion-item>
   </ion-list>
 </ion-content>
 
-<ion-footer>
+<ion-footer no-border padding>
   <button ion-item no-lines color="primary" (click)="updateTransaction()">
-    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'update-transaction' | translate:param }}</ion-title >
+    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'update' | translate:param }}</ion-title >
   </button>
 </ion-footer>
