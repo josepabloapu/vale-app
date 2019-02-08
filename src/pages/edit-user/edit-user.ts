@@ -19,7 +19,8 @@ export class EditUserPage {
 
 	public editUser: UserModel;
   public tempUser: UserModel;
-	public currencies: CurrencyModel [];
+  public currencies: CurrencyModel [];
+  public dangerZoneIsDisabled: boolean;
 
   constructor(
     public app: App,
@@ -32,9 +33,12 @@ export class EditUserPage {
     public currencyProvider: CurrencyProvider,
     public exportProvider: ExportProvider) 
   {
+
+    this.dangerZoneIsDisabled = true;
   	this.setCurrencies(this.currencyProvider.currencies);
   	this.setUser(this.userProvider.user);
     // console.log({PAGE_EDITUSER: this})
+
   }
 
   ionViewDidLoad() {
@@ -97,7 +101,7 @@ export class EditUserPage {
   }
 
   public import() {
-    
+    this.exportProvider.readCsvData();
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -106,6 +110,63 @@ export class EditUserPage {
     this.userProvider.logout().then( promise => {
       this.app.getRootNav().setRoot(WelcomePage);
     });
+  }
+
+  public activateDangerZoneAlertMessage() {
+    this.messageProvider.displayAlertConfirmMessage('are-you-sure?').then( res => {
+      if (this.messageProvider.flag == true) {
+        this.activateDangerZone();
+        this.messageProvider.flag = false;
+      }
+    });
+  }
+
+  private activateDangerZone() {
+    this.dangerZoneIsDisabled = !this.dangerZoneIsDisabled;
+  }
+
+  public deactivateDangerZone() {
+    this.dangerZoneIsDisabled = true;
+  }
+
+  public removeAllTransactionsAlertMessage() {
+    this.messageProvider.displayAlertConfirmMessage('are-you-sure?').then( res => {
+      if (this.messageProvider.flag == true) {
+        this.removeAllTransactions();
+        this.messageProvider.flag = false;
+      }
+    });
+  }
+
+  private removeAllTransactions() {
+    this.exportProvider.removeAllTransactions();
+  }
+
+  public removeAllAccountsAlertMessage() {
+    this.messageProvider.displayAlertConfirmMessage('are-you-sure?').then( res => {
+      if (this.messageProvider.flag == true) {
+        this.removeAllAccounts();
+        this.messageProvider.flag = false;
+      }
+    });
+  }
+
+  private removeAllAccounts() {
+    this.exportProvider.removeAllAccounts();
+  }
+
+  public removeUserAlertMessage() {
+    this.messageProvider.displayAlertConfirmMessage('are-you-sure?').then( res => {
+      if (this.messageProvider.flag == true) {
+        this.removeUser();
+        this.messageProvider.flag = false;
+      }
+    });
+  }
+
+  private removeUser() {
+    this.exportProvider.removeAllTransactions();
+    this.exportProvider.removeAllAccounts();
   }
 
 }

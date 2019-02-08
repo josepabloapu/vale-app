@@ -9,6 +9,7 @@ export class CategoryProvider {
   public categories: CategoryModel [];
   public mappedCategoriesById: {};
   public mappedCategoriesByName: {};
+  public mappedCategoriesByCode: {};
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
     // console.log({ CATEGORY: this });
@@ -21,14 +22,17 @@ export class CategoryProvider {
   }
 
   private updateMappedCategories(array) {
-    this.mappedCategoriesById = {}
+    this.mappedCategoriesById = {};
+    this.mappedCategoriesByName = {};
+    this.mappedCategoriesByCode = {};
+
+    var self = this;
     array.forEach(function(element) {
-      this.mappedCategoriesById[element._id] = element
-    }, this);
-    this.mappedCategoriesByName = {}
-    array.forEach(function(element) {
-      this.mappedCategoriesByName[element.name] = element
-    }, this);
+      self.mappedCategoriesById[element._id] = element
+      self.mappedCategoriesByName[element.name] = element
+      self.mappedCategoriesByCode[element.code] = element
+    });
+
   }
 
   public getCategories(): Promise<any> {

@@ -9,6 +9,7 @@ export class CurrencyProvider {
   public currencies: CurrencyModel [];
   public mappedCurrenciesById: {};
   public mappedCurrenciesByName: {};
+  public mappedCurrenciesByCode: {};
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
     // console.log({ CURRENCY: this });
@@ -22,13 +23,15 @@ export class CurrencyProvider {
 
   private updateMappedCurrencies(array) {
     this.mappedCurrenciesById = {}
-    array.forEach(function(element) {
-      this.mappedCurrenciesById[element._id] = element
-    }, this);
     this.mappedCurrenciesByName = {}
+    this.mappedCurrenciesByCode = {}
+
+    var self = this;
     array.forEach(function(element) {
-      this.mappedCurrenciesByName[element.name] = element
-    }, this);
+      self.mappedCurrenciesById[element._id] = element
+      self.mappedCurrenciesByName[element.name] = element
+      self.mappedCurrenciesByCode[element.code] = element
+    });
   }
 
   public getCurrencies(): Promise<any> {

@@ -11,6 +11,9 @@
 
 <ion-content>
 	<ion-list>
+    <ion-item no-lines color="dark">
+      <p style="font-weight: bold;">{{ 'personal-info' | translate:param }}</p>
+    </ion-item>
     <ion-item no-lines color="white">
       <ion-label>{{ 'name' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="editUser.name" (blur)="changeName($event.target.value)"></ion-input>
@@ -32,7 +35,7 @@
         <ion-option value="es">{{ 'es' | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item no-lines color="secondary">
+    <ion-item no-lines color="dark">
       <p style="font-weight: bold;">{{ 'import-and-export' | translate:param }}</p>
     </ion-item>
     <button ion-item no-lines color="white" (click)="export()">
@@ -40,6 +43,28 @@
     </button>
     <button ion-item no-lines color="light" (click)="import()" [disabled]="true">
       <p>{{ 'import-to-file' | translate:param }}</p>
+    </button>
+    <ion-item no-lines color="danger">
+      <p style="font-weight: bold;">{{ 'danger-zone' | translate:param }}</p>
+      <button item-end ion-button outline color="white"
+        *ngIf="dangerZoneIsDisabled" 
+        (click)="activateDangerZoneAlertMessage()">
+        {{ 'disabled' | translate:param }}
+      </button>
+      <button item-end ion-button outline color="white" 
+        *ngIf="!dangerZoneIsDisabled" 
+        (click)="deactivateDangerZone()">
+        {{ 'enabled' | translate:param }}
+      </button>
+    </ion-item>
+    <button ion-item no-lines color="white" (click)="removeAllTransactionsAlertMessage()" [disabled]="dangerZoneIsDisabled">
+      <p>{{ 'remove-all-transactions' | translate:param }}</p>
+    </button>
+    <button ion-item no-lines color="light" (click)="removeAllAccountsAlertMessage()" [disabled]="dangerZoneIsDisabled">
+      <p>{{ 'remove-all-accounts' | translate:param }}</p>
+    </button>
+    <button ion-item no-lines color="white" (click)="removeUserAlertMessage()" [disabled]="true">
+      <p>{{ 'remove-user' | translate:param }}</p>
     </button>
   </ion-list>
 </ion-content>

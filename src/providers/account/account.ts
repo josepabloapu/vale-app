@@ -8,6 +8,7 @@ export class AccountProvider {
 
   public accounts: AccountModel [];
   public mappedAccountsById: {};
+  public mappedAccountsByName: {};
   public currentAccount: AccountModel;
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
@@ -21,9 +22,13 @@ export class AccountProvider {
 
   private updateMappedAccounts(array) {
     this.mappedAccountsById = {}
+    this.mappedAccountsByName = {}
+
+    var self = this;
     array.forEach(function(element) {
-      this.mappedAccountsById[element._id] = element
-    }, this);
+      self.mappedAccountsById[element._id] = element;
+      self.mappedAccountsByName[element.name] = element;
+    });
   }
 
   public updateCurrentAccount(account: AccountModel) {

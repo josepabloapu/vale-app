@@ -39,6 +39,18 @@ export class TransactionProvider {
     });
   }
 
+  public getAllTransactions(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.getRequest('/transactions-all', true)
+        .subscribe(
+          res => {
+            this.updateTransactionProvider(TransactionModel.ParseFromArray(res));
+            resolve(TransactionModel.ParseFromArray(res));
+          },
+          err => reject(<any>err));
+    });
+  }
+
   public getTransactions(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.apiProvider.getRequest('/transactions', true)
