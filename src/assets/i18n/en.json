@@ -67,6 +67,8 @@
 	"already-an-user-?":"Already an user?",
 	"login":"Login",
 	"logging-in":"Logging in...",
+	"loading":"Loading",
+	"loading-please-wait":"Loading, please wait.",
 	"not-yet-an-user-?":"Not yet an user?",
 	"transactions":"Transactions",
 	"accounts":"Accounts",

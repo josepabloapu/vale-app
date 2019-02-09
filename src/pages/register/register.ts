@@ -17,6 +17,7 @@ export class RegisterPage {
 
   public newUser: UserModel;
   public currencies: CurrencyModel [];
+  private loading: any;
 
   constructor(
     public navCtrl: NavController, 
@@ -45,11 +46,22 @@ export class RegisterPage {
   }
 
   public register() {
-    this.userProvider.register(this.newUser).then((result) => {
-      this.messageProvider.displaySuccessMessage('message-new-user-success')
-      this.navCtrl.push(LoginPage, { }, { animate: false });
-    }, (err) => {
-      this.messageProvider.displayErrorMessage('message-new-user-error')
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      this.userProvider.register(this.newUser).then(
+        (result) => {
+          this.loading.dismiss();
+          this.messageProvider.displaySuccessMessage('message-new-user-success')
+          this.navCtrl.push(LoginPage, { }, { animate: false });
+        }, 
+        (err) => {
+          this.loading.dismiss();
+          this.messageProvider.displayErrorMessage('message-new-user-error')
+        });
     });
   }
 

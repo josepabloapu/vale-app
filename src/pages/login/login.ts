@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { LoadingController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { UserModel } from '../../models/user/user';
@@ -17,12 +16,11 @@ import { RegisterPage } from '../register/register';
 })
 export class LoginPage {
 
-  private loading: any;
   public userData: Object;
+  private loading: any;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
-    public loadingCtrl: LoadingController,
     public storage: Storage,
     public translateService: TranslateService,
     public messageProvider: MessageProvider, 
@@ -30,7 +28,6 @@ export class LoginPage {
     public userProvider: UserProvider) 
   {
     this.userData = { username: "", password: "" };
-    this.translateService.get('logging-in').subscribe( value => this.loading = this.loadingCtrl.create({ content: value }));
   }
 
   ionViewDidLoad() {
@@ -38,6 +35,11 @@ export class LoginPage {
   }
 
   public login() {
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
     this.loading.present().then(() => {
       this.userProvider.login(this.userData)
         .then(

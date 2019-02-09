@@ -24,6 +24,7 @@ export class EditAccountPage {
   public currencies: CurrencyModel [];
   public accountTypes: AccountTypeModel [];
   public tempAmount: string;
+  private loading: any;
 
   constructor(
   	public navCtrl: NavController, 
@@ -68,28 +69,53 @@ export class EditAccountPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   public updateAccount() {
+
     let initialBalance = this.unFormat(this.tempAmount);
     if (initialBalance == "") initialBalance = 0;
     this.editAccount.initialBalance = initialBalance;
-  	this.accountProvider.updateAccount(this.editAccount)
-      .then(
-        res => {
-          this.messageProvider.displaySuccessMessage('message-update-account-success')
-          this.navCtrl.setRoot(AccountsPage);
-        }, 
-        err => this.messageProvider.displayErrorMessage('message-update-account-error')
-      );
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+  	  this.accountProvider.updateAccount(this.editAccount)
+        .then(
+          res => {
+            this.loading.dismiss();
+            this.messageProvider.displaySuccessMessage('message-update-account-success')
+            this.navCtrl.setRoot(AccountsPage);
+          }, 
+          err => {
+            this.loading.dismiss();
+            this.messageProvider.displayErrorMessage('message-update-account-error')
+          }
+        );
+    });
+
   }
 
   private deleteAccount() {
-    this.accountProvider.deleteAccount(this.editAccount)
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      this.accountProvider.deleteAccount(this.editAccount)
       .then(
         res => {
+          this.loading.dismiss();
           this.messageProvider.displaySuccessMessage('message-delete-account-success')
           this.navCtrl.setRoot(AccountsPage);
         }, 
-        err => this.messageProvider.displayErrorMessage('message-delete-account-error')
+        err => {
+          this.loading.dismiss();
+          this.messageProvider.displayErrorMessage('message-delete-account-error')
+        }
       );
+    });
+
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */

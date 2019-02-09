@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { AlertController, ToastController } from 'ionic-angular';
+import { AlertController, ToastController, LoadingController } from 'ionic-angular';
 
 @Injectable()
 export class MessageProvider {
@@ -12,7 +12,8 @@ export class MessageProvider {
     public http: HttpClient, 
     public toastCtrl: ToastController,
     public translateService: TranslateService, 
-    public alertController: AlertController) 
+    public alertController: AlertController,
+    public loadingCtrl: LoadingController) 
   {
     this.flag = false;
   }

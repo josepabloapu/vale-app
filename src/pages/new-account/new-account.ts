@@ -24,6 +24,7 @@ export class NewAccountPage {
   public accountTypes: AccountTypeModel [];
   public newAccount: AccountModel;
   public tempAmount: string;
+  private loading; any;
   
   constructor(
     private navCtrl: NavController,
@@ -70,18 +71,29 @@ export class NewAccountPage {
   }
 
   public createAccount() {
-    let initialBalance = this.unFormat(this.tempAmount);
-    if (initialBalance == "") initialBalance = 0;
-    this.newAccount.initialBalance = initialBalance;
-    this.accountProvider.createAccount(this.newAccount)
-      .then(
-        res => {
-          this.getAccounts();
-          this.messageProvider.displaySuccessMessage('message-new-account-success')
-          this.navCtrl.setRoot(AccountsPage);
-        }, 
-        err => this.messageProvider.displayErrorMessage('message-new-account-error')
-      );
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      let initialBalance = this.unFormat(this.tempAmount);
+      if (initialBalance == "") initialBalance = 0;
+      this.newAccount.initialBalance = initialBalance;
+      this.accountProvider.createAccount(this.newAccount)
+        .then(
+          res => {
+            this.getAccounts();
+            this.loading.dismiss();
+            this.messageProvider.displaySuccessMessage('message-new-account-success')
+            this.navCtrl.setRoot(AccountsPage);
+          }, 
+          err => {
+            this.loading.dismiss();
+            this.messageProvider.displayErrorMessage('message-new-account-error')
+          }
+        );
+    });
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */

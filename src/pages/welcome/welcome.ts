@@ -31,9 +31,10 @@ export class WelcomePage {
     public apiProvider: ApiProvider,
     public currencyProvider: CurrencyProvider) 
   {
+
     this.translateService.use('en');
-    this.translateService.get('logging-in').subscribe( value => this.loading = this.loadingCtrl.create({ content: value }));
     this.tryToLogin();
+    // console.log({WELCOME_PAGE: this});
   }
 
   ionViewDidLoad() {
@@ -61,6 +62,11 @@ export class WelcomePage {
   }
 
   private verifyToken(token: string) {
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
     this.loading.present().then(() => {
       this.apiProvider.verifyToken(token)
         .then(

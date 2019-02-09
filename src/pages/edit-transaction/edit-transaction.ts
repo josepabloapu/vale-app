@@ -31,6 +31,7 @@ export class EditTransactionPage {
   private tempAmount: string;
   private date: Date;
   private isoDate: string;
+  private loading: any;
 
   constructor(
     public app: App,
@@ -49,7 +50,7 @@ export class EditTransactionPage {
     this.setCategories(this.categoryProvider.categories);
     this.setAccounts(this.accountProvider.accounts);
     this.setTransaction(this.transactionProvider.currentTransaction);
-    console.log({EDIT_TRANSACTION: this})
+    // console.log({EDIT_TRANSACTION: this})
 
   }
 
@@ -85,15 +86,25 @@ export class EditTransactionPage {
     this.editTransaction.amount = this.unFormat(this.tempAmount);
     this.editTransaction.date = this.parseDate(this.tempDate);
 
-  	this.transactionProvider.updateTransaction(this.editTransaction)
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      this.transactionProvider.updateTransaction(this.editTransaction)
       .then(
         res => {
+          this.loading.dismiss();
           this.messageProvider.displaySuccessMessage('message-update-transaction-success')
           this.navCtrl.setRoot(TransactionsPage);  
         }, 
-        err => this.messageProvider.displayErrorMessage('message-update-transaction-error')
+        err => {
+          this.loading.dismiss();
+          this.messageProvider.displayErrorMessage('message-update-transaction-error')
+        }
       );
-
+    });
+    
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -108,14 +119,26 @@ export class EditTransactionPage {
   }
 
   private deleteTransaction() {
-    this.transactionProvider.deleteTransaction(this.editTransaction)
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      this.transactionProvider.deleteTransaction(this.editTransaction)
       .then(
         res => {
+          this.loading.dismiss();
           this.messageProvider.displaySuccessMessage('message-delete-transaction-success')
           this.navCtrl.setRoot(TransactionsPage);
         }, 
-        err => this.messageProvider.displayErrorMessage('message-delete-transaction-error')
+        err => {
+          this.loading.dismiss();
+          this.messageProvider.displayErrorMessage('message-delete-transaction-error')
+        }
       );
+    });
+    
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */

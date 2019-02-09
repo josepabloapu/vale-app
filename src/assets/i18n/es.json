@@ -67,6 +67,8 @@
 	"already-an-user-?":"¿Es usted un usuario?",
 	"login":"Ingresar",
 	"logging-in":"Ingresando...",
+	"loading":"Cargando",
+	"loading-please-wait":"Cargando, favor espere.",
 	"not-yet-an-user-?":"¿No tiene usuario aún?",
 	"transactions":"Transacciones",
 	"accounts":"Cuentas",

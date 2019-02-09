@@ -21,6 +21,7 @@ export class EditUserPage {
   public tempUser: UserModel;
   public currencies: CurrencyModel [];
   public dangerZoneIsDisabled: boolean;
+  private loading: any;
 
   constructor(
     public app: App,
@@ -84,14 +85,26 @@ export class EditUserPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   private updateUser() {
-    this.userProvider.updateRemoteUser(this.editUser)
-    .then(
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      this.userProvider.updateRemoteUser(this.editUser)
+      .then(
         (user: UserModel) => {
+          this.loading.dismiss();
           this.messageProvider.displaySuccessMessage('message-update-user-success')
           this.setUser(user);
         }, 
-        err => this.messageProvider.displayErrorMessage('message-update-user-error')
+        err => {
+          this.loading.dismiss();
+          this.messageProvider.displayErrorMessage('message-update-user-error')
+        }
       );
+    });
+    
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */

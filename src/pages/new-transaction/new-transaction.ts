@@ -40,6 +40,7 @@ export class NewTransactionPage {
   private tempAmount: string;
   private date: Date;
   private isoDate: string;
+  private loading: any;
   
   constructor(
     private navCtrl: NavController,
@@ -111,19 +112,30 @@ export class NewTransactionPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   public createTransaction() {
+
     this.newTransaction.amount = this.unFormat(this.tempAmount);
     this.newTransaction.date = this.parseDate(this.tempDate);
-    this.transactionProvider.createTransaction(this.newTransaction)
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      this.transactionProvider.createTransaction(this.newTransaction)
       .then(
         res => {
+          this.loading.dismiss();
           this.messageProvider.displaySuccessMessage('message-new-transaction-success');
           this.navCtrl.setRoot(TransactionsPage);
          
         }, 
         err => {
+          this.loading.dismiss();
           this.messageProvider.displayErrorMessage('message-new-transaction-error');
         }
       );
+    });
+
   }
 
   public createTransferTransaction() {
@@ -156,26 +168,35 @@ export class NewTransactionPage {
     this.newTransactionOut.account = this.accountOut;
     this.newTransactionIn.account = this.accountIn;
 
-    this.transactionProvider.createTransaction(this.newTransactionOut)
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      this.transactionProvider.createTransaction(this.newTransactionOut)
       .then(
         res => {
-          
           this.transactionProvider.createTransaction(this.newTransactionIn)
             .then(
               res => {
+                this.loading.dismiss();
                 this.messageProvider.displaySuccessMessage('message-new-two-transactions-success');
                 this.navCtrl.setRoot(TransactionsPage);
                 
               }, 
               err => {
+                this.loading.dismiss();
                 this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
               }
             );
         }, 
         err => {
+          this.loading.dismiss();
           this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
         }
       );
+    });
+
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
