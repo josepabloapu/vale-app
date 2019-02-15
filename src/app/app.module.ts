@@ -7,6 +7,8 @@ import { IonicStorageModule } from '@ionic/storage';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { File } from '@ionic-native/file';
+import { FileChooser } from '@ionic-native/file-chooser';
+import { FilePath } from '@ionic-native/file-path';
 
 import { WelcomePage } from '../pages/welcome/welcome';
 import { RegisterPage } from '../pages/register/register';
@@ -36,6 +38,8 @@ import { MessageProvider } from '../providers/message/message';
 import { ExportProvider } from '../providers/export/export';
 import { UserProvider } from '../providers/user/user';
 
+import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, '../assets/i18n/', '.json');
@@ -55,7 +59,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     EditAccountPage,
     StatsPage,
     EditUserPage,
-    TabsPage
+    TabsPage,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,
@@ -90,6 +95,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     StatusBar,
     SplashScreen,
     File,
+    FileChooser,
+    FilePath,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
     TransactionProvider,

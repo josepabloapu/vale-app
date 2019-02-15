@@ -22,6 +22,7 @@ export class TransactionsPage {
   public accounts: AccountModel [];
   public transactions: TransactionModel [];
   public timeZoneOffset: string;
+  private loading: any;
   
   constructor(
     public navCtrl: NavController, 
@@ -36,7 +37,17 @@ export class TransactionsPage {
     this.timeZoneOffset = String(new Date().getTimezoneOffset() / 60 * 100);
     this.getCategories();
     this.getAccounts();
-    this.getTransactions();
+
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+
+    this.loading.present().then(() => {
+      this.getTransactions().then( res => {
+        this.loading.dismiss();
+      })
+    })
+
     // console.log({TRANSACTION_PAGE: this})
 
   }
@@ -59,9 +70,11 @@ export class TransactionsPage {
     this.accountProvider.getAccounts()
     .then(
       res => {
-        this.updateAccounts(AccountModel.ParseFromArray(res))
+        this.updateAccounts(AccountModel.ParseFromArray(res));
       },
-      err => this.messageProvider.displaySuccessMessage('message-get-accounts-error')
+      err => {
+        this.messageProvider.displaySuccessMessage('message-get-accounts-error');
+      }
     );
   }
 
@@ -70,13 +83,19 @@ export class TransactionsPage {
   }
 
   private getTransactions() {
-    this.transactionProvider.getTransactions()
-    .then(
-      res => {
-        this.updateTransactions(TransactionModel.ParseFromArray(res))
-      },
-      err => this.messageProvider.displaySuccessMessage('message-get-transactions-error')
-    );
+    return new Promise((resolve) => {
+      this.transactionProvider.getTransactions()
+      .then(
+        res => {
+          resolve();
+          this.updateTransactions(TransactionModel.ParseFromArray(res));
+        },
+        err => {
+          resolve(err);
+          this.messageProvider.displaySuccessMessage('message-get-transactions-error');
+        }
+      );
+    })
   }
 
   private updateCategories(categories: CategoryModel []) {

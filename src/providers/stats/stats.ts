@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { CurrencyModel } from '../../models/currency/currency';
+import { FilterRulesModel } from '../../models/stats/filter-rules';
 
 import { ApiProvider } from '../../providers/api/api';
 import { UserProvider } from '../../providers/user/user';
@@ -26,7 +27,7 @@ export class StatsProvider {
     private currencyProvider: CurrencyProvider) 
   {
     this.currency = this.currencyProvider.mappedCurrenciesById[this.userProvider.user.currency];
-    // console.log({ STATS: this });
+    // console.log({ PROVIDER_STATS: this });
   }
 
   public getBalancePerCategoryAndDate(category, date): Promise<any> {
@@ -37,6 +38,17 @@ export class StatsProvider {
           result => {
             balance = result;
             resolve(balance.amount);
+          },
+          err => reject(<any>err));
+    });
+  }
+
+  public getBalance(filterRules: FilterRulesModel): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.postRequest('/stats/filter', filterRules)
+        .subscribe(
+          result => {
+            resolve(result);
           },
           err => reject(<any>err));
     });

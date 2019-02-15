@@ -13,6 +13,7 @@ export class AccountProvider {
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
     this.getAccounts();
+    // console.log({PROVIDER_ACCOUNT: this})
   }
 
   public updateAccountProvider(accounts: AccountModel []) {
@@ -40,8 +41,9 @@ export class AccountProvider {
       this.apiProvider.postRequest('/accounts', account, true)
         .subscribe(
           res => {
-            this.getAccounts();
-            resolve(<any>res);
+            this.getAccounts().then( res => {
+              resolve(<any>res);
+            });
           },
           err => reject(<any>err));
     });

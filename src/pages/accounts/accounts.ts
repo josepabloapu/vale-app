@@ -30,6 +30,7 @@ export class AccountsPage {
   private creditAccounts: AccountModel [];
   private investmentAccounts: AccountModel [];
   private loanAccounts: AccountModel [];
+  private loading: any;
 
   constructor(
     private navCtrl: NavController, 
@@ -38,10 +39,23 @@ export class AccountsPage {
     private currencyProvider: CurrencyProvider,
     private accountProvider: AccountProvider,
     private accountTypeProvider: AccountTypeProvider) 
-  {    
-    this.setUser(this.userProvider.user)
-    this.getAccounts();
+  {  
+
+    this.setUser(this.userProvider.user);
+    this.setAccounts(this.accountProvider.accounts);
+
+    // this.messageProvider.translateService.get('loading').subscribe( value => {
+    //   this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    // });
+
+    // this.loading.present().then(() => {
+    //   this.getAccounts().then( res => {
+    //     this.loading.dismiss();
+    //   })
+    // })
+
     // console.log({PAGE_ACCOUNTS: this})
+
   }
 
   ionViewDidLoad() {
@@ -61,18 +75,22 @@ export class AccountsPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
   
   private getAccounts() {
-  	this.accountProvider.getAccounts()
-  	.then(
-  		res => {
-  			this.updateAccounts(AccountModel.ParseFromArray(res));
-  		},
-  		err => {
-        this.messageProvider.displayErrorMessage('message-get-accounts-error');
-      }
-    );
+    return new Promise((resolve) => {
+  	  this.accountProvider.getAccounts()
+  	  .then(
+  	  	res => {
+          resolve(res);
+  	  		this.setAccounts(AccountModel.ParseFromArray(res));
+  	  	},
+  	  	err => {
+          resolve(err);
+          this.messageProvider.displayErrorMessage('message-get-accounts-error');
+        }
+      );
+    })
   }
 
-  private updateAccounts(accounts: AccountModel []) {
+  private setAccounts(accounts: AccountModel []) {
     this.accounts = accounts;
     this.computeAccountsPerType();
     this.computeNetWorth();

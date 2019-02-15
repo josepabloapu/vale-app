@@ -35,23 +35,26 @@
         <ion-option *ngFor="let category of expenseCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item  no-lines color="light" *ngIf="isTransfer === false">
+    <ion-item  no-lines color="light" *ngIf="isTransfer === false && newTransaction.account != null">
       <ion-label>{{ 'account' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.account" #account (ionChange)="accountChange(account._value)">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item  no-lines color="white" *ngIf="isTransfer === true">
+    <ion-item  no-lines color="white" *ngIf="isTransfer === true && newTransaction.account != null">
       <ion-label>{{ 'account-out' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountOut">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item no-lines color="light" *ngIf="isTransfer === true">
+    <ion-item no-lines color="light" *ngIf="isTransfer === true && newTransaction.account != null">
       <ion-label>{{ 'account-in' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountIn">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
+    </ion-item>
+    <ion-item no-lines color="energized" *ngIf="newTransaction.account === null">
+      <p text-wrap>{{ 'warning-transaction-no-account' | translate:param }}</p>
     </ion-item>
     <ion-item no-lines color="white">
       <ion-label>Date</ion-label>
@@ -64,9 +67,6 @@
     <ion-item no-lines color="white">
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="newTransaction.description"></ion-input>
-    </ion-item>
-    <ion-item no-lines color="energized" *ngIf="newTransaction.account == null">
-      <p text-wrap>{{ 'warning-transaction-no-account' | translate:param }}</p>
     </ion-item>
   </ion-list>
 </ion-content>

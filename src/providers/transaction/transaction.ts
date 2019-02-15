@@ -16,7 +16,7 @@ export class TransactionProvider {
   public currentTransaction: TransactionModel;
 
   constructor(public http: HttpClient, private apiProvider: ApiProvider) {
-    // console.log({ TRANSACTION: this });
+    // console.log({ PROVIDER_TRANSACTION: this });
   }
 
   public updateTransactionProvider(transactions: TransactionModel []) {
@@ -33,6 +33,17 @@ export class TransactionProvider {
         .subscribe(
           res => {
             this.getTransactions();
+            resolve(<any>res);
+          },
+          err => reject(<any>err));
+    });
+  }
+
+  public createTransactionFromImportRoutine(transaction: object) {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.postRequest('/transactions', transaction, true)
+        .subscribe(
+          res => {
             resolve(<any>res);
           },
           err => reject(<any>err));
@@ -84,6 +95,19 @@ export class TransactionProvider {
             resolve(<any>res);
           },
           err => reject(<any>err));
+    });
+  }
+
+  public deleteTransactionFromImportRoutine(transaction): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.apiProvider.deleteRequest('/transactions/' + transaction._id, true)
+        .subscribe(
+          res => {
+            resolve(<any>res);
+          },
+          err => {
+            reject(<any>err)
+          });
     });
   }
 

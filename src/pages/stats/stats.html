@@ -11,7 +11,7 @@
       <p style="font-weight: bold;">{{ 'expenses' | translate:param }}
     </ion-item>
 
-    <ion-item no-lines *ngFor="let term of dateTerms; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+    <ion-item no-lines *ngFor="let term of dateTermsToDisplay; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
       <h3 item-start>
           {{ term | translate:param }}
       </h3>
@@ -92,6 +92,23 @@
         </ion-col>
       </ion-row>
     </ion-item>  -->
+
+    <ion-item no-lines color="dark">
+      <p style="font-weight: bold;">{{ 'balance-per-category' | translate:param }}
+      <p item-end style="font-weight: bold;">{{ 'last-year' | translate:param }}</p>
+    </ion-item>
+
+    <ion-item no-lines *ngFor="let category of dataSortedByDate['last-year'].validExpenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+      <h3 item-start>
+        {{ dataSortedByDate['last-year'].categoriesBalance[category.name].name | translate:param}}
+      </h3>
+      <h3 style="color:grey;">
+        {{ dataSortedByDate['last-year'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%
+      </h3>
+      <h3 item-end>
+        {{ dataSortedByDate['last-year'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}
+      </h3>
+    </ion-item>
 
   </ion-list>
 </ion-content>

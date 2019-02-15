@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, transition } from '@angular/core';
-import { Platform } from 'ionic-angular';
-// import { CurrencyModel } from '../../models/currency/currency';
-// import { CategoryModel } from '../../models/category/category';
-// import { AccountModel } from '../../models/account/account';
+import { Platform, Header } from 'ionic-angular';
+import { CurrencyModel } from '../../models/currency/currency';
+import { CategoryModel } from '../../models/category/category';
+import { AccountModel } from '../../models/account/account';
 import { TransactionModel } from '../../models/transaction/transaction';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { CategoryProvider } from '../../providers/category/category';
@@ -13,32 +13,40 @@ import { TransactionProvider } from '../../providers/transaction/transaction';
 import { UserProvider } from '../../providers/user/user';
 import { MessageProvider } from '../../providers/message/message';
 import { File } from '@ionic-native/file';
+import { FileChooser } from '@ionic-native/file-chooser';
+import { FilePath } from '@ionic-native/file-path';
 import * as papa from 'papaparse';
-import { rejects } from 'assert';
-import { AccountModel } from '../../models/account/account';
+// import { DomSanitizer, SafeHtml, SafeStyle, SafeScript, SafeUrl, SafeResourceUrl } from '@angular/platform-browser';
 
 @Injectable()
 export class ExportProvider {
 
+  public progress: number;
   // private currencies: CurrencyModel [];
   // private categories: CategoryModel [];
   // private accounts: AccountModel [];
   private transactions: TransactionModel [];
   private parsedTransactions: TransactionModel [];
   private headerFields: string [];
+  private loading: any;
+  // private _htmlProperty: string = '<progress-bar [progress]="exportProvider.progress"></progress-bar>'
 
   constructor(
+    // private _sanitizer: DomSanitizer,
     public platform: Platform,
     public http: HttpClient,
     public file: File,
+    public fileChooser: FileChooser,
+    public filePath: FilePath,
   	public currencyProvider: CurrencyProvider,
   	public categoryProvider: CategoryProvider,
     public accountProvider: AccountProvider,
     public accountTypeProvider: AccountTypeProvider,
     public transactionProvider: TransactionProvider,
     public userProvider: UserProvider,
-  	public messageProvider: MessageProvider) 
+    public messageProvider: MessageProvider) 
   {
+    this.progress = 0;
     this.initializeVariables();
     // console.log({EXPORT_PROVIDER: this})
   }
@@ -46,7 +54,7 @@ export class ExportProvider {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   private initializeVariables() {
-    this.headerFields = ['type', 'account', 'category', 'amount', 'date','description'];
+    this.headerFields = ['type', 'account', 'currency', 'category', 'amount', 'date','description'];
     // this.setCurrencies(this.currencyProvider.currencies);
     // this.setCategories(this.categoryProvider.categories);
     // this.setAccounts(this.accountProvider.accounts);
@@ -83,6 +91,10 @@ export class ExportProvider {
     return this.categoryProvider.mappedCategoriesById[id];
   }
   
+  private getCategoryReadableObjectByName(name: string = '') {
+    return this.categoryProvider.mappedCategoriesByName[name];
+  }
+
   private getCategoryReadableObjectByCode(code: string = '') {
     return this.categoryProvider.mappedCategoriesByCode[code];
   }
@@ -104,7 +116,7 @@ export class ExportProvider {
 
   public computeCSV() {
   	return new Promise((resolve) => {
-  		this.parseData().then( transactions => {
+  		this.parseTransactions().then( transactions => {
     	  this.convertToCSV(transactions).then( csv => {
     	  	resolve(csv);
     	  });
@@ -132,7 +144,14 @@ export class ExportProvider {
   private  convertToCSV(transactions) {
   	return new Promise((resolve) => {
   	  var csv: any = '';
-  	  var line: any = '';
+      var line: any = '';
+      
+      //create header
+      for (let field of this.headerFields) {
+        csv += field + ','
+      }
+      csv += '\r\n';
+
   	  for (let transaction of transactions) {
   	  	line = '';
   	  	for (let field of this.headerFields) {
@@ -144,34 +163,49 @@ export class ExportProvider {
   	})
   }
 
-  private parseData() {
-  	return new Promise((resolve) => {
-  		// this.loadCurrencies();
-    	// this.loadCategories();
-    	// this.loadAccounts();
-    	this.setTransactions(this.transactionProvider.transactions);
-    	this.parseTransactions().then( data => {
-    		resolve(data)
-    	});
-  	})
-  }
+  // private parseData() {
+  // 	return new Promise((resolve) => {
+  //   	this.setTransactions(this.transactionProvider.transactions);
+  //   	this.parseTransactions().then( data => {
+  //   		resolve(data)
+  //   	});
+  // 	})
+  // }
 
-  private parseTransactions() {
-  	return new Promise((resolve) => {
-  		this.parsedTransactions = [];
-  		for (let transaction of this.transactions) {
-  			transaction.currency = this.getCurrencyReadableObject(transaction.currency).name;
-  			transaction.category = this.getCategoryReadableObject(transaction.category).name;
-  			if (this.getAccountReadableObject(transaction.account) == null) {
-  				transaction.account = "";
-  			} else {
-  				transaction.account = this.getAccountReadableObject(transaction.account).name;
-  			}
-  			this.parsedTransactions.push(transaction);
-  		}
-  		this.refreshTransactions();
-  		resolve(this.parsedTransactions)
-  	})
+  // private parseTransactionsOld() {
+  // 	return new Promise((resolve) => {
+  // 		this.parsedTransactions = [];
+  // 		for (let transaction of this.transactions) {
+  // 			transaction.currency = this.getCurrencyReadableObject(transaction.currency).code;
+  // 			transaction.category = this.getCategoryReadableObject(transaction.category).name;
+  // 			if (this.getAccountReadableObject(transaction.account) == null) {
+  // 				transaction.account = "";
+  // 			} else {
+  // 				transaction.account = this.getAccountReadableObject(transaction.account).name;
+  // 			}
+  // 			this.parsedTransactions.push(transaction);
+  // 		}
+  // 		this.refreshTransactions();
+  // 		resolve(this.parsedTransactions)
+  // 	})
+  // }
+
+  private async parseTransactions() {
+    let promises = [];
+    let transactions: TransactionModel[] = await this.transactionProvider.getAllTransactions()
+    for (let transaction of transactions) {
+      transaction.currency = this.getCurrencyReadableObject(transaction.currency).code;
+      transaction.category = this.getCategoryReadableObject(transaction.category).name;
+      if (this.getAccountReadableObject(transaction.account) == null) {
+        transaction.account = "";
+      } else {
+        transaction.account = this.getAccountReadableObject(transaction.account).name;
+      }
+      promises.push(new Promise((resolve) => {
+        resolve(transaction)
+      }))
+    }
+    return Promise.all(promises)
   }
 
   private refreshTransactions() {
@@ -187,189 +221,225 @@ export class ExportProvider {
   /* ---------------------------------------------------------------------------------------------------------------- */
   /* Importing data */
 
-  public readCsvData() {
-    this.http.get('assets/dummyData.csv', {responseType: 'text'}).subscribe(
-      data => this.extractData(data),
+  public readLocalFile() {
+    this.http.get('assets/data13feb(2).csv', {responseType: 'text'}).subscribe(
+      data => this.exportFromCsv(data),
       err => console.log(err)
     );
   }
 
-  private extractData(text) {
-    let csvData = text || '';
+  public chooseCsvFile() {
+    this.fileChooser.open().then(file => {
+      this.filePath.resolveNativePath(file).then(resolvedFilePath => {
+        let path = resolvedFilePath.substring(0, resolvedFilePath.lastIndexOf('/'));
+        let file = resolvedFilePath.substring(resolvedFilePath.lastIndexOf('/')+1, resolvedFilePath.length);
+        this.readCsvData(path, file)
+      }).catch(err => {
+        alert(JSON.stringify(err));
+      });
+    }).catch(err => {
+      alert(JSON.stringify(err));
+  });
+  }
+
+  private readCsvData(path, file) {
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+    this.file.readAsText(path, file).then( csvData => {
+      this.loading.present().then(() => {
+        this.exportFromCsv(csvData).then( res => {
+          this.loading.dismiss();
+        })
+      })
+    }).catch( err => {
+      alert(JSON.stringify(err));
+    });
+  }
+
+  private async exportFromCsv(csv) {
+    let csvData = csv || '';
     let parsedData = papa.parse(csvData).data;
     let headerRow = parsedData[0];
     parsedData.splice(0, 1);
     csvData = parsedData;
-    
-    // console.log(headerRow);
-    // console.log(csvData);
+    await this.createNewAccountsFromCsv(csvData, headerRow);
+    await this.createNewTransactionsFromCsv(csvData, headerRow);
+    return new Promise((resolve) => {
+      resolve();
+    })
+  }
 
-    let transactions: TransactionModel [] = [];
-
-    for (let data of csvData) {
-      let transaction = TransactionModel.GetNewInstance();
-      transaction[headerRow[0]] = data[0]; // type
-      transaction[headerRow[1]] = this.getAccountReadableObjectByName(data[1])._id; // account
-      transaction[headerRow[2]] = this.getCategoryReadableObjectByCode(data[2])._id; // category
-      transaction[headerRow[3]] = data[3]; // amount
-      transaction[headerRow[4]] = this.getCurrencyReadableObjectByCode(data[4])._id; // currency
-      transaction[headerRow[5]] = data[5]; // date
-      transaction[headerRow[6]] = data[6]; // description
-      transaction.owner = this.userProvider.user._id
-      transactions.push(transaction);
-    }
-
-    console.log(transactions);
-
-    let counter = 0;
+  private async createNewTransactionsFromCsv(csv, header){
+    let transactions: TransactionModel[] = await this.identifyNewTransactionsFromCsv(csv, header);
+    let counter: number = 1;
+    let counterEnd: number = transactions.length;
     for (let transaction of transactions) {
-      
-      this.transactionProvider.createTransaction(transaction)
-        // .then(
-        //   transaction => {
-        //     console.log({counter: counter, transaction: transaction});
-        //     counter = counter + 1;
-        //   }, 
-        //   err => {
-        //     console.log("Error")
-        //     counter = counter + 1;
-        //   }
-        // );
-      console.log({counter: counter});
-      counter = counter + 1;
-      this.wait(5000);
+      this.progress = counter / counterEnd * 100;
+      // console.log(counter + ' of ' + counterEnd)
+      await this.transactionProvider.createTransactionFromImportRoutine(transaction);
+      counter++;
     }
+  }
 
+  private async identifyNewTransactionsFromCsv(csv,header){
+    let promises = [];
+    let transaction: TransactionModel;
+    let accountNameTemp: string;
+    for (let line of csv) {
+      if (line == "") break;
+      transaction = TransactionModel.GetNewInstance();
+      transaction['type'] = line[header.findIndex(value => value === 'type')];
+      
+      accountNameTemp = line[header.findIndex(value => value === 'account')];
+      
+      if (accountNameTemp) {
+        transaction['account'] = this.getAccountReadableObjectByName(line[header.findIndex(value => value === 'account')])._id;
+      }
+      transaction['currency'] = this.getCurrencyReadableObjectByCode(line[header.findIndex(value => value === 'currency')].toUpperCase())._id;
+
+      if (line[header.findIndex(value => value === 'category')] != 'Investment') {
+        transaction['category'] = this.getCategoryReadableObjectByName(line[header.findIndex(value => value === 'category')])._id;
+      } else if (line[header.findIndex(value => value === 'type')] == 'expense') {
+        transaction['category'] = this.getCategoryReadableObjectByCode('investment-expense')._id;
+      } else {
+        transaction['category'] = this.getCategoryReadableObjectByCode('investment-income')._id;
+      }
+
+      transaction['amount'] = line[header.findIndex(value => value === 'amount')];
+      transaction['date'] = line[header.findIndex(value => value === 'date')];
+      transaction['description'] = line[header.findIndex(value => value === 'description')];
+      transaction.owner = this.userProvider.user._id
+      promises.push(new Promise((resolve) => {
+        resolve(transaction)
+      }))
+    }
+    return Promise.all(promises)
+  }
+
+  private async createNewAccountsFromCsv(csv, header) {
+    let promises = []
+    let accounts: AccountModel[] = await this.identifyNewAccountsFromCsv(csv, header, this.accountProvider.accounts);
+    for (let account of accounts) {
+      // console.log({newAccount: account})
+      promises.push(new Promise((resolve) => {
+        this.accountProvider.createAccount(account).then( () => {
+          resolve();
+        })
+      }))
+    }
+    return Promise.all(promises)
+  }
+
+  private async identifyNewAccountsFromCsv(csv, header, currentAccounts): Promise<any> {
+    let accounts: AccountModel[] = await this.identifyAccountsFromCsv(csv, header);
+    let promises = []
+    for (let account of accounts) {
+      if(this.searchAccountName(account.name, currentAccounts) == false) {
+        promises.push(new Promise((resolve) => {
+          resolve(account);
+        }))
+      }
+    }
+    return Promise.all(promises)
+  }
+
+  private async identifyAccountsFromCsv(csv, header): Promise<any> {
+    let promises = []
+    let accounts: AccountModel[] = [];
+    let account: AccountModel;
+    let accountNameTemp: string;
+    for (let line of csv) {
+      if (line != "") {
+        accountNameTemp = line[header.findIndex(value => value === 'account')]
+        if (accountNameTemp != null && accountNameTemp != "") {
+          if (this.searchAccountName(accountNameTemp, accounts) != true) {
+            account = AccountModel.GetNewInstance();
+            account.name = accountNameTemp;
+            account.description = 'Automatic generated';
+            account.owner = this.userProvider.user._id;
+            account.type = this.getAccountTypeReadableObjectByCode('debit-card')._id;
+            account.currency = this.getCurrencyReadableObjectByCode(line[header.findIndex(value => value === 'currency')])._id;
+            account.initialBalance = 0;
+            accounts.push(account);
+            promises.push(new Promise((resolve) => {
+              resolve(account)
+            }))
+          }
+        }
+      }
+    }
+    return Promise.all(promises)
+  }
+
+  private searchAccountName(name, accounts: AccountModel[]) : boolean {
+    let isFound: boolean = false;
+    accounts.forEach(element => {
+      if (element.name == name) isFound = true
+    });
+    return isFound;
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
   /* Danger zone */
 
-  public removeAllTransactions() {
-    this.transactionProvider.getAllTransactions().then( transactions => {
-      let counter = 0;
-      for (let transaction of transactions) {
-        this.transactionProvider.deleteTransaction(transaction)
-          .then( 
-            transaction => {
-            console.log({counter: counter, transaction: transaction});
-            counter = counter + 1;
-          },
-          err => {
-            console.log("Error")
-            counter = counter + 1;
-          });
-        // this.wait(500);
-      }
-    });
+  public async removeAllTransactions() {
+    let transactions: TransactionModel[] = await this.transactionProvider.getAllTransactions()
+    let counter = 1;
+    let counterEnd = transactions.length;
+    for (let transaction of transactions) {
+      this.progress = counter / counterEnd * 100;
+      // console.log(counter + ' of ' + counterEnd)
+      await this.transactionProvider.deleteTransactionFromImportRoutine(transaction)
+      counter++;
+    }
+    return new Promise((resolve) => {
+      resolve();
+    })
+  }
+  
+  public async removeAllAccounts() {
+    let accounts = this.accountProvider.accounts;
+    let counter = 1;
+    let counterEnd = accounts.length;
+    for (let account of accounts) {
+      this.progress = counter / counterEnd * 100;
+      // console.log(counter + ' of ' + counterEnd)
+      await this.accountProvider.deleteAccount(account)
+      counter++;
+    }
+    return new Promise((resolve) => {
+      resolve();
+    })
   }
 
-  public removeAllAccounts() {
-    let accounts = this.accountProvider.accounts;
-    let counter = 0;
-    for (let account of accounts) {
-      this.accountProvider.deleteAccount(account)
-        .then( 
-          account => {
-          console.log({counter: counter, account: account});
-          counter = counter + 1;
-        },
-        err => {
-          console.log("Error")
-          counter = counter + 1;
-        });
-    }
+  public async removeAllTransactionsWithLoading() {
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+    this.loading.present().then(() => {
+      this.removeAllTransactions().then( res => {
+        this.loading.dismiss();
+      })
+    })
+  }
+
+  public async removeAllAccountsWithLoading() {
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+    this.loading.present().then(() => {
+      this.removeAllAccounts().then( res => {
+        this.loading.dismiss();
+      })
+    })
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
-  /* Testing */
+  /* Testing stuff */
 
-  public createAccounts() {
-    let account : AccountModel = AccountModel.GetNewInstance();
-    let counter = 0;
-    account.name = "Planilla";
-    account.owner = this.userProvider.user._id;
-    account.type = this.getAccountTypeReadableObjectByCode('debit-card')._id;
-    account.currency = this.getCurrencyReadableObjectByCode('CRC')._id;
-    account.initialBalance = 0;
-    this.accountProvider.createAccount(account).then(
-      account => {
-        console.log({counter: counter, account: account});
-        counter = counter + 1;
-      }, 
-      err => {
-        console.log("Error")
-        counter = counter + 1;
-      }
-    );
-    account.name = "BCR";
-    account.owner = this.userProvider.user._id;
-    account.type = this.getAccountTypeReadableObjectByCode('debit-card')._id;
-    account.currency = this.getCurrencyReadableObjectByCode('CRC')._id;
-    account.initialBalance = 0;
-    this.accountProvider.createAccount(account).then(
-      account => {
-        console.log({counter: counter, account: account});
-        counter = counter + 1;
-      }, 
-      err => {
-        console.log("Error")
-        counter = counter + 1;
-      }
-    );
-    account.name = "Cash";
-    account.owner = this.userProvider.user._id;
-    account.type = this.getAccountTypeReadableObjectByCode('debit-card')._id;
-    account.currency = this.getCurrencyReadableObjectByCode('CRC')._id;
-    account.initialBalance = 0;
-    this.accountProvider.createAccount(account).then(
-      account => {
-        console.log({counter: counter, account: account});
-        counter = counter + 1;
-      }, 
-      err => {
-        console.log("Error")
-        counter = counter + 1;
-      }
-    );
-    account.name = "Cashback";
-    account.owner = this.userProvider.user._id;
-    account.type = this.getAccountTypeReadableObjectByCode('credit-card')._id;
-    account.currency = this.getCurrencyReadableObjectByCode('CRC')._id;
-    account.initialBalance = 0;
-    this.accountProvider.createAccount(account).then(
-      account => {
-        console.log({counter: counter, account: account});
-        counter = counter + 1;
-      }, 
-      err => {
-        console.log("Error")
-        counter = counter + 1;
-      }
-    );
-    account.name = "Lifemiles";
-    account.owner = this.userProvider.user._id;
-    account.type = this.getAccountTypeReadableObjectByCode('credit-card')._id;
-    account.currency = this.getCurrencyReadableObjectByCode('CRC')._id;
-    account.initialBalance = 0;
-    this.accountProvider.createAccount(account).then(
-      account => {
-        console.log({counter: counter, account: account});
-        counter = counter + 1;
-      }, 
-      err => {
-        console.log("Error")
-        counter = counter + 1;
-      }
-    );
-  }
-
-  private wait(ms) {
-    var start = Date.now(),
-    now = start;
-    while (now - start < ms) {
-      now = Date.now();
-    }
-  }
+  // public htmlProperty() {
+  //   return this._sanitizer.bypassSecurityTrustHtml(this._htmlProperty);
+  // }
 
 }

@@ -21,6 +21,7 @@ export class EditUserPage {
   public tempUser: UserModel;
   public currencies: CurrencyModel [];
   public dangerZoneIsDisabled: boolean;
+  public loadProgress: number;
   private loading: any;
 
   constructor(
@@ -114,7 +115,8 @@ export class EditUserPage {
   }
 
   public import() {
-    this.exportProvider.readCsvData();
+    // this.exportProvider.readLocalFile();
+    this.exportProvider.chooseCsvFile();
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -152,7 +154,7 @@ export class EditUserPage {
   }
 
   private removeAllTransactions() {
-    this.exportProvider.removeAllTransactions();
+    this.exportProvider.removeAllTransactionsWithLoading();
   }
 
   public removeAllAccountsAlertMessage() {
@@ -165,7 +167,7 @@ export class EditUserPage {
   }
 
   private removeAllAccounts() {
-    this.exportProvider.removeAllAccounts();
+    this.exportProvider.removeAllAccountsWithLoading();
   }
 
   public removeUserAlertMessage() {

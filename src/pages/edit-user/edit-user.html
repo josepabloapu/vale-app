@@ -10,6 +10,7 @@
 </ion-header>
 
 <ion-content>
+  <progress-bar [progress]="exportProvider.progress" *ngIf="exportProvider.progress > 0 && exportProvider.progress < 99.9"></progress-bar>
 	<ion-list>
     <ion-item no-lines color="dark">
       <p style="font-weight: bold;">{{ 'personal-info' | translate:param }}</p>
@@ -41,7 +42,7 @@
     <button ion-item no-lines color="white" (click)="export()">
       <p>{{ 'export-to-file' | translate:param }}</p> 
     </button>
-    <button ion-item no-lines color="light" (click)="import()" [disabled]="true">
+    <button ion-item no-lines color="light" (click)="import()" [disabled]="false">
       <p>{{ 'import-to-file' | translate:param }}</p>
     </button>
     <ion-item no-lines color="danger">
