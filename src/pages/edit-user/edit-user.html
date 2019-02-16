@@ -64,7 +64,7 @@
     <button ion-item no-lines color="light" (click)="removeAllAccountsAlertMessage()" [disabled]="dangerZoneIsDisabled">
       <p>{{ 'remove-all-accounts' | translate:param }}</p>
     </button>
-    <button ion-item no-lines color="white" (click)="removeUserAlertMessage()" [disabled]="true">
+    <button ion-item no-lines color="white" (click)="removeUserAlertMessage()" [disabled]="dangerZoneIsDisabled">
       <p>{{ 'remove-user' | translate:param }}</p>
     </button>
   </ion-list>

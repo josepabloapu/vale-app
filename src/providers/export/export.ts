@@ -380,36 +380,14 @@ export class ExportProvider {
     return isFound;
   }
 
-  /* ---------------------------------------------------------------------------------------------------------------- */
-  /* Danger zone */
-
-  public async removeAllTransactions() {
-    let transactions: TransactionModel[] = await this.transactionProvider.getAllTransactions()
-    let counter = 1;
-    let counterEnd = transactions.length;
-    for (let transaction of transactions) {
-      this.progress = counter / counterEnd * 100;
-      // console.log(counter + ' of ' + counterEnd)
-      await this.transactionProvider.deleteTransactionFromImportRoutine(transaction)
-      counter++;
-    }
-    return new Promise((resolve) => {
-      resolve();
-    })
-  }
-  
-  public async removeAllAccounts() {
-    let accounts = this.accountProvider.accounts;
-    let counter = 1;
-    let counterEnd = accounts.length;
-    for (let account of accounts) {
-      this.progress = counter / counterEnd * 100;
-      // console.log(counter + ' of ' + counterEnd)
-      await this.accountProvider.deleteAccount(account)
-      counter++;
-    }
-    return new Promise((resolve) => {
-      resolve();
+  public async removeAllAccountsWithLoading() {
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+    });
+    this.loading.present().then(() => {
+      this.accountProvider.removeAllAccounts().then( res => {
+        this.loading.dismiss();
+      })
     })
   }
 
@@ -418,28 +396,10 @@ export class ExportProvider {
       this.loading = this.messageProvider.loadingCtrl.create({ content: value })
     });
     this.loading.present().then(() => {
-      this.removeAllTransactions().then( res => {
+      this.transactionProvider.removeAllTransactions().then( res => {
         this.loading.dismiss();
       })
     })
   }
-
-  public async removeAllAccountsWithLoading() {
-    this.messageProvider.translateService.get('loading').subscribe( value => {
-      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
-    });
-    this.loading.present().then(() => {
-      this.removeAllAccounts().then( res => {
-        this.loading.dismiss();
-      })
-    })
-  }
-
-  /* ---------------------------------------------------------------------------------------------------------------- */
-  /* Testing stuff */
-
-  // public htmlProperty() {
-  //   return this._sanitizer.bypassSecurityTrustHtml(this._htmlProperty);
-  // }
 
 }

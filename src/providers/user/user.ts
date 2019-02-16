@@ -10,28 +10,20 @@ export class UserProvider {
   public user: UserModel
 
   constructor(public http: HttpClient, public apiProvider: ApiProvider, private storage: Storage) {
-    // console.log({USER_ME: this})
+    // console.log({PROVIDER_USER: this})
   }
 
-  public updateUser(user: UserModel) {
+  private setUser(user: UserModel) {
     this.user = user;
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
-  public setLocalUser(user: UserModel): Promise<UserModel> {
+  public async setLocalUser(user: UserModel): Promise<any> {
+    await this.storage.set('user', JSON.stringify(user));
+    await this.setUser(user);
     return new Promise((resolve) => {
-      this.getLocalUser().then((res) => {
-        if (res) {
-          this.removeLocalUser().then(() => {
-
-          });
-        }
-      }).then(() => {
-        this.storage.set('user', JSON.stringify(user));
-        this.updateUser(user);
-        resolve(user);
-      });
+      resolve(user);
     });
   }
 
@@ -39,7 +31,7 @@ export class UserProvider {
     return new Promise((resolve) => {
       this.storage.get('user').then((value) => {
         let user = JSON.parse(value);
-        this.updateUser(user);
+        this.setUser(user);
         resolve(user);
       })
     });
@@ -48,7 +40,7 @@ export class UserProvider {
   public removeLocalUser(): Promise<string> {
     return new Promise((resolve) => {
       this.storage.remove('user');
-      this.updateUser(null);
+      this.setUser(null);
       resolve();
     });
   }

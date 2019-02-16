@@ -7,7 +7,7 @@
 <ion-content id="page-stats">
   <ion-list>
     
-    <ion-item no-lines color="dark">
+    <!-- <ion-item no-lines color="dark">
       <p style="font-weight: bold;">{{ 'expenses' | translate:param }}
     </ion-item>
 
@@ -16,9 +16,9 @@
           {{ term | translate:param }}
       </h3>
       <h3 item-end>
-          {{ dataSortedByDate[term].expenseBalance | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}
+          {{ dataSortedByDate[term].expenseBalance | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}
       </h3>
-    </ion-item>
+    </ion-item> -->
 
     <!-- <ion-item no-lines color="white">
       <ion-row *ngFor="let term of dateTerms">
@@ -26,7 +26,7 @@
           <p>{{ term | translate:param }}</p>
         </ion-col>
         <ion-col text-right>
-          <p>{{ dataSortedByDate[term].expenseBalance | number:0 }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+          <p>{{ dataSortedByDate[term].expenseBalance | number:0 }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}</p>
         </ion-col>
       </ion-row>
     </ion-item> -->
@@ -44,7 +44,7 @@
         {{ dataSortedByDate['this-month'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%
       </h3>
       <h3 item-end>
-        {{ dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}
+        {{ dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}
       </h3>
     </ion-item>
 
@@ -57,7 +57,7 @@
           <p style="color:grey;">{{ dataSortedByDate['this-month'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
         </ion-col>
         <ion-col text-right *ngIf="dataSortedByDate['this-month'].categoriesBalance[category.name].balance">
-          <p>{{ dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+          <p>{{ dataSortedByDate['this-month'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}</p>
         </ion-col>
       </ion-row>
     </ion-item>   -->
@@ -75,7 +75,7 @@
         {{ dataSortedByDate['this-year'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%
       </h3>
       <h3 item-end>
-        {{ dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}
+        {{ dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}
       </h3>
     </ion-item>
 
@@ -88,12 +88,12 @@
           <p style="color:grey;">{{ dataSortedByDate['this-year'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%</p>
         </ion-col>
         <ion-col text-right *ngIf="dataSortedByDate['this-year'].categoriesBalance[category.name].balance">
-          <p>{{ dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}</p>
+          <p>{{ dataSortedByDate['this-year'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}</p>
         </ion-col>
       </ion-row>
     </ion-item>  -->
 
-    <ion-item no-lines color="dark">
+    <ion-item no-lines color="dark" *ngIf="dataSortedByDate['last-year'].validExpenseCategories[0]">
       <p style="font-weight: bold;">{{ 'balance-per-category' | translate:param }}
       <p item-end style="font-weight: bold;">{{ 'last-year' | translate:param }}</p>
     </ion-item>
@@ -106,7 +106,7 @@
         {{ dataSortedByDate['last-year'].categoriesBalance[category.name].percentage | number: '1.2-2' }}%
       </h3>
       <h3 item-end>
-        {{ dataSortedByDate['last-year'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}
+        {{ dataSortedByDate['last-year'].categoriesBalance[category.name].balance | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}
       </h3>
     </ion-item>
 

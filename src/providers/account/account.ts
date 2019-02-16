@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AccountModel } from '../../models/account/account';
 import { ApiProvider } from '../../providers/api/api';
@@ -11,7 +10,7 @@ export class AccountProvider {
   public mappedAccountsByName: {};
   public currentAccount: AccountModel;
 
-  constructor(public http: HttpClient, private apiProvider: ApiProvider) {
+  constructor(private apiProvider: ApiProvider) {
     this.getAccounts();
     // console.log({PROVIDER_ACCOUNT: this})
   }
@@ -61,7 +60,8 @@ export class AccountProvider {
     });
   }
 
-  public updateAccount(account) {
+  public updateAccount(account) 
+  {
     return new Promise((resolve, reject) => {
       this.apiProvider.putRequest('/accounts/' + account._id, account, true)
         .subscribe(
@@ -73,16 +73,49 @@ export class AccountProvider {
     });
   }
 
-  public deleteAccount(account): Promise<any> {
-    return new Promise((resolve, reject) => {
+  public deleteAccount(account: AccountModel): Promise<any> 
+  {
+    return new Promise( (resolve, reject) => {
       this.apiProvider.deleteRequest('/accounts/' + account._id, true)
-        .subscribe(
-          res => {
-            this.getAccounts();
-            resolve(<any>res);
-          },
-          err => reject(<any>err));
+      .subscribe(
+        res => {
+          this.getAccounts();
+          resolve(<any>res);
+        }, err => {
+          reject(<any>err)
+        }
+      );
     });
+  }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+  /* Danger zone */
+
+  public async removeAllAccounts() 
+  {
+    let accounts: AccountModel[] = await this.getAccounts();
+    let counter: number = 1;
+    let counterEnd: number = accounts.length;
+    let progress: number = 0;
+
+    for (let account of accounts) 
+    {
+      progress = counter / counterEnd * 100;
+      this.broadcastProgress(progress);
+      await this.deleteAccount(account);
+      counter++;
+    }
+
+    return new Promise((resolve) => { resolve(); });
+  }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+  /* Support functions */
+
+  private broadcastProgress(value) 
+  {
+    console.log(value)
+    // this.exportProvider.progress = value;
   }
 
 }

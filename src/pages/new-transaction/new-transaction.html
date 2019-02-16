@@ -12,8 +12,22 @@
         autofocus text-right type="tel"
         [ngClass]="'amount'"
         [(ngModel)]="tempAmount" 
-        pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
+        pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$"
+        (ionChange)="rateChange()"
         (input)="tempAmount = format(tempAmount)"></ion-input>
+    </ion-item>
+    <ion-item no-lines color="light" *ngIf="isDifferentCurrency == true">
+      <ion-label>{{ 'rate' | translate:param }}</ion-label>
+      <ion-input 
+        autofocus text-right type="tel"
+        [(ngModel)]="tempRate" 
+        pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
+        (ionChange)="rateChange()"
+        (input)="tempRate = format(tempRate)"></ion-input>
+    </ion-item>
+    <ion-item no-lines color="energized" *ngIf="isDifferentCurrency == true">
+      <p text-wrap>{{ 'warning-how-much-is-deducted' | translate:param }}</p>
+      <p>{{ cost | number:'1.2-2' }} {{ getCurrencyReadableObject(accountProvider.mappedAccountsById[accountOut].currency).code }}</p>
     </ion-item>
     <ion-item no-lines color="light">
       <ion-label>{{ 'type' | translate:param }}</ion-label>
@@ -37,19 +51,19 @@
     </ion-item>
     <ion-item  no-lines color="light" *ngIf="isTransfer === false && newTransaction.account != null">
       <ion-label>{{ 'account' | translate:param }}</ion-label>
-      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.account" #account (ionChange)="accountChange(account._value)">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.account" (ionChange)="accountChange($event)">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
     <ion-item  no-lines color="white" *ngIf="isTransfer === true && newTransaction.account != null">
       <ion-label>{{ 'account-out' | translate:param }}</ion-label>
-      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountOut">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountOut" (ionChange)="checkAccountsCurrencies()">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
     <ion-item no-lines color="light" *ngIf="isTransfer === true && newTransaction.account != null">
       <ion-label>{{ 'account-in' | translate:param }}</ion-label>
-      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountIn">
+      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountIn" (ionChange)="checkAccountsCurrencies()">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>

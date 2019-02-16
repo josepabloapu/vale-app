@@ -1,21 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiProvider } from '../../providers/api/api';
 import { TransactionModel } from '../../models/transaction/transaction';
 
-/*
-  Generated class for the TransactionProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class TransactionProvider {
 
   public transactions: TransactionModel [];
   public currentTransaction: TransactionModel;
 
-  constructor(public http: HttpClient, private apiProvider: ApiProvider) {
+  constructor(private apiProvider: ApiProvider){
     // console.log({ PROVIDER_TRANSACTION: this });
   }
 
@@ -109,6 +102,36 @@ export class TransactionProvider {
             reject(<any>err)
           });
     });
+  }
+
+  /* ---------------------------------------------------------------------------------------------------------------- */
+  /* Danger zone */
+
+  public async removeAllTransactions() 
+  {
+    let transactions: TransactionModel[] = await this.getAllTransactions()
+    let counter: number = 1;
+    let counterEnd: number = transactions.length;
+    let progress: number = 0;
+
+    for (let transaction of transactions) 
+    {
+      progress = counter / counterEnd * 100;
+      this.broadcastProgress(progress);
+      await this.deleteTransactionFromImportRoutine(transaction)
+      counter++;
+    }
+
+    return new Promise((resolve) => 
+    {
+      resolve();
+    })
+  }
+
+  private broadcastProgress(value) 
+  {
+    console.log(value)
+    // this.exportProvider.progress = value;
   }
 
 }

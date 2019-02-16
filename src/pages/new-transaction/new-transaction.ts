@@ -31,6 +31,7 @@ export class NewTransactionPage {
   public accounts: AccountModel [];
   public isTransfer: boolean;
   public tempDate: string;
+  public isDifferentCurrency: boolean;
   private newTransaction: TransactionModel;
   private newTransactionOut: TransactionModel;
   private newTransactionIn: TransactionModel;
@@ -38,6 +39,9 @@ export class NewTransactionPage {
   private accountOut: string;
   private accountIn: string;
   private tempAmount: string;
+  private rate: string;
+  private cost: number;
+  private tempRate: string;
   private date: Date;
   private isoDate: string;
   private loading: any;
@@ -53,12 +57,19 @@ export class NewTransactionPage {
   {
 
     this.isTransfer = false;
+    this.isDifferentCurrency = false;
     this.accountOut = '';
     this.accountIn = '';
     this.tempAmount = '';
+    this.tempRate = '';
+    this.cost = 0;
     this.date = new Date();
     this.isoDate = new Date().toISOString();
-    this.setAccounts(this.accountProvider.accounts);
+
+    this.accountProvider.getAccounts().then(accounts => {
+      this.accounts = accounts;
+    })
+    // this.setAccounts(this.accountProvider.accounts);
     this.setCurrencies(this.currencyProvider.currencies);
     this.setCategories(this.categoryProvider.categories);
     this.initTransaction();
@@ -108,6 +119,12 @@ export class NewTransactionPage {
 
   }
 
+  /* ---------------------------------------------------------------------------------------------------------------- */
+
+  public getCurrencyReadableObject(id: string) {
+    return this.currencyProvider.mappedCurrenciesById[id]
+  }
+
 
   /* ---------------------------------------------------------------------------------------------------------------- */
 
@@ -147,9 +164,14 @@ export class NewTransactionPage {
     this.newTransactionOut.owner = this.newTransaction.owner;
     this.newTransactionIn.owner = this.newTransaction.owner;
 
-    this.newTransactionOut.amount = this.newTransaction.amount;
-    this.newTransactionIn.amount = this.newTransaction.amount;
-
+    if (this.isDifferentCurrency == false) {
+      this.newTransactionOut.amount = this.newTransaction.amount;
+      this.newTransactionIn.amount = this.newTransaction.amount;
+    } else {
+      this.newTransactionOut.amount = this.newTransaction.amount * this.unFormat(this.tempRate);
+      this.newTransactionIn.amount = this.newTransaction.amount;
+    }
+    
     this.newTransactionOut.category = this.newTransaction.category;
     this.newTransactionIn.category = this.newTransaction.category;
 
@@ -168,33 +190,34 @@ export class NewTransactionPage {
     this.newTransactionOut.account = this.accountOut;
     this.newTransactionIn.account = this.accountIn;
 
+    // console.log({ newTransactionIn: this.newTransactionIn, newTransactionOut: this.newTransactionOut })
+
     this.messageProvider.translateService.get('loading').subscribe( value => {
       this.loading = this.messageProvider.loadingCtrl.create({ content: value })
-    });
+      this.loading.present().then(() => {
+        this.transactionProvider.createTransaction(this.newTransactionOut)
+        .then(
+          res => {
+            this.transactionProvider.createTransaction(this.newTransactionIn)
+              .then(
+                res => {
+                  this.loading.dismiss();
+                  this.messageProvider.displaySuccessMessage('message-new-two-transactions-success');
+                  this.navCtrl.setRoot(TransactionsPage);
 
-    this.loading.present().then(() => {
-      this.transactionProvider.createTransaction(this.newTransactionOut)
-      .then(
-        res => {
-          this.transactionProvider.createTransaction(this.newTransactionIn)
-            .then(
-              res => {
-                this.loading.dismiss();
-                this.messageProvider.displaySuccessMessage('message-new-two-transactions-success');
-                this.navCtrl.setRoot(TransactionsPage);
-                
-              }, 
-              err => {
-                this.loading.dismiss();
-                this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
-              }
-            );
-        }, 
-        err => {
-          this.loading.dismiss();
-          this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
-        }
-      );
+                }, 
+                err => {
+                  this.loading.dismiss();
+                  this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
+                }
+              );
+          }, 
+          err => {
+            this.loading.dismiss();
+            this.messageProvider.displayErrorMessage('message-new-two-transaction-error');
+          }
+        );
+      });
     });
 
   }
@@ -216,10 +239,15 @@ export class NewTransactionPage {
     }
   }
 
-  public accountChange(value) {
-    this.newTransaction.currency = this.accountProvider.mappedAccountsById[value].currency
+  public accountChange(account) {
+    this.newTransaction.currency = this.accountProvider.mappedAccountsById[account].currency
   }
 
+  public rateChange() {
+    let numRate = this.unFormat(this.tempRate)
+    let numAmount = this.unFormat(this.tempAmount);
+    this.cost = numRate * numAmount;
+  }
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   private computeCategoriesPerType() {
@@ -239,6 +267,18 @@ export class NewTransactionPage {
           break;
       }
     }, this);
+  }
+
+  public checkAccountsCurrencies() {
+    let accountInObject = this.accountProvider.mappedAccountsById[this.accountIn]
+    let accountOutObject = this.accountProvider.mappedAccountsById[this.accountOut]
+    if (accountInObject != undefined && accountOutObject != undefined) {
+      if (accountInObject.currency != accountOutObject.currency) {
+        this.isDifferentCurrency = true;
+      } else {
+        this.isDifferentCurrency = false;
+      }
+    }
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */

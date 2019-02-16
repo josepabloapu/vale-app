@@ -17,13 +17,13 @@
 	"account":"Account",
 	"amount":"Amount",
 	"my-accounts":"My Accounts",
-	"debit-card":"Debit Card",
-	"credit-card":"Credit Card",
+	"debit-card":"Debit card",
+	"credit-card":"Credit card",
 	"investment":"Investment",
 	"loan":"Loan",
 	"cash":"Cash",
-	"debit-cards":"Debit Cards",
-	"credit-cards":"Credit Cards",
+	"debit-cards":"Debit cards",
+	"credit-cards":"Credit cards",
 	"investments":"Investments",
 	"loans":"Loans",
 	"net-worth":"Net Worth",
@@ -44,6 +44,7 @@
 	"expense":"Expense",
 	"income":"Income",
 	"transfer":"Transfer",
+	"rate":"Rate",
 	"account-out":"Debit Account",
 	"account-in":"Credit Account",
 	"cumulative-inflow":"Cumulative Inflow",
@@ -134,5 +135,6 @@
 	"message-update-user-error":"Unable to update the user",
 	"message-loggin-error":"Unable to login",
 	"warning-transaction-account-removed": "The account of this transaction was removed, therefore the transaction is not able to be edited but removed.",
-	"warning-transaction-no-account":"You have no accounts yet, please create one first."
+	"warning-transaction-no-account":"You have no accounts yet, please create one first.",
+	"warning-how-much-is-deducted":"You are transfering between account with different currency. The giver account is going to be deducted with:"
 }

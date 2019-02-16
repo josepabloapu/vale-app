@@ -202,6 +202,7 @@ export class StatsPage {
 
       let filterRules: FilterRulesModel = FilterRulesModel.GetNewInstance();
       filterRules.category = this.categoryProvider.mappedCategoriesByCode[category.code]._id
+      filterRules.currency = this.userProvider.user.currency;
       let filterDate: any = this.filterDate(date)
       filterRules.dateStart = filterDate.dateStart;
       filterRules.dateEnd = filterDate.dateEnd

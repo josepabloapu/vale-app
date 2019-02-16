@@ -4,57 +4,45 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <div padding>
-    <ion-card>
-      <ion-item no-lines color="dark">
-        {{ 'add-your-credentials' | translate:param }}
-      </ion-item>
-      <ion-item no-lines color="white">
-        <ion-label>{{ 'username' | translate:param }}</ion-label>
-        <ion-input type="text" value="" [(ngModel)]="newUser.username"></ion-input>
-      </ion-item>
-      <ion-item no-lines color="light">
-        <ion-label>{{ 'password' | translate:param }}</ion-label>
-        <ion-input type="password" [(ngModel)]="newUser.password"></ion-input>
-      </ion-item>
-    </ion-card>
-  </div>
-  <ion-list>
-    <ion-item no-lines color="dark">
-      {{ 'optional' | translate:param }} 
-      <p item-end>({{ 'you-can-edit-them-later-on' | translate:param}})</p>
-    </ion-item>
-    <ion-item no-lines color="light">
-      <ion-label>{{ 'name' | translate:param }}</ion-label>
-      <ion-input type="text" value="" [(ngModel)]="newUser.name"></ion-input>
-    </ion-item>
-    <ion-item no-lines color="white">
-      <ion-label>{{ 'email' | translate:param }}</ion-label>
-      <ion-input type="text" value="" [(ngModel)]="newUser.email"></ion-input>
-    </ion-item>
-    <ion-item no-lines color="light">
-      <ion-label>{{ 'currency' | translate:param }}</ion-label>
-      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newUser.currency">
-        <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.code | translate:param }}</ion-option>
-      </ion-select>
-    </ion-item>
-    <ion-item no-lines color="white">
-      <ion-label>{{ 'language' | translate:param }}</ion-label>
-      <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newUser.language" (ionChange)="changeLanguage($event)">
-        <ion-option value="en">{{ 'en' | translate:param }}</ion-option>
-        <ion-option value="es">{{ 'es' | translate:param }} </ion-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
+<ion-content padding>
+  <ion-item no-lines color="light">
+    <ion-label>{{ 'username' | translate:param }}</ion-label>
+    <ion-input text-right type="text" value="" [(ngModel)]="newUser.username"></ion-input>
+  </ion-item>
+  <br>
+  <ion-item no-lines color="light">
+    <ion-label>{{ 'password' | translate:param }}</ion-label>
+    <ion-input text-right type="password" [(ngModel)]="newUser.password"></ion-input>
+  </ion-item>
+  <br>
+  <ion-item no-lines color="light">
+    <ion-label>{{ 'name' | translate:param }}</ion-label>
+    <ion-input text-right type="text" placeholder="optional" value="" [(ngModel)]="newUser.name"></ion-input>
+  </ion-item>
+  <br>
+  <ion-item no-lines color="light">
+    <ion-label>{{ 'email' | translate:param }}</ion-label>
+    <ion-input text-right type="text" placeholder="optional" value="" [(ngModel)]="newUser.email"></ion-input>
+  </ion-item>
+  <br>
+  <ion-item no-lines color="light">
+    <ion-label>{{ 'currency' | translate:param }}</ion-label>
+    <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newUser.currency">
+      <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.code | translate:param }}</ion-option>
+    </ion-select>
+  </ion-item>
+  <br>
+  <ion-item no-lines color="light">
+    <ion-label>{{ 'language' | translate:param }}</ion-label>
+    <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newUser.language" (ionChange)="changeLanguage($event)">
+      <ion-option value="en">{{ 'en' | translate:param }}</ion-option>
+      <ion-option value="es">{{ 'es' | translate:param }} </ion-option>
+    </ion-select>
+  </ion-item>
 </ion-content>
 
 <ion-footer no-border padding>
   <button ion-item no-lines color="primary" (click)="register()">
     <ion-title style="text-align:center;text-transform:uppercase;">{{ 'register' | translate:param }}</ion-title >
-  </button>
-  <br>
-  <button ion-item no-lines color="dark" (click)="login()">
-    <ion-title style="text-align:center;text-transform:uppercase;">{{ 'already-an-user-?' | translate:param }}</ion-title >
   </button>
 </ion-footer>

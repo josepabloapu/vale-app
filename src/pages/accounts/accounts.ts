@@ -99,7 +99,11 @@ export class AccountsPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   public getCurrencyReadableObject(id: string) {
-    return this.currencyProvider.mappedCurrenciesById[id];
+    return this.currencyProvider.mappedCurrenciesById[id]
+  }
+
+  public getAccountTypeReadableObject(id: string) {
+    return this.accountTypeProvider.mappedAccountTypesById[id]
   }
 
   /* ---------------------------------------------------------------------------------------------------------------- */
@@ -170,19 +174,19 @@ export class AccountsPage {
     this.liabilities = 0;
 
     this.debitAccounts.forEach(function(element) {
-      this.assets = this.assets + element.balance;
+      if(element.currency == this.userProvider.user.currency) this.assets = this.assets + element.balance;
     }, this);
 
     this.investmentAccounts.forEach(function(element) {
-      this.assets = this.assets + element.balance;
+      if(element.currency == this.userProvider.user.currency) this.assets = this.assets + element.balance;
     }, this);
 
     this.creditAccounts.forEach(function(element) {
-      this.liabilities = this.liabilities + element.balance;
+      if(element.currency == this.userProvider.user.currency) this.liabilities = this.liabilities + element.balance;
     }, this);
 
     this.loanAccounts.forEach(function(element) {
-      this.liabilities = this.liabilities + element.balance;
+      if(element.currency == this.userProvider.user.currency) this.liabilities = this.liabilities + element.balance;
     }, this);
 
     this.liabilities = this.liabilities * (-1);

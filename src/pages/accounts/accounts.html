@@ -10,19 +10,38 @@
 </ion-header>
 
 <ion-content id="page-accounts">
-  <ion-item no-lines color="dark">
-    <p style="font-weight: bold;">{{ 'net-worth' | translate:param }}</p>
-    <p item-end style="font-weight: bold;">{{ netWorth | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}</p>
-  </ion-item>
-  <ion-item no-lines color="white">
-    <p>{{ 'assets' | translate:param }}</p>
-    <p item-end>{{ assets | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }}</p>
-  </ion-item>
-  <ion-item no-lines color="light">
-    <p>{{ 'liabilities' | translate:param }}</p>
-    <p item-end>{{ liabilities | number : '1.2-2' }} {{ getCurrencyReadableObject(user.currency).code }} </p>
-  </ion-item>
-  <div *ngIf="debitAccountsTrue === true">
+  
+  <div [ngClass]="'div-networth'" padding>
+    <ion-item no-lines color="secondary">
+      <p>{{ 'net-worth' | translate:param }}</p>
+      <p item-end>{{ netWorth | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}</p>
+    </ion-item>
+    <br>
+    <ion-item no-lines color="dark">
+      <p>{{ 'assets' | translate:param }}</p>
+      <p item-end>{{ assets | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}</p>
+    </ion-item>
+    <br>
+    <ion-item no-lines color="dark">
+      <p>{{ 'liabilities' | translate:param }}</p>
+      <p item-end>{{ liabilities | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }} </p>
+    </ion-item>
+  </div>
+
+  <button ion-item no-lines *ngFor="let account of accounts; let $i = index" (click)="editAccount(account)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
+    <div item-start>
+      <h3>{{ account.name }}</h3>
+      <p>{{ account.description }}</p>
+      <p>{{ getAccountTypeReadableObject(account.type).code | translate:param }}</p>
+    </div>
+    <div item-end>
+      <h3 style="font-weight:normal;">
+        {{ account.balance | number : '1.2-2' }} {{ getCurrencyReadableObject(account.currency).code }}
+      </h3>
+    </div>
+  </button>
+
+  <!-- <div *ngIf="debitAccountsTrue === true">
     <ion-item no-lines color="dark">
       <p style="font-weight: bold;">{{ 'debit-cards' | translate:param }}</p>
     </ion-item>
@@ -85,5 +104,6 @@
         </h3>
       </div>
     </button>
-  </div>
+  </div> -->
+
 </ion-content>

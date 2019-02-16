@@ -44,6 +44,7 @@
 	"expense":"Gasto",
 	"income":"Ingreso",
 	"transfer":"Transferencia",
+	"rate":"Tipo de cambio",
 	"account-out":"Cuenta a debitar",
 	"account-in":"Cuenta a creditar",
 	"cumulative-inflow":"Ingresos acumulados",
@@ -134,5 +135,6 @@
 	"message-update-user-error":"El usuario no fue actualizado",
 	"message-loggin-error":"No se pudo ingresar, verifique sus credenciales",
 	"warning-transaction-account-removed": "La cuenta de esta transación fue eliminada, por lo tanto no se puede editar, pero sí eliminar.",
-	"warning-transaction-no-account":"Usted no tiene una cuenta aún, favor cree una primero."
+	"warning-transaction-no-account":"Usted no tiene una cuenta aún, favor cree una primero.",
+	"warning-how-much-is-deducted":"Usted está haciendo una transferencia entre cuentas con distina moneda. A la cuenta a debitar se le va a deducir el siguiente monto: "
 }
