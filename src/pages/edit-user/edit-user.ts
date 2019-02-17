@@ -128,6 +128,7 @@ export class EditUserPage {
       this.loading = this.messageProvider.loadingCtrl.create({ content: value })
       this.loading.present().then(() => {
         this.userProvider.logout().then( promise => {
+          this.loading.dismiss();
           this.app.getRootNav().setRoot(WelcomePage)
         })
       })
