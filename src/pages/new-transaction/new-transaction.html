@@ -4,9 +4,8 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content id="page-new-transaction">
-  <ion-list>
-    <ion-item no-lines color="white">
+<ion-content padding id="page-new-transaction">
+    <ion-item no-lines color="light">
       <ion-label>{{ 'amount' | translate:param }}</ion-label>
       <ion-input 
         autofocus text-right type="tel"
@@ -16,6 +15,7 @@
         (ionChange)="rateChange()"
         (input)="tempAmount = format(tempAmount)"></ion-input>
     </ion-item>
+    <br>
     <ion-item no-lines color="light" *ngIf="isDifferentCurrency == true">
       <ion-label>{{ 'rate' | translate:param }}</ion-label>
       <ion-input 
@@ -25,10 +25,12 @@
         (ionChange)="rateChange()"
         (input)="tempRate = format(tempRate)"></ion-input>
     </ion-item>
+    <br *ngIf="isDifferentCurrency == true">
     <ion-item no-lines color="energized" *ngIf="isDifferentCurrency == true">
       <p text-wrap>{{ 'warning-how-much-is-deducted' | translate:param }}</p>
       <p>{{ cost | number:'1.2-2' }} {{ getCurrencyReadableObject(accountProvider.mappedAccountsById[accountOut].currency).code }}</p>
     </ion-item>
+    <br *ngIf="isDifferentCurrency == true">
     <ion-item no-lines color="light">
       <ion-label>{{ 'type' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.type" (ionChange)="typeChange($event)">
@@ -37,52 +39,60 @@
         <ion-option value="transfer"> {{ 'transfer' | translate:param }} </ion-option>
       </ion-select>
     </ion-item>
-    <ion-item no-lines color="white" *ngIf="newTransaction.type === 'income'">
+    <br>
+    <ion-item no-lines color="light" *ngIf="newTransaction.type === 'income'">
       <ion-label>{{ 'category' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.category">
         <ion-option *ngFor="let category of incomeCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item no-lines color="white" *ngIf="newTransaction.type === 'expense'">
+    <br *ngIf="newTransaction.type === 'income'">
+    <ion-item no-lines color="light" *ngIf="newTransaction.type === 'expense'">
       <ion-label>{{ 'category' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.category">
         <ion-option *ngFor="let category of expenseCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
+    <br *ngIf="newTransaction.type === 'expense'">
     <ion-item  no-lines color="light" *ngIf="isTransfer === false && newTransaction.account != null">
       <ion-label>{{ 'account' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newTransaction.account" (ionChange)="accountChange($event)">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item  no-lines color="white" *ngIf="isTransfer === true && newTransaction.account != null">
+    <br *ngIf="isTransfer === false && newTransaction.account != null">
+    <ion-item  no-lines color="light" *ngIf="isTransfer === true && newTransaction.account != null">
       <ion-label>{{ 'account-out' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountOut" (ionChange)="checkAccountsCurrencies()">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
+    <br *ngIf="isTransfer === true && newTransaction.account != null">
     <ion-item no-lines color="light" *ngIf="isTransfer === true && newTransaction.account != null">
       <ion-label>{{ 'account-in' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="accountIn" (ionChange)="checkAccountsCurrencies()">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
+    <br *ngIf="isTransfer === true && newTransaction.account != null">
     <ion-item no-lines color="energized" *ngIf="newTransaction.account === null">
       <p text-wrap>{{ 'warning-transaction-no-account' | translate:param }}</p>
     </ion-item>
-    <ion-item no-lines color="white">
+    <br *ngIf="newTransaction.account === null">
+    <ion-item no-lines color="light">
       <ion-label>Date</ion-label>
       <ion-datetime displayFormat="YYYY/MM/DD" [(ngModel)]="tempDate"></ion-datetime>
     </ion-item>
+    <br>
     <ion-item no-lines color="light">
       <ion-label>Time</ion-label>
       <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="tempDate"></ion-datetime>
     </ion-item>
-    <ion-item no-lines color="white">
+    <br>
+    <ion-item no-lines color="light">
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="newTransaction.description"></ion-input>
     </ion-item>
-  </ion-list>
 </ion-content>
 
 <ion-footer no-border padding>

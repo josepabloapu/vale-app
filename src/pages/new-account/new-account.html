@@ -4,29 +4,32 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-item no-lines color="white">
+<ion-content padding>
+    <ion-item no-lines color="light">
       <ion-label>{{ 'name' | translate:param }}</ion-label>
       <ion-input autofocus text-right type="string" value="" [(ngModel)]="newAccount.name"></ion-input>
     </ion-item>
+    <br>
     <ion-item no-lines color="light">
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="newAccount.description"></ion-input>
     </ion-item>
-    <ion-item no-lines color="white">
+    <br>
+    <ion-item no-lines color="light">
       <ion-label>{{ 'currency' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newAccount.currency">
         <ion-option *ngFor="let currency of currencies" [value]="currency._id">{{ currency.code | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
+    <br>
     <ion-item no-lines color="light">
       <ion-label>{{ 'type' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="newAccount.type">
         <ion-option *ngFor="let accountType of accountTypes" [value]="accountType._id">{{ accountType.code | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item no-lines color="white">
+    <br>
+    <ion-item no-lines color="light">
       <ion-label>{{ 'initial-balance' | translate:param }}</ion-label>
       <ion-input 
         text-right type="tel"
@@ -35,7 +38,6 @@
         pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
         (input)="tempAmount = format(tempAmount)"></ion-input>
     </ion-item>
-  </ion-list>
 </ion-content>
 
 <ion-footer no-border padding>

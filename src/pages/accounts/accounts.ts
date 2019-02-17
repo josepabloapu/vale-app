@@ -157,7 +157,7 @@ export class AccountsPage {
           self.investmentAccounts.push(element);
           self.investmentAccountsTrue = true;
           break;
-        case self.accountTypeProvider.mappedAccountTypesByCode['load']._id:
+        case self.accountTypeProvider.mappedAccountTypesByCode['loan']._id:
           self.loanAccounts.push(element);
           self.loanAccountsTrue = true;
           break;

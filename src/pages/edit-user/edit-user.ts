@@ -124,8 +124,13 @@ export class EditUserPage {
   /* ---------------------------------------------------------------------------------------------------------------- */
 
   public logout() {
-    this.userProvider.logout().then( promise => {
-      this.app.getRootNav().setRoot(WelcomePage)
+    this.messageProvider.translateService.get('loading').subscribe( value => {
+      this.loading = this.messageProvider.loadingCtrl.create({ content: value })
+      this.loading.present().then(() => {
+        this.userProvider.logout().then( promise => {
+          this.app.getRootNav().setRoot(WelcomePage)
+        })
+      })
     })
   }
 

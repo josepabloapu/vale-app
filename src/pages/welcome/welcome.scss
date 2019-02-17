@@ -1,24 +1,23 @@
-#page-welcome {
-	background: color($colors, primary);
-	color: color($colors, light);
-	h1{
+#page-welcome { 
+    background: color($colors, primary);
+    h1{
+        color: color($colors, white);
     	font-size: 48px;
     	margin-top: 50px;
     	text-align: center;
         font-weight: bold;
     }
     h2{
+        color: color($colors, white);
     	font-size: 14px;
-    	margin-top: 30px;
+    	margin-top: 10px;
     	text-align: center;
     }
-    div {
-        background: url(../assets/imgs/welcome.png);
-        background-repeat: no-repeat;
-        background-position: right top;
-        background-size: 140%;
-    }
-    .scroll-content {
-        margin-bottom: 0!important;
+    .logo {
+        margin-top: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
     }
 }

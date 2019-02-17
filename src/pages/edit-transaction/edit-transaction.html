@@ -9,9 +9,8 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content id="page-edit-transaction">
-	<ion-list>
-    <ion-item no-lines color="white">
+<ion-content padding id="page-edit-transaction">
+    <ion-item no-lines color="light">
       <ion-label>{{ 'amount' | translate:param }}</ion-label>
       <ion-input 
         text-right type="tel"
@@ -20,6 +19,7 @@
         pattern="^[$\-\s]*[\d\,]*?([\.]\d{0,10})?\s*$" 
         (input)="tempAmount = format(tempAmount)"></ion-input>
     </ion-item>
+    <br>
     <ion-item no-lines color="light">
       <ion-label>{{ 'type' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editTransaction.type" (ionChange)="typeChange($event)">
@@ -27,40 +27,46 @@
         <ion-option value="income">{{ 'income' | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item no-lines color="white" *ngIf="editTransaction.type === 'income'">
+    <br>
+    <ion-item no-lines color="light" *ngIf="editTransaction.type === 'income'">
       <ion-label>{{ 'category' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editTransaction.category">
         <ion-option *ngFor="let category of incomeCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
-    <ion-item no-lines color="white" *ngIf="editTransaction.type === 'expense'">
+    <br *ngIf="editTransaction.type === 'income'">
+    <ion-item no-lines color="light" *ngIf="editTransaction.type === 'expense'">
       <ion-label>{{ 'category' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editTransaction.category">
         <ion-option *ngFor="let category of expenseCategories" [value]="category._id">{{ category.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
+    <br *ngIf="editTransaction.type === 'expense'">
     <ion-item no-lines color="light" *ngIf="getAccountReadableObject(editTransaction.account) != null">
       <ion-label>{{ 'account' | translate:param }}</ion-label>
       <ion-select okText="{{ 'ok' | translate:param }}" cancelText="{{ 'cancel' | translate:param }}" [(ngModel)]="editTransaction.account" #account (ionChange)="accountChange(account._value)">
         <ion-option *ngFor="let account of accounts" [value]="account._id">{{ account.name | translate:param }}</ion-option>
       </ion-select>
     </ion-item>
+    <br *ngIf="getAccountReadableObject(editTransaction.account) != null">
     <ion-item no-lines color="energized" *ngIf="getAccountReadableObject(editTransaction.account) == null">
       <p text-wrap>{{ 'warning-transaction-account-removed' | translate:param }}</p>
     </ion-item>
-    <ion-item no-lines color="white">
+    <br *ngIf="getAccountReadableObject(editTransaction.account) == null">
+    <ion-item no-lines color="light">
       <ion-label>{{ 'date' | translate:param }}</ion-label>
       <ion-datetime displayFormat="YYYY/MM/DD" [(ngModel)]="tempDate"></ion-datetime>
     </ion-item>
+    <br>
     <ion-item no-lines color="light">
       <ion-label>{{ 'time' | translate:param }}</ion-label>
       <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="tempDate"></ion-datetime>
     </ion-item>
-    <ion-item no-lines color="white">
+    <br>
+    <ion-item no-lines color="light">
       <ion-label>{{ 'description' | translate:param }}</ion-label>
       <ion-input text-right type="string" value="" [(ngModel)]="editTransaction.description"></ion-input>
     </ion-item>
-  </ion-list>
 </ion-content>
 
 <ion-footer no-border padding>
