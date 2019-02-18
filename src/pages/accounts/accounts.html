@@ -10,6 +10,10 @@
 </ion-header>
 
 <ion-content id="page-accounts">
+  <ion-item no-lines [ngClass]="(netWorth > 0) ? 'good' : 'bad'">
+    <p [ngClass]="(netWorth > 0) ? 'good' : 'bad'">{{ 'net-worth' | translate:param }}</p>
+    <p item-end [ngClass]="(netWorth > 0) ? 'good' : 'bad'">{{ netWorth | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}</p>
+  </ion-item>
   <button ion-item no-lines *ngFor="let account of accounts; let $i = index" (click)="editAccount(account)" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
     <div item-start>
       <h3>{{ account.name }}</h3>
@@ -23,10 +27,3 @@
     </div>
   </button>
 </ion-content>
-
-<ion-footer [ngClass]="'div-networth'" no-border padding>
-  <ion-item no-lines color="secondary">
-    <p>{{ 'net-worth' | translate:param }}</p>
-    <p item-end>{{ netWorth | number : '1.2-2' }} {{ getCurrencyReadableObject(userProvider.user.currency).code }}</p>
-  </ion-item>
-</ion-footer>

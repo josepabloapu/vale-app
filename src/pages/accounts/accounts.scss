@@ -1,6 +1,11 @@
 page-accounts {
-    .div-networth {
-        background-color: color($colors, dark);
+    .good {
+        background-color: color($colors, correct);
+        color : color($colors, white);
+    }
+    .bad {
+        background-color: color($colors, danger);
+        color : color($colors, white);
     }
 }
 
