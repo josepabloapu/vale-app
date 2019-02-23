@@ -1,25 +1,14 @@
 page-transactions {
-
-	.odd {
-	  background: white;
-	}
-	.even {
-	  background: color($colors, light);
-	}
-
 	.transfer {
 	  color: color($colors, energized);
 	  font-weight: bold;
 	}
-
 	.income {
 	  color: color($colors, nature);
 	  font-weight: bold;
 	}
-
 	.expense {
 	  color: color($colors, dark);
 	  font-weight: bold;
 	}
-	
 }

@@ -36,5 +36,8 @@ config.xml
 Thumbs.db
 UserInterfaceState.xcuserstate
 
+# project
+*.csv
+
 # Sensitive data
 src/providers/api/api.ts

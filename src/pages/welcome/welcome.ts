@@ -10,6 +10,7 @@ import { MessageProvider } from '../../providers/message/message';
 import { UserProvider } from '../../providers/user/user';
 import { ApiProvider } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
+import { CategoryProvider } from '../../providers/category/category';
 
 @IonicPage()
 @Component({
@@ -29,11 +30,15 @@ export class WelcomePage {
     public messageProvider: MessageProvider,
     public userProvider: UserProvider,
     public apiProvider: ApiProvider,
-    public currencyProvider: CurrencyProvider) 
+    public currencyProvider: CurrencyProvider,
+    public categoryProvider: CategoryProvider) 
   {
-
     this.translateService.use('en');
-    this.tryToLogin();
+
+    var self = this;
+    setTimeout(function() {
+      self.tryToLogin();
+    }, 1000);
     // console.log({WELCOME_PAGE: this});
   }
 

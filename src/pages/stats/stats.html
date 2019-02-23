@@ -7,8 +7,8 @@
 <ion-content id="page-stats">
 
     <ion-item no-lines color="dark">
-      <p style="font-weight: bold;">{{ 'balance-per-category' | translate:param }}
-      <p item-end style="font-weight: bold;">{{ 'this-month' | translate:param }}</p>
+      <p>{{ 'balance-per-category' | translate:param }}
+      <p item-end>{{ 'this-month' | translate:param }}</p>
     </ion-item>
     <ion-item no-lines *ngFor="let category of dataSortedByDate['this-month'].validExpenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
       <h3 item-start>
@@ -23,8 +23,8 @@
     </ion-item>
 
     <ion-item no-lines color="dark">
-      <p style="font-weight: bold;">{{ 'balance-per-category' | translate:param }}
-      <p item-end style="font-weight: bold;">{{ 'this-year' | translate:param }}</p>
+      <p>{{ 'balance-per-category' | translate:param }}
+      <p item-end>{{ 'this-year' | translate:param }}</p>
     </ion-item>
     <ion-item no-lines *ngFor="let category of dataSortedByDate['this-year'].validExpenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
       <h3 item-start>
@@ -39,8 +39,8 @@
     </ion-item>
 
     <ion-item no-lines color="dark" *ngIf="dataSortedByDate['last-year'].validExpenseCategories[0]">
-      <p style="font-weight: bold;">{{ 'balance-per-category' | translate:param }}
-      <p item-end style="font-weight: bold;">{{ 'last-year' | translate:param }}</p>
+      <p>{{ 'balance-per-category' | translate:param }}
+      <p item-end>{{ 'last-year' | translate:param }}</p>
     </ion-item>
     <ion-item no-lines *ngFor="let category of dataSortedByDate['last-year'].validExpenseCategories; let $i = index" [ngClass]="($i%2 == 0) ? 'odd' : 'even'">
       <h3 item-start>
